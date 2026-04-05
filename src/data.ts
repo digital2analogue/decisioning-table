@@ -1,0 +1,94 @@
+import type { Ruleset } from './types'
+
+export const initialRulesets: Ruleset[] = [
+  {
+    id: 'rs-1',
+    name: 'Primary Ruleset',
+    rules: [
+      {
+        id: 'r-1',
+        selected: false,
+        ruleName: 'High Income Approval',
+        dataAttribute: 'Income',
+        operator: '>=',
+        amount: 75000,
+        outcome: 'Approve',
+      },
+      {
+        id: 'r-2',
+        selected: false,
+        ruleName: 'Low Income Denial',
+        dataAttribute: 'Income',
+        operator: '<',
+        amount: 20000,
+        outcome: 'Deny',
+      },
+      {
+        id: 'r-3',
+        selected: false,
+        ruleName: 'High Expense Denial',
+        dataAttribute: 'Expense',
+        operator: '>',
+        amount: 50000,
+        outcome: 'Deny',
+      },
+      {
+        id: 'r-4',
+        selected: false,
+        ruleName: 'Moderate Income Approval',
+        dataAttribute: 'Income',
+        operator: '>=',
+        amount: 40000,
+        outcome: 'Approve',
+      },
+      {
+        id: 'r-5',
+        selected: false,
+        ruleName: 'Low Expense Approval',
+        dataAttribute: 'Expense',
+        operator: '<=',
+        amount: 15000,
+        outcome: 'Approve',
+      },
+    ],
+  },
+  {
+    id: 'rs-2',
+    name: 'Secondary Ruleset',
+    rules: [
+      {
+        id: 'r-6',
+        selected: false,
+        ruleName: 'Premium Income Rule',
+        dataAttribute: 'Income',
+        operator: '>',
+        amount: 100000,
+        outcome: 'Approve',
+      },
+      {
+        id: 'r-7',
+        selected: false,
+        ruleName: 'Expense Threshold',
+        dataAttribute: 'Expense',
+        operator: '=',
+        amount: 30000,
+        outcome: 'Deny',
+      },
+    ],
+  },
+  {
+    id: 'rs-3',
+    name: 'Override Rules',
+    rules: [
+      {
+        id: 'r-8',
+        selected: false,
+        ruleName: 'Manual Override Approval',
+        dataAttribute: 'Income',
+        operator: '>=',
+        amount: 0,
+        outcome: 'Approve',
+      },
+    ],
+  },
+]

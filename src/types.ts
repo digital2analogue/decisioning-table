@@ -17,3 +17,8 @@ export interface Ruleset {
   name: string
   rules: Rule[]
 }
+
+export interface DragItem {
+  index: number
+  id: string
+}

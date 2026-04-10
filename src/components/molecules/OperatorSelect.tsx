@@ -30,8 +30,22 @@ export function OperatorSelect({ value, onChange }: OperatorSelectProps) {
       <select
         value={value}
         onChange={(e) => onChange(e.target.value as Operator)}
-        className="appearance-none bg-slate-50 border border-slate-200 rounded-lg px-2.5 py-1 pr-6 text-sm text-slate-700 cursor-pointer focus:outline-none focus:ring-2 focus:ring-indigo-300 focus:border-indigo-300 hover:border-slate-300 transition-colors"
         title={labels[value]}
+        style={{
+          appearance: 'none',
+          backgroundColor: 'var(--color-background-default)',
+          border: '1px solid var(--color-border-muted)',
+          borderRadius: '6px',
+          padding: '4px 24px 4px var(--space-sm)',
+          fontFamily: 'var(--font-family-mono)',
+          fontSize: 'var(--font-label-small-size)',
+          color: 'var(--color-foreground-secondary)',
+          cursor: 'pointer',
+          outline: 'none',
+          transition: 'border-color 0.15s',
+        }}
+        onFocus={(e) => { e.currentTarget.style.borderColor = 'var(--color-foreground-accent)' }}
+        onBlur={(e) => { e.currentTarget.style.borderColor = 'var(--color-border-muted)' }}
       >
         {operators.map((op) => (
           <option key={op} value={op}>
@@ -42,7 +56,8 @@ export function OperatorSelect({ value, onChange }: OperatorSelectProps) {
       </select>
       <ChevronDownIcon
         size={12}
-        className="absolute right-1.5 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none"
+        className="absolute right-1.5 top-1/2 -translate-y-1/2 pointer-events-none"
+        style={{ color: 'var(--color-foreground-muted)' }}
       />
     </div>
   )

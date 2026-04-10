@@ -1,16 +1,54 @@
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Spectral:wght@400;500;600;700&family=JetBrains+Mono:wght@400&display=swap');
+@import "./tokens/variables.css";
 @import "tailwindcss";
 
 * {
   box-sizing: border-box;
 }
 
+html,
 body {
   margin: 0;
-  font-family: system-ui, -apple-system, sans-serif;
-  background: #f8fafc;
+  padding: 0;
+  background-color: var(--color-background-default);
+  color: var(--color-foreground-primary);
+  font-family: var(--font-family-body);
+  font-size: var(--font-body-large-size);
+  line-height: var(--font-body-large-line-height);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 #root {
   width: 100%;
   min-height: 100vh;
+}
+
+/* Scrollbar styling for the terminal aesthetic */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-background-default);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-border-muted);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-foreground-muted);
+}
+
+/* Checkbox accent color */
+input[type="checkbox"] {
+  accent-color: var(--color-foreground-accent);
+}
+
+/* Select element base styles */
+select {
+  color-scheme: dark;
 }

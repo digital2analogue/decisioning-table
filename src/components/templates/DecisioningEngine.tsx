@@ -26,16 +26,65 @@ export function DecisioningEngine() {
   }
 
   return (
-    <div className="min-h-screen bg-slate-50 flex flex-col">
+    <div
+      className="min-h-screen flex flex-col"
+      style={{ backgroundColor: 'var(--color-background-default)' }}
+    >
       {/* Header */}
-      <div className="bg-white border-b border-slate-200 px-6 py-4 flex items-center justify-between">
+      <div
+        className="px-6 py-4 flex items-center justify-between"
+        style={{
+          backgroundColor: 'var(--color-background-alt)',
+          borderBottom: '1px solid var(--color-border-muted)',
+        }}
+      >
         <div>
-          <h1 className="text-xl font-semibold text-slate-900">Decisioning Engine</h1>
-          <p className="text-sm text-slate-500 mt-0.5">Configure rules to automate approval decisions</p>
+          <h1
+            style={{
+              fontFamily: 'var(--font-title-small-family)',
+              fontSize: 'var(--font-title-small-size)',
+              lineHeight: 'var(--font-title-small-line-height)',
+              fontWeight: 'var(--font-title-small-weight)',
+              color: 'var(--color-foreground-primary)',
+              margin: 0,
+            }}
+          >
+            Decisioning Engine
+          </h1>
+          <p
+            style={{
+              fontFamily: 'var(--font-body-medium-family)',
+              fontSize: 'var(--font-body-medium-size)',
+              lineHeight: 'var(--font-body-medium-line-height)',
+              color: 'var(--color-foreground-muted)',
+              margin: '2px 0 0 0',
+            }}
+          >
+            Configure rules to automate approval decisions
+          </p>
         </div>
         <div className="flex items-center gap-2">
-          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-emerald-50 text-emerald-700 border border-emerald-200">
-            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+          <span
+            className="inline-flex items-center gap-1.5 rounded-full"
+            style={{
+              padding: '4px 10px',
+              fontFamily: 'var(--font-label-small-family)',
+              fontSize: 'var(--font-label-small-size)',
+              fontWeight: 500,
+              color: 'var(--color-foreground-accent)',
+              backgroundColor: 'var(--color-background-accent-subtle)',
+              border: '1px solid var(--color-border-accent)',
+            }}
+          >
+            <span
+              style={{
+                width: '6px',
+                height: '6px',
+                borderRadius: '50%',
+                backgroundColor: 'var(--color-foreground-accent)',
+                display: 'inline-block',
+              }}
+            />
             Active
           </span>
         </div>

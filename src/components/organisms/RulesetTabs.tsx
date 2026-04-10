@@ -11,7 +11,10 @@ export interface RulesetTabsProps {
 
 export function RulesetTabs({ rulesets, activeRulesetId, onSelect, onAdd }: RulesetTabsProps) {
   return (
-    <div className="bg-white border-t border-slate-200 px-6 py-0 flex items-center gap-1 overflow-x-auto">
+    <div
+      className="px-6 py-0 flex items-center gap-1 overflow-x-auto"
+      style={{ borderTop: '1px solid var(--color-border-muted)', backgroundColor: 'var(--color-background-alt)' }}
+    >
       {rulesets.map((rs) => (
         <TabItem
           key={rs.id}
@@ -23,7 +26,17 @@ export function RulesetTabs({ rulesets, activeRulesetId, onSelect, onAdd }: Rule
       ))}
       <button
         onClick={onAdd}
-        className="px-3 py-3 text-slate-400 hover:text-slate-600 transition-colors flex items-center gap-1 text-sm"
+        className="px-3 py-3 flex items-center gap-1 transition-colors"
+        style={{
+          fontFamily: 'var(--font-label-medium-family)',
+          fontSize: 'var(--font-label-medium-size)',
+          color: 'var(--color-foreground-muted)',
+          background: 'none',
+          border: 'none',
+          cursor: 'pointer',
+        }}
+        onMouseEnter={(e) => { e.currentTarget.style.color = 'var(--color-foreground-accent)' }}
+        onMouseLeave={(e) => { e.currentTarget.style.color = 'var(--color-foreground-muted)' }}
       >
         <PlusIcon size={14} />
         Add Ruleset

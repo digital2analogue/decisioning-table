@@ -1,5 +1,4 @@
 import { CheckIcon, XIcon } from 'lucide-react'
-import { cn } from '../../lib/utils'
 import type { DataAttribute, Outcome } from '../../types'
 
 export interface AttributeBadgeProps {
@@ -9,12 +8,21 @@ export interface AttributeBadgeProps {
 export function AttributeBadge({ value }: AttributeBadgeProps) {
   return (
     <span
-      className={cn(
-        'inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium',
-        value === 'Income'
-          ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
-          : 'bg-red-50 text-red-700 border border-red-200',
-      )}
+      style={{
+        display: 'inline-flex',
+        alignItems: 'center',
+        padding: '2px var(--space-sm)',
+        borderRadius: '9999px',
+        fontFamily: 'var(--font-label-small-family)',
+        fontSize: 'var(--font-label-small-size)',
+        lineHeight: 'var(--font-label-small-line-height)',
+        border: '1px solid',
+        color: value === 'Income' ? 'var(--color-foreground-accent)' : 'var(--color-foreground-danger)',
+        borderColor: value === 'Income' ? 'var(--color-border-accent)' : 'var(--color-foreground-danger)',
+        backgroundColor: value === 'Income'
+          ? 'var(--color-background-accent-subtle)'
+          : 'var(--color-background-danger-subtle)',
+      }}
     >
       {value}
     </span>
@@ -27,18 +35,32 @@ export interface OutcomeBadgeProps {
 }
 
 export function OutcomeBadge({ value, onChange }: OutcomeBadgeProps) {
+  const isApprove = value === 'Approve'
   return (
     <button
-      onClick={() => onChange(value === 'Approve' ? 'Deny' : 'Approve')}
+      onClick={() => onChange(isApprove ? 'Deny' : 'Approve')}
       title="Click to toggle"
-      className={cn(
-        'inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold border transition-colors',
-        value === 'Approve'
-          ? 'bg-emerald-50 text-emerald-700 border-emerald-200 hover:bg-emerald-100'
-          : 'bg-red-50 text-red-700 border-red-200 hover:bg-red-100',
-      )}
+      style={{
+        display: 'inline-flex',
+        alignItems: 'center',
+        gap: '4px',
+        padding: '4px var(--space-sm)',
+        borderRadius: '9999px',
+        fontFamily: 'var(--font-label-small-family)',
+        fontSize: 'var(--font-label-small-size)',
+        lineHeight: 'var(--font-label-small-line-height)',
+        fontWeight: 600,
+        border: '1px solid',
+        cursor: 'pointer',
+        transition: 'background-color 0.15s',
+        color: isApprove ? 'var(--color-foreground-accent)' : 'var(--color-foreground-danger)',
+        borderColor: isApprove ? 'var(--color-border-accent)' : 'var(--color-foreground-danger)',
+        backgroundColor: isApprove
+          ? 'var(--color-background-accent-subtle)'
+          : 'var(--color-background-danger-subtle)',
+      }}
     >
-      {value === 'Approve' ? <CheckIcon size={11} /> : <XIcon size={11} />}
+      {isApprove ? <CheckIcon size={11} /> : <XIcon size={11} />}
       {value}
     </button>
   )

@@ -21,7 +21,8 @@ export function Checkbox({ checked, indeterminate, onChange, className }: Checkb
       type="checkbox"
       checked={checked}
       onChange={(e) => onChange(e.target.checked)}
-      className={cn('rounded border-slate-300 text-indigo-600 cursor-pointer', className)}
+      className={cn('rounded cursor-pointer', className)}
+      style={{ accentColor: 'var(--color-foreground-accent)' }}
     />
   )
 }

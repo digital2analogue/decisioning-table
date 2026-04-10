@@ -1,5 +1,4 @@
 import { XIcon } from 'lucide-react'
-import { cn } from '../../lib/utils'
 import type { DataAttribute } from '../../types'
 import { IconButton } from '../atoms/IconButton'
 
@@ -12,23 +11,40 @@ export interface AttributeEditorProps {
 export function AttributeEditor({ value, onChange, onClose }: AttributeEditorProps) {
   return (
     <div className="flex items-center gap-1">
-      {(['Income', 'Expense'] as DataAttribute[]).map((attr) => (
-        <button
-          key={attr}
-          onClick={() => onChange(attr)}
-          className={cn(
-            'px-2 py-0.5 rounded-full text-xs font-medium border transition-colors',
-            attr === value
-              ? attr === 'Income'
-                ? 'bg-emerald-100 text-emerald-700 border-emerald-300'
-                : 'bg-red-100 text-red-700 border-red-300'
-              : 'bg-white text-slate-500 border-slate-200 hover:border-slate-400',
-          )}
-        >
-          {attr}
-        </button>
-      ))}
-      <IconButton onClick={onClose} className="text-slate-400 hover:text-slate-600">
+      {(['Income', 'Expense'] as DataAttribute[]).map((attr) => {
+        const isSelected = attr === value
+        const isIncome = attr === 'Income'
+        return (
+          <button
+            key={attr}
+            onClick={() => onChange(attr)}
+            style={{
+              padding: '2px var(--space-sm)',
+              borderRadius: '9999px',
+              fontFamily: 'var(--font-label-small-family)',
+              fontSize: 'var(--font-label-small-size)',
+              border: '1px solid',
+              cursor: 'pointer',
+              transition: 'background-color 0.15s',
+              color: isSelected
+                ? isIncome ? 'var(--color-foreground-accent)' : 'var(--color-foreground-danger)'
+                : 'var(--color-foreground-muted)',
+              borderColor: isSelected
+                ? isIncome ? 'var(--color-border-accent)' : 'var(--color-foreground-danger)'
+                : 'var(--color-border-muted)',
+              backgroundColor: isSelected
+                ? isIncome ? 'var(--color-background-accent-subtle)' : 'var(--color-background-danger-subtle)'
+                : 'transparent',
+            }}
+          >
+            {attr}
+          </button>
+        )
+      })}
+      <IconButton
+        onClick={onClose}
+        style={{ color: 'var(--color-foreground-muted)' }}
+      >
         <XIcon size={12} />
       </IconButton>
     </div>

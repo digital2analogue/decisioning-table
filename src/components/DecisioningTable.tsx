@@ -89,28 +89,22 @@ export function DecisioningTable({ ruleset, onUpdate }: DecisioningTableProps) {
   }
 
   return (
-    <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+    <div className="dt-container">
       {/* Toolbar */}
-      <div className="px-4 py-3 border-b border-slate-100 flex items-center justify-between">
+      <div className="dt-toolbar flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <h2 className="text-sm font-semibold text-slate-800">{ruleset.name}</h2>
-          <span className="text-xs text-slate-400 bg-slate-100 px-2 py-0.5 rounded-full">
+          <span className="dt-ruleset-name">{ruleset.name}</span>
+          <span className="dt-count-badge">
             {ruleset.rules.length} rule{ruleset.rules.length !== 1 ? 's' : ''}
           </span>
           {someSelected && (
-            <button
-              onClick={deleteSelected}
-              className="flex items-center gap-1 text-xs text-red-600 hover:text-red-700 ml-2"
-            >
+            <button onClick={deleteSelected} className="dt-delete-selected-btn">
               <Trash2Icon size={13} />
               Delete {selectedCount} selected
             </button>
           )}
         </div>
-        <button
-          onClick={addRule}
-          className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-white bg-indigo-600 hover:bg-indigo-700 rounded-lg transition-colors"
-        >
+        <button onClick={addRule} className="dt-add-btn">
           <PlusIcon size={13} />
           Add Rule
         </button>
@@ -118,33 +112,33 @@ export function DecisioningTable({ ruleset, onUpdate }: DecisioningTableProps) {
 
       {/* Table */}
       <div className="overflow-x-auto">
-        <table className="w-full text-sm">
+        <table className="w-full">
           <thead>
-            <tr className="border-b border-slate-100 bg-slate-50">
-              <th className="w-10 px-3 py-2.5 text-center">
+            <tr className="dt-thead-row">
+              <th className="dt-th dt-th--center" style={{ width: 40, padding: '8px 12px' }}>
                 <input
                   type="checkbox"
                   checked={allSelected}
                   ref={(el) => { if (el) el.indeterminate = someSelected && !allSelected }}
                   onChange={(e) => toggleAll(e.target.checked)}
-                  className="rounded border-slate-300 text-indigo-600 cursor-pointer"
+                  className="dt-checkbox"
                 />
               </th>
-              <th className="w-8 px-1 py-2.5"></th>
-              <th className="w-10 px-2 py-2.5 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">#</th>
-              <th className="px-3 py-2.5 text-left text-xs font-medium text-slate-500 uppercase tracking-wider min-w-[180px]">Rule Name</th>
-              <th className="px-3 py-2.5 text-left text-xs font-medium text-slate-500 uppercase tracking-wider min-w-[140px]">Data Attribute</th>
-              <th className="px-3 py-2.5 text-left text-xs font-medium text-slate-500 uppercase tracking-wider w-[110px]">Operator</th>
-              <th className="px-3 py-2.5 text-left text-xs font-medium text-slate-500 uppercase tracking-wider min-w-[120px]">Amount</th>
-              <th className="px-3 py-2.5 text-left text-xs font-medium text-slate-500 uppercase tracking-wider w-[110px]">Outcome</th>
-              <th className="w-10 px-3 py-2.5"></th>
+              <th className="dt-th" style={{ width: 32, padding: '8px 4px' }} />
+              <th className="dt-th" style={{ width: 40 }}>#</th>
+              <th className="dt-th" style={{ minWidth: 180 }}>Rule Name</th>
+              <th className="dt-th" style={{ minWidth: 140 }}>Data Attribute</th>
+              <th className="dt-th" style={{ width: 110 }}>Operator</th>
+              <th className="dt-th" style={{ minWidth: 120 }}>Amount</th>
+              <th className="dt-th" style={{ width: 110 }}>Outcome</th>
+              <th className="dt-th" style={{ width: 40, padding: '8px 12px' }} />
             </tr>
           </thead>
           <tbody>
             {ruleset.rules.length === 0 ? (
               <tr>
-                <td colSpan={9} className="py-12 text-center text-slate-400 text-sm">
-                  No rules yet. Click <strong className="text-slate-600">Add Rule</strong> to get started.
+                <td colSpan={9} className="dt-empty-state">
+                  No rules yet. Click <strong>Add Rule</strong> to get started.
                 </td>
               </tr>
             ) : (
@@ -235,43 +229,47 @@ function RuleRow({
     <tr
       ref={rowRef}
       className={cn(
-        'border-b border-slate-100 transition-colors group',
-        isDragging ? 'opacity-40 bg-indigo-50' : 'hover:bg-slate-50',
-        isOver && !isDragging ? 'border-t-2 border-t-indigo-400' : '',
-        rule.selected ? 'bg-indigo-50/40' : '',
+        'dt-row',
+        isDragging ? 'dt-row--dragging' : '',
+        isOver && !isDragging ? 'dt-row--over' : '',
+        rule.selected ? 'dt-row--selected' : '',
       )}
     >
       {/* Checkbox */}
-      <td className="px-3 py-2.5 text-center">
+      <td className="dt-cell dt-cell--center" style={{ padding: '8px 12px' }}>
         <input
           type="checkbox"
           checked={rule.selected}
           onChange={(e) => onUpdate(rule.id, { selected: e.target.checked })}
-          className="rounded border-slate-300 text-indigo-600 cursor-pointer"
+          className="dt-checkbox"
         />
       </td>
 
       {/* Drag Handle */}
-      <td ref={handleRef} className="px-1 py-2.5 cursor-grab active:cursor-grabbing text-slate-300 hover:text-slate-500">
-        <GripVerticalIcon size={16} />
+      <td ref={handleRef} className="dt-cell dt-cell--handle">
+        <span className="dt-drag-handle">
+          <GripVerticalIcon size={16} />
+        </span>
       </td>
 
       {/* Row # */}
-      <td className="px-2 py-2.5 text-slate-400 text-xs font-mono">{index + 1}</td>
+      <td className="dt-cell">
+        <span className="dt-row-num">{index + 1}</span>
+      </td>
 
       {/* Rule Name */}
-      <td className="px-3 py-2.5">
+      <td className="dt-cell" style={{ padding: '8px 12px' }}>
         <input
           type="text"
           value={rule.ruleName}
           onChange={(e) => onUpdate(rule.id, { ruleName: e.target.value })}
-          className="w-full bg-transparent border-0 outline-none text-slate-800 text-sm placeholder:text-slate-300 focus:bg-white focus:ring-1 focus:ring-indigo-300 rounded px-1.5 py-0.5 -mx-1.5 transition-all"
+          className="dt-rule-name-input"
           placeholder="Rule name..."
         />
       </td>
 
       {/* Data Attribute */}
-      <td className="px-3 py-2.5">
+      <td className="dt-cell" style={{ padding: '8px 12px' }}>
         {editingAttributeId === rule.id ? (
           <AttributeEditor
             value={rule.dataAttribute}
@@ -283,7 +281,7 @@ function RuleRow({
             <AttributeBadge value={rule.dataAttribute} />
             <button
               onClick={() => onEditAttribute(rule.id)}
-              className="opacity-0 group-hover/attr:opacity-100 text-slate-400 hover:text-slate-600 transition-opacity"
+              className="attr-edit-trigger group-hover/attr:opacity-100"
             >
               <PencilIcon size={12} />
             </button>
@@ -292,7 +290,7 @@ function RuleRow({
       </td>
 
       {/* Operator */}
-      <td className="px-3 py-2.5">
+      <td className="dt-cell" style={{ padding: '8px 12px' }}>
         <OperatorSelect
           value={rule.operator}
           onChange={(v) => onUpdate(rule.id, { operator: v })}
@@ -300,20 +298,20 @@ function RuleRow({
       </td>
 
       {/* Amount */}
-      <td className="px-3 py-2.5">
+      <td className="dt-cell" style={{ padding: '8px 12px' }}>
         <div className="flex items-center">
-          <span className="text-slate-400 text-sm mr-1">$</span>
+          <span className="dt-amount-prefix">$</span>
           <input
             type="number"
             value={rule.amount}
             onChange={(e) => onUpdate(rule.id, { amount: Number(e.target.value) })}
-            className="w-full bg-transparent border-0 outline-none text-slate-800 text-sm focus:bg-white focus:ring-1 focus:ring-indigo-300 rounded px-1.5 py-0.5 transition-all"
+            className="dt-amount-input"
           />
         </div>
       </td>
 
       {/* Outcome */}
-      <td className="px-3 py-2.5">
+      <td className="dt-cell" style={{ padding: '8px 12px' }}>
         <OutcomeToggle
           value={rule.outcome}
           onChange={(v) => onUpdate(rule.id, { outcome: v })}
@@ -321,10 +319,10 @@ function RuleRow({
       </td>
 
       {/* Actions */}
-      <td className="px-3 py-2.5 relative">
+      <td className="dt-cell relative" style={{ padding: '8px 12px' }}>
         <button
           onClick={() => onMenuToggle(rule.id)}
-          className="text-slate-300 hover:text-slate-600 transition-colors opacity-0 group-hover:opacity-100 focus:opacity-100"
+          className="actions-trigger"
         >
           <MoreHorizontalIcon size={16} />
         </button>
@@ -344,14 +342,7 @@ function RuleRow({
 
 function AttributeBadge({ value }: { value: DataAttribute }) {
   return (
-    <span
-      className={cn(
-        'inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium',
-        value === 'Income'
-          ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
-          : 'bg-red-50 text-red-700 border border-red-200',
-      )}
-    >
+    <span className={`attr-badge ${value === 'Income' ? 'attr-badge--income' : 'attr-badge--expense'}`}>
       {value}
     </span>
   )
@@ -368,23 +359,20 @@ function AttributeEditor({
 }) {
   return (
     <div className="flex items-center gap-1">
-      {(['Income', 'Expense'] as DataAttribute[]).map((attr) => (
-        <button
-          key={attr}
-          onClick={() => onChange(attr)}
-          className={cn(
-            'px-2 py-0.5 rounded-full text-xs font-medium border transition-colors',
-            attr === value
-              ? attr === 'Income'
-                ? 'bg-emerald-100 text-emerald-700 border-emerald-300'
-                : 'bg-red-100 text-red-700 border-red-300'
-              : 'bg-white text-slate-500 border-slate-200 hover:border-slate-400',
-          )}
-        >
-          {attr}
-        </button>
-      ))}
-      <button onClick={onClose} className="text-slate-400 hover:text-slate-600">
+      {(['Income', 'Expense'] as DataAttribute[]).map((attr) => {
+        const isActive = attr === value
+        const activeClass = attr === 'Income' ? 'attr-editor-btn--income-active' : 'attr-editor-btn--expense-active'
+        return (
+          <button
+            key={attr}
+            onClick={() => onChange(attr)}
+            className={`attr-editor-btn ${isActive ? activeClass : 'attr-editor-btn--inactive'}`}
+          >
+            {attr}
+          </button>
+        )
+      })}
+      <button onClick={onClose} className="attr-editor-close">
         <XIcon size={12} />
       </button>
     </div>
@@ -393,13 +381,6 @@ function AttributeEditor({
 
 function OperatorSelect({ value, onChange }: { value: Operator; onChange: (v: Operator) => void }) {
   const operators: Operator[] = ['>', '>=', '<', '<=', '=']
-  const labels: Record<Operator, string> = {
-    '>': '> Greater than',
-    '>=': '≥ At least',
-    '<': '< Less than',
-    '<=': '≤ At most',
-    '=': '= Equals',
-  }
   const display: Record<Operator, string> = {
     '>': '>',
     '>=': '≥',
@@ -409,12 +390,11 @@ function OperatorSelect({ value, onChange }: { value: Operator; onChange: (v: Op
   }
 
   return (
-    <div className="relative inline-block">
+    <div className="operator-select-wrap">
       <select
         value={value}
         onChange={(e) => onChange(e.target.value as Operator)}
-        className="appearance-none bg-slate-50 border border-slate-200 rounded-lg px-2.5 py-1 pr-6 text-sm text-slate-700 cursor-pointer focus:outline-none focus:ring-2 focus:ring-indigo-300 focus:border-indigo-300 hover:border-slate-300 transition-colors"
-        title={labels[value]}
+        className="operator-select"
       >
         {operators.map((op) => (
           <option key={op} value={op}>
@@ -422,10 +402,9 @@ function OperatorSelect({ value, onChange }: { value: Operator; onChange: (v: Op
           </option>
         ))}
       </select>
-      <ChevronDownIcon
-        size={12}
-        className="absolute right-1.5 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none"
-      />
+      <span className="operator-chevron">
+        <ChevronDownIcon size={12} />
+      </span>
     </div>
   )
 }
@@ -435,12 +414,7 @@ function OutcomeToggle({ value, onChange }: { value: Outcome; onChange: (v: Outc
     <button
       onClick={() => onChange(value === 'Approve' ? 'Deny' : 'Approve')}
       title="Click to toggle"
-      className={cn(
-        'inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold border transition-colors',
-        value === 'Approve'
-          ? 'bg-emerald-50 text-emerald-700 border-emerald-200 hover:bg-emerald-100'
-          : 'bg-red-50 text-red-700 border-red-200 hover:bg-red-100',
-      )}
+      className={`outcome-toggle ${value === 'Approve' ? 'outcome-toggle--approve' : 'outcome-toggle--deny'}`}
     >
       {value === 'Approve' ? <CheckIcon size={11} /> : <XIcon size={11} />}
       {value}
@@ -459,21 +433,14 @@ function ActionsMenu({
 }) {
   return (
     <>
-      {/* Backdrop */}
       <div className="fixed inset-0 z-10" onClick={onClose} />
-      <div className="absolute right-0 top-7 z-20 bg-white border border-slate-200 rounded-lg shadow-lg py-1 min-w-[140px]">
-        <button
-          onClick={onDuplicate}
-          className="w-full flex items-center gap-2 px-3 py-1.5 text-sm text-slate-700 hover:bg-slate-50 transition-colors"
-        >
+      <div className="actions-menu">
+        <button onClick={onDuplicate} className="actions-menu-item actions-menu-item--normal">
           <CopyIcon size={13} />
           Duplicate
         </button>
-        <div className="border-t border-slate-100 my-1" />
-        <button
-          onClick={onDelete}
-          className="w-full flex items-center gap-2 px-3 py-1.5 text-sm text-red-600 hover:bg-red-50 transition-colors"
-        >
+        <hr className="actions-menu-divider" />
+        <button onClick={onDelete} className="actions-menu-item actions-menu-item--danger">
           <Trash2Icon size={13} />
           Delete rule
         </button>

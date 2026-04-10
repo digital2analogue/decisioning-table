@@ -1,0 +1,65 @@
+/**
+ * Brand design tokens — copied from brand-tokens/build/css/variables.css
+ * Do not edit directly.
+ */
+
+:root {
+  --color-green-200: #c8cfc4;
+  --color-green-400: #a0a89a;
+  --color-green-500: #7a9e80;
+  --color-green-600: #8b9683;
+  --color-green-900: #1e241e;
+  --color-green-950: #0a0d0a;
+  --color-green-accent: #4ade6e;
+  --color-neutral-white: #ffffff;
+  --color-neutral-black: #000000;
+
+  --space-xs: 4px;
+  --space-sm: 8px;
+  --space-md: 16px;
+  --space-lg: 24px;
+  --space-xl: 48px;
+  --space-2xl: 80px;
+
+  --font-family-sans: 'Space Grotesk', system-ui, sans-serif;
+  --font-family-serif: Spectral, Georgia, serif;
+  --font-family-mono: 'JetBrains Mono', 'Courier New', monospace;
+
+  --font-weight-light: 300;
+  --font-weight-regular: 400;
+  --font-weight-medium: 500;
+
+  --font-size-xs: 0.75rem;
+  --font-size-sm: 0.875rem;
+  --font-size-base: 1rem;
+  --font-size-md: 1.25rem;
+  --font-size-lg: 1.5rem;
+  --font-size-xl: 1.75rem;
+  --font-size-2xl: 2rem;
+  --font-size-3xl: 2.5rem;
+
+  --font-line-height-tight: 1.1;
+  --font-line-height-snug: 1.25;
+  --font-line-height-normal: 1.6;
+  --font-line-height-relaxed: 1.7;
+
+  /* Semantic color aliases */
+  --color-bg-primary: var(--color-green-950);
+  --color-bg-secondary: var(--color-green-900);
+  --color-text-primary: var(--color-green-200);
+  --color-text-secondary: var(--color-green-400);
+  --color-text-muted: var(--color-green-600);
+  --color-accent: var(--color-green-accent);
+  --color-border-default: var(--color-green-900);
+
+  /* Font composite shorthands */
+  --font-title-large: var(--font-weight-regular) var(--font-size-3xl)/var(--font-line-height-tight) var(--font-family-sans);
+  --font-title-medium: var(--font-weight-regular) var(--font-size-2xl)/var(--font-line-height-snug) var(--font-family-sans);
+  --font-title-small: var(--font-weight-regular) var(--font-size-xl)/var(--font-line-height-snug) var(--font-family-sans);
+  --font-body-large: var(--font-weight-regular) var(--font-size-base)/var(--font-line-height-normal) var(--font-family-serif);
+  --font-body-medium: var(--font-weight-regular) var(--font-size-sm)/var(--font-line-height-normal) var(--font-family-serif);
+  --font-body-small: var(--font-weight-regular) var(--font-size-xs)/var(--font-line-height-normal) var(--font-family-serif);
+  --font-label-large: var(--font-weight-regular) var(--font-size-base)/var(--font-line-height-snug) var(--font-family-sans);
+  --font-label-medium: var(--font-weight-regular) var(--font-size-sm)/var(--font-line-height-snug) var(--font-family-sans);
+  --font-label-small: var(--font-weight-regular) var(--font-size-xs)/var(--font-line-height-snug) var(--font-family-sans);
+}

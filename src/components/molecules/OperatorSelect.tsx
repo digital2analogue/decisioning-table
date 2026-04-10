@@ -30,22 +30,8 @@ export function OperatorSelect({ value, onChange }: OperatorSelectProps) {
       <select
         value={value}
         onChange={(e) => onChange(e.target.value as Operator)}
+        className="dt-operator-select"
         title={labels[value]}
-        style={{
-          appearance: 'none',
-          backgroundColor: 'var(--color-background-default)',
-          border: '1px solid var(--color-border-muted)',
-          borderRadius: '6px',
-          padding: '4px 24px 4px var(--space-sm)',
-          fontFamily: 'var(--font-family-mono)',
-          fontSize: 'var(--font-label-small-size)',
-          color: 'var(--color-foreground-secondary)',
-          cursor: 'pointer',
-          outline: 'none',
-          transition: 'border-color 0.15s',
-        }}
-        onFocus={(e) => { e.currentTarget.style.borderColor = 'var(--color-foreground-accent)' }}
-        onBlur={(e) => { e.currentTarget.style.borderColor = 'var(--color-border-muted)' }}
       >
         {operators.map((op) => (
           <option key={op} value={op}>
@@ -56,8 +42,7 @@ export function OperatorSelect({ value, onChange }: OperatorSelectProps) {
       </select>
       <ChevronDownIcon
         size={12}
-        className="absolute right-1.5 top-1/2 -translate-y-1/2 pointer-events-none"
-        style={{ color: 'var(--color-foreground-muted)' }}
+        className="dt-select-chevron absolute right-1.5 top-1/2 -translate-y-1/2 pointer-events-none"
       />
     </div>
   )

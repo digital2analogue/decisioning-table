@@ -1,4 +1,4 @@
-import type { CSSProperties, ReactNode } from 'react'
+import type { ReactNode } from 'react'
 import { cn } from '../../lib/utils'
 
 export interface IconButtonProps {
@@ -6,16 +6,14 @@ export interface IconButtonProps {
   children: ReactNode
   className?: string
   title?: string
-  style?: CSSProperties
 }
 
-export function IconButton({ onClick, children, className, title, style }: IconButtonProps) {
+export function IconButton({ onClick, children, className, title }: IconButtonProps) {
   return (
     <button
       onClick={onClick}
       title={title}
-      className={cn('transition-colors', className)}
-      style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 0, ...style }}
+      className={cn('dt-icon-btn transition-colors', className)}
     >
       {children}
     </button>

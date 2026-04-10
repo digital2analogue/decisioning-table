@@ -2,6 +2,7 @@ import { useCallback, useRef } from 'react'
 import { useDrag, useDrop } from 'react-dnd'
 import { PencilIcon, MoreHorizontalIcon } from 'lucide-react'
 import type { Rule, DragItem } from '../../types'
+import { cn } from '../../lib/utils'
 import { Checkbox } from '../atoms/Checkbox'
 import { DragHandle } from '../atoms/DragHandle'
 import { AttributeBadge, OutcomeBadge } from '../atoms/Badge'
@@ -68,20 +69,16 @@ export function RuleRow({
 
   dragPreview(drop(rowRef))
 
-  const rowStyle: React.CSSProperties = {
-    borderBottom: '1px solid var(--color-border-muted)',
-    transition: 'background-color 0.1s',
-    opacity: isDragging ? 0.4 : 1,
-    backgroundColor: rule.selected
-      ? 'var(--color-background-selected)'
-      : isOver && !isDragging
-        ? 'var(--color-background-accent-subtle)'
-        : 'transparent',
-    ...(isOver && !isDragging ? { borderTop: '2px solid var(--color-foreground-accent)' } : {}),
-  }
-
   return (
-    <tr ref={rowRef} className="group" style={rowStyle}>
+    <tr
+      ref={rowRef}
+      className={cn(
+        'dt-tbody-row group',
+        isDragging ? 'dt-tbody-row-dragging' : '',
+        isOver && !isDragging ? 'dt-tbody-row-over' : '',
+        rule.selected && !isDragging ? 'dt-tbody-row-selected' : '',
+      )}
+    >
       {/* Checkbox */}
       <td className="px-3 py-2.5 text-center">
         <Checkbox
@@ -94,15 +91,7 @@ export function RuleRow({
       <DragHandle dragRef={handleRef} />
 
       {/* Row # */}
-      <td
-        className="px-2 py-2.5 text-xs"
-        style={{
-          fontFamily: 'var(--font-family-mono)',
-          color: 'var(--color-foreground-muted)',
-        }}
-      >
-        {index + 1}
-      </td>
+      <td className="dt-row-number px-2 py-2.5">{index + 1}</td>
 
       {/* Rule Name */}
       <td className="px-3 py-2.5">
@@ -110,28 +99,8 @@ export function RuleRow({
           type="text"
           value={rule.ruleName}
           onChange={(e) => onUpdate(rule.id, { ruleName: e.target.value })}
+          className="dt-rule-name-input"
           placeholder="Rule name..."
-          style={{
-            width: '100%',
-            background: 'transparent',
-            border: 'none',
-            outline: 'none',
-            fontFamily: 'var(--font-body-medium-family)',
-            fontSize: 'var(--font-body-medium-size)',
-            lineHeight: 'var(--font-body-medium-line-height)',
-            color: 'var(--color-foreground-primary)',
-          }}
-          onFocus={(e) => {
-            e.currentTarget.style.backgroundColor = 'var(--color-background-elevated)'
-            e.currentTarget.style.outline = '1px solid var(--color-border-accent)'
-            e.currentTarget.style.borderRadius = '4px'
-            e.currentTarget.style.padding = '2px 6px'
-          }}
-          onBlur={(e) => {
-            e.currentTarget.style.backgroundColor = 'transparent'
-            e.currentTarget.style.outline = 'none'
-            e.currentTarget.style.padding = '0'
-          }}
         />
       </td>
 
@@ -152,7 +121,6 @@ export function RuleRow({
             <IconButton
               onClick={() => onEditAttribute(rule.id)}
               className="opacity-0 group-hover/attr:opacity-100 transition-opacity"
-              style={{ color: 'var(--color-foreground-muted)' }}
             >
               <PencilIcon size={12} />
             </IconButton>
@@ -171,36 +139,12 @@ export function RuleRow({
       {/* Amount */}
       <td className="px-3 py-2.5">
         <div className="flex items-center">
-          <span
-            className="mr-1 text-sm"
-            style={{ fontFamily: 'var(--font-family-mono)', color: 'var(--color-foreground-muted)' }}
-          >
-            $
-          </span>
+          <span className="dt-amount-prefix">$</span>
           <input
             type="number"
             value={rule.amount}
             onChange={(e) => onUpdate(rule.id, { amount: Number(e.target.value) })}
-            style={{
-              width: '100%',
-              background: 'transparent',
-              border: 'none',
-              outline: 'none',
-              fontFamily: 'var(--font-family-mono)',
-              fontSize: 'var(--font-body-medium-size)',
-              color: 'var(--color-foreground-primary)',
-            }}
-            onFocus={(e) => {
-              e.currentTarget.style.backgroundColor = 'var(--color-background-elevated)'
-              e.currentTarget.style.outline = '1px solid var(--color-border-accent)'
-              e.currentTarget.style.borderRadius = '4px'
-              e.currentTarget.style.padding = '2px 6px'
-            }}
-            onBlur={(e) => {
-              e.currentTarget.style.backgroundColor = 'transparent'
-              e.currentTarget.style.outline = 'none'
-              e.currentTarget.style.padding = '0'
-            }}
+            className="dt-amount-input"
           />
         </div>
       </td>
@@ -217,8 +161,7 @@ export function RuleRow({
       <td className="px-3 py-2.5 relative">
         <IconButton
           onClick={() => onMenuToggle(rule.id)}
-          className="opacity-0 group-hover:opacity-100 focus:opacity-100 transition-opacity"
-          style={{ color: 'var(--color-foreground-muted)' }}
+          className="opacity-0 group-hover:opacity-100 focus:opacity-100"
         >
           <MoreHorizontalIcon size={16} />
         </IconButton>

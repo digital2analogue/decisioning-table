@@ -1,20 +1,32 @@
-@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Spectral:wght@400;500;600;700&family=JetBrains+Mono:wght@400&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500&family=Spectral:ital,opsz,wght@0,6..18,300;0,6..18,400;0,6..18,500;1,6..18,300;1,6..18,400&family=JetBrains+Mono:wght@400&display=swap');
 @import "./tokens/variables.css";
 @import "tailwindcss";
 
-* {
+/* ── Semantic token aliases ─────────────────────────────────────── */
+:root {
+  --color-background-default: var(--color-green-950);
+  --color-background-alt: var(--color-green-900);
+  --color-foreground-primary: var(--color-green-200);
+  --color-foreground-secondary: var(--color-green-400);
+  --color-foreground-muted: var(--color-green-600);
+  --color-foreground-accent: var(--color-green-accent);
+  --color-border-default: var(--color-green-900);
+  /* Derived subtle accent tints */
+  --color-accent-subtle: color-mix(in srgb, var(--color-green-900) 78%, var(--color-green-accent) 22%);
+  --color-accent-subtle-border: color-mix(in srgb, var(--color-green-900) 55%, var(--color-green-accent) 45%);
+}
+
+/* ── Base ───────────────────────────────────────────── */
+*, *::before, *::after {
   box-sizing: border-box;
 }
 
-html,
-body {
+html, body {
   margin: 0;
   padding: 0;
   background-color: var(--color-background-default);
   color: var(--color-foreground-primary);
-  font-family: var(--font-family-body);
-  font-size: var(--font-body-large-size);
-  line-height: var(--font-body-large-line-height);
+  font: var(--font-body-large);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -24,31 +36,187 @@ body {
   min-height: 100vh;
 }
 
-/* Scrollbar styling for the terminal aesthetic */
-::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
-}
+/* ── Scrollbar (Webkit) ─────────────────────────────── */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: var(--color-background-default); }
+::-webkit-scrollbar-thumb { background: var(--color-border-default); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--color-foreground-muted); }
 
-::-webkit-scrollbar-track {
-  background: var(--color-background-default);
-}
+/* ── Form resets ────────────────────────────────────── */
+input, select, textarea { color: var(--color-foreground-primary); background: transparent; }
+input::placeholder { color: var(--color-foreground-muted); }
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button { opacity: 0.3; }
+input[type="checkbox"] { accent-color: var(--color-foreground-accent); }
+select { color-scheme: dark; }
+select option { background-color: var(--color-background-alt); color: var(--color-foreground-primary); }
 
-::-webkit-scrollbar-thumb {
-  background: var(--color-border-muted);
-  border-radius: 3px;
-}
+/* ── Component styles ───────────────────────────────── */
+@layer components {
 
-::-webkit-scrollbar-thumb:hover {
-  background: var(--color-foreground-muted);
-}
+  /* DecisioningEngine — template */
+  .dt-page { background-color: var(--color-background-default); color: var(--color-foreground-primary); }
+  .dt-page-header { background-color: var(--color-background-alt); border-bottom: 1px solid var(--color-border-default); }
+  .dt-page-title { font: var(--font-title-small); color: var(--color-foreground-primary); margin: 0; }
+  .dt-page-subtitle { font: var(--font-body-large); color: var(--color-foreground-secondary); margin: var(--space-xs) 0 0; }
+  .dt-status-badge {
+    display: inline-flex; align-items: center; gap: 6px;
+    background-color: var(--color-background-default);
+    color: var(--color-foreground-accent);
+    border: 1px solid var(--color-foreground-accent);
+    font: var(--font-label-small); border-radius: 9999px; padding: 4px 10px;
+  }
+  .dt-status-dot { width: 6px; height: 6px; border-radius: 9999px; background-color: var(--color-foreground-accent); flex-shrink: 0; }
 
-/* Checkbox accent color */
-input[type="checkbox"] {
-  accent-color: var(--color-foreground-accent);
-}
+  /* DecisioningTable — organism */
+  .dt-table-card {
+    background-color: var(--color-background-alt);
+    border: 1px solid var(--color-border-default);
+    border-radius: 12px; overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  }
+  .dt-thead-row { background-color: var(--color-background-default); border-bottom: 1px solid var(--color-border-default); }
+  .dt-th { font: var(--font-label-small); color: var(--color-foreground-muted); text-transform: uppercase; letter-spacing: 0.06em; }
+  .dt-tbody-row { border-bottom: 1px solid var(--color-border-default); transition: background-color 120ms ease; }
+  .dt-tbody-row:hover { background-color: var(--color-background-default); }
+  .dt-tbody-row-dragging { opacity: 0.35; background-color: var(--color-background-default); }
+  .dt-tbody-row-over { border-top: 2px solid var(--color-foreground-accent); }
+  .dt-tbody-row-selected { background-color: var(--color-background-default); }
+  .dt-row-number { font-family: var(--font-family-mono); font-size: var(--font-size-xs); color: var(--color-foreground-muted); }
+  .dt-empty-cell { font: var(--font-body-medium); color: var(--color-foreground-muted); }
 
-/* Select element base styles */
-select {
-  color-scheme: dark;
+  /* ToolbarActions — molecule */
+  .dt-toolbar { border-bottom: 1px solid var(--color-border-default); }
+  .dt-toolbar-name { font: var(--font-label-medium); color: var(--color-foreground-primary); margin: 0; }
+  .dt-rule-count {
+    font: var(--font-label-small); color: var(--color-foreground-muted);
+    background-color: var(--color-background-default);
+    border: 1px solid var(--color-border-default); border-radius: 9999px; padding: 1px 8px;
+  }
+  .dt-delete-selected {
+    display: inline-flex; align-items: center; gap: 4px;
+    font: var(--font-label-small); color: var(--color-foreground-muted);
+    background: none; border: none; cursor: pointer; transition: color 120ms ease; padding: 0;
+  }
+  .dt-delete-selected:hover { color: var(--color-foreground-secondary); }
+  .dt-add-rule-btn {
+    display: inline-flex; align-items: center; gap: 6px;
+    font: var(--font-label-small);
+    color: var(--color-background-default);
+    background-color: var(--color-foreground-accent);
+    border: 1px solid var(--color-foreground-accent);
+    border-radius: 8px; padding: var(--space-xs) var(--space-sm);
+    cursor: pointer; transition: background-color 120ms ease, border-color 120ms ease;
+  }
+  .dt-add-rule-btn:hover { background-color: var(--color-foreground-primary); border-color: var(--color-foreground-primary); }
+
+  /* TabItem — molecule */
+  .dt-tab-item {
+    font: var(--font-label-medium); color: var(--color-foreground-muted);
+    background: none; border: none; border-top: 2px solid transparent;
+    cursor: pointer; white-space: nowrap;
+    padding: var(--space-sm) var(--space-md);
+    transition: color 120ms ease, border-color 120ms ease;
+  }
+  .dt-tab-item:hover { color: var(--color-foreground-secondary); border-top-color: var(--color-border-default); }
+  .dt-tab-item-active { color: var(--color-foreground-accent); border-top-color: var(--color-foreground-accent); }
+
+  /* RulesetTabs — organism */
+  .dt-tabs-bar { background-color: var(--color-background-alt); border-top: 1px solid var(--color-border-default); }
+  .dt-add-ruleset-btn {
+    display: inline-flex; align-items: center; gap: 4px;
+    font: var(--font-label-medium); color: var(--color-foreground-muted);
+    background: none; border: none; cursor: pointer;
+    padding: var(--space-sm); transition: color 120ms ease;
+  }
+  .dt-add-ruleset-btn:hover { color: var(--color-foreground-secondary); }
+
+  /* RuleRow — molecule */
+  .dt-rule-name-input {
+    font: var(--font-body-medium); color: var(--color-foreground-primary);
+    background: transparent; border: 0; outline: none; width: 100%;
+    border-radius: 3px; padding: 2px 6px; margin-left: -6px;
+    transition: background-color 120ms ease, box-shadow 120ms ease;
+  }
+  .dt-rule-name-input::placeholder { color: var(--color-foreground-muted); }
+  .dt-rule-name-input:focus { background-color: var(--color-background-default); box-shadow: 0 0 0 1px var(--color-foreground-accent); }
+  .dt-amount-prefix { font: var(--font-body-medium); color: var(--color-foreground-muted); margin-right: 2px; }
+  .dt-amount-input {
+    font: var(--font-body-medium); color: var(--color-foreground-primary);
+    background: transparent; border: 0; outline: none; width: 100%;
+    border-radius: 3px; padding: 2px 4px;
+    transition: background-color 120ms ease, box-shadow 120ms ease;
+  }
+  .dt-amount-input:focus { background-color: var(--color-background-default); box-shadow: 0 0 0 1px var(--color-foreground-accent); }
+
+  /* ActionsMenu — molecule */
+  .dt-menu {
+    background-color: var(--color-background-alt); border: 1px solid var(--color-border-default);
+    border-radius: 8px; box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5);
+    padding: 4px 0; min-width: 140px;
+    position: absolute; right: 0; top: 28px; z-index: 20;
+  }
+  .dt-menu-item {
+    display: flex; align-items: center; gap: 8px; width: 100%;
+    font: var(--font-label-medium); color: var(--color-foreground-secondary);
+    background: none; border: none; cursor: pointer; padding: 6px 12px;
+    transition: background-color 120ms ease, color 120ms ease; text-align: left;
+  }
+  .dt-menu-item:hover { background-color: var(--color-background-default); color: var(--color-foreground-primary); }
+  .dt-menu-divider { border: none; border-top: 1px solid var(--color-border-default); margin: 4px 0; }
+  .dt-menu-item-danger {
+    display: flex; align-items: center; gap: 8px; width: 100%;
+    font: var(--font-label-medium); color: var(--color-foreground-muted);
+    background: none; border: none; cursor: pointer; padding: 6px 12px;
+    transition: background-color 120ms ease, color 120ms ease; text-align: left;
+  }
+  .dt-menu-item-danger:hover { background-color: var(--color-background-default); color: var(--color-foreground-secondary); }
+
+  /* Badge — atom */
+  .dt-badge { display: inline-flex; align-items: center; font: var(--font-label-small); border-radius: 9999px; padding: 2px 8px; border: 1px solid var(--color-border-default); }
+  .dt-badge-income { background-color: var(--color-accent-subtle); color: var(--color-foreground-accent); border-color: var(--color-accent-subtle-border); }
+  .dt-badge-expense { background-color: var(--color-background-default); color: var(--color-foreground-muted); border-color: var(--color-border-default); }
+  .dt-outcome-badge {
+    display: inline-flex; align-items: center; gap: 4px;
+    font: var(--font-label-small); border-radius: 9999px; padding: 4px 10px;
+    border: 1px solid var(--color-border-default); cursor: pointer;
+    transition: background-color 120ms ease, color 120ms ease, border-color 120ms ease;
+  }
+  .dt-outcome-approve { background-color: var(--color-accent-subtle); color: var(--color-foreground-accent); border-color: var(--color-accent-subtle-border); }
+  .dt-outcome-approve:hover { background-color: color-mix(in srgb, var(--color-background-alt) 55%, var(--color-green-accent) 45%); }
+  .dt-outcome-deny { background-color: var(--color-background-default); color: var(--color-foreground-muted); border-color: var(--color-border-default); }
+  .dt-outcome-deny:hover { background-color: var(--color-background-alt); color: var(--color-foreground-secondary); }
+
+  /* DragHandle — atom */
+  .dt-drag-handle { color: var(--color-foreground-muted); cursor: grab; transition: color 120ms ease; }
+  .dt-drag-handle:active { cursor: grabbing; }
+  .dt-drag-handle:hover { color: var(--color-foreground-secondary); }
+
+  /* IconButton — atom */
+  .dt-icon-btn { color: var(--color-foreground-muted); background: none; border: none; padding: 0; cursor: pointer; line-height: 0; transition: color 120ms ease; }
+  .dt-icon-btn:hover { color: var(--color-foreground-secondary); }
+
+  /* OperatorSelect — molecule */
+  .dt-operator-select {
+    appearance: none; background-color: var(--color-background-default);
+    border: 1px solid var(--color-border-default);
+    color: var(--color-foreground-primary); font: var(--font-label-small);
+    border-radius: 8px; padding: 4px 24px 4px 10px;
+    cursor: pointer; transition: border-color 120ms ease;
+  }
+  .dt-operator-select:focus { outline: none; box-shadow: 0 0 0 2px var(--color-foreground-accent); border-color: var(--color-foreground-accent); }
+  .dt-operator-select:hover { border-color: var(--color-foreground-muted); }
+  .dt-operator-select option { background-color: var(--color-background-alt); color: var(--color-foreground-primary); }
+  .dt-select-chevron { color: var(--color-foreground-muted); }
+
+  /* AttributeEditor — molecule */
+  .dt-attr-btn {
+    font: var(--font-label-small); border: 1px solid var(--color-border-default);
+    color: var(--color-foreground-muted); background-color: var(--color-background-default);
+    border-radius: 9999px; padding: 2px 8px; cursor: pointer;
+    transition: background-color 120ms ease, color 120ms ease, border-color 120ms ease;
+  }
+  .dt-attr-btn:hover { border-color: var(--color-foreground-muted); color: var(--color-foreground-secondary); }
+  .dt-attr-btn-active-income { background-color: var(--color-accent-subtle); color: var(--color-foreground-accent); border-color: var(--color-accent-subtle-border); }
+  .dt-attr-btn-active-expense { background-color: var(--color-background-alt); color: var(--color-foreground-secondary); border-color: var(--color-border-default); }
 }

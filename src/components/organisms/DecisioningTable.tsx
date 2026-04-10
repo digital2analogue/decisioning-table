@@ -72,13 +72,7 @@ export function DecisioningTable({ ruleset, onUpdate }: DecisioningTableProps) {
   }
 
   return (
-    <div
-      className="rounded-xl overflow-hidden"
-      style={{
-        backgroundColor: 'var(--color-background-alt)',
-        border: '1px solid var(--color-border-muted)',
-      }}
-    >
+    <div className="dt-table-card">
       <ToolbarActions
         rulesetName={ruleset.name}
         ruleCount={ruleset.rules.length}
@@ -91,7 +85,7 @@ export function DecisioningTable({ ruleset, onUpdate }: DecisioningTableProps) {
       <div className="overflow-x-auto">
         <table className="w-full">
           <thead>
-            <tr style={{ borderBottom: '1px solid var(--color-border-muted)', backgroundColor: 'var(--color-background-default)' }}>
+            <tr className="dt-thead-row">
               <th className="w-10 px-3 py-2.5 text-center">
                 <Checkbox
                   checked={allSelected}
@@ -100,55 +94,20 @@ export function DecisioningTable({ ruleset, onUpdate }: DecisioningTableProps) {
                 />
               </th>
               <th className="w-8 px-1 py-2.5"></th>
-              <th
-                className="w-10 px-2 py-2.5 text-left uppercase tracking-wider"
-                style={{
-                  fontFamily: 'var(--font-label-small-family)',
-                  fontSize: 'var(--font-label-small-size)',
-                  fontWeight: 400,
-                  color: 'var(--color-foreground-muted)',
-                }}
-              >
-                #
-              </th>
-              {['Rule Name', 'Data Attribute', 'Operator', 'Amount', 'Outcome'].map((header, i) => (
-                <th
-                  key={header}
-                  className={`px-3 py-2.5 text-left uppercase tracking-wider ${
-                    i === 0 ? 'min-w-[180px]' :
-                    i === 1 ? 'min-w-[140px]' :
-                    i === 2 ? 'w-[110px]' :
-                    i === 3 ? 'min-w-[120px]' :
-                    'w-[110px]'
-                  }`}
-                  style={{
-                    fontFamily: 'var(--font-label-small-family)',
-                    fontSize: 'var(--font-label-small-size)',
-                    fontWeight: 400,
-                    color: 'var(--color-foreground-muted)',
-                  }}
-                >
-                  {header}
-                </th>
-              ))}
+              <th className="dt-th w-10 px-2 py-2.5 text-left tracking-wider">#</th>
+              <th className="dt-th px-3 py-2.5 text-left tracking-wider min-w-[180px]">Rule Name</th>
+              <th className="dt-th px-3 py-2.5 text-left tracking-wider min-w-[140px]">Data Attribute</th>
+              <th className="dt-th px-3 py-2.5 text-left tracking-wider w-[110px]">Operator</th>
+              <th className="dt-th px-3 py-2.5 text-left tracking-wider min-w-[120px]">Amount</th>
+              <th className="dt-th px-3 py-2.5 text-left tracking-wider w-[110px]">Outcome</th>
               <th className="w-10 px-3 py-2.5"></th>
             </tr>
           </thead>
           <tbody>
             {ruleset.rules.length === 0 ? (
               <tr>
-                <td
-                  colSpan={9}
-                  className="py-12 text-center"
-                  style={{
-                    fontFamily: 'var(--font-body-medium-family)',
-                    fontSize: 'var(--font-body-medium-size)',
-                    color: 'var(--color-foreground-muted)',
-                  }}
-                >
-                  No rules yet. Click{' '}
-                  <strong style={{ color: 'var(--color-foreground-accent)' }}>Add Rule</strong>{' '}
-                  to get started.
+                <td colSpan={9} className="dt-empty-cell py-12 text-center">
+                  No rules yet. Click <strong>Add Rule</strong> to get started.
                 </td>
               </tr>
             ) : (

@@ -6,11 +6,7 @@ export interface DragHandleProps {
 
 export function DragHandle({ dragRef }: DragHandleProps) {
   return (
-    <td
-      ref={dragRef}
-      className="px-1 py-2.5 cursor-grab active:cursor-grabbing"
-      style={{ color: 'var(--color-foreground-muted)' }}
-    >
+    <td ref={dragRef} className="dt-drag-handle px-1 py-2.5">
       <GripVerticalIcon size={16} />
     </td>
   )

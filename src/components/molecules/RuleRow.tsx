@@ -73,11 +73,14 @@ export function RuleRow({
     <tr
       ref={rowRef}
       className={cn(
-        'border-b border-slate-100 transition-colors group',
-        isDragging ? 'opacity-40 bg-indigo-50' : 'hover:bg-slate-50',
-        isOver && !isDragging ? 'border-t-2 border-t-indigo-400' : '',
-        rule.selected ? 'bg-indigo-50/40' : '',
+        'transition-colors group',
+        isDragging
+          ? 'opacity-40 bg-[var(--dt-color-accent-subtle)]'
+          : 'hover:bg-[var(--dt-color-bg-subtle)]',
+        isOver && !isDragging ? 'border-t-2 border-t-[var(--dt-color-accent-default)]' : '',
+        rule.selected ? 'bg-[var(--dt-color-accent-subtle)]' : '',
       )}
+      style={{ borderBottom: 'var(--dt-border-width) solid var(--dt-color-border-muted)' }}
     >
       {/* Checkbox */}
       <td className="px-3 py-2.5 text-center">
@@ -91,7 +94,12 @@ export function RuleRow({
       <DragHandle dragRef={handleRef} />
 
       {/* Row # */}
-      <td className="px-2 py-2.5 text-slate-400 text-xs font-mono">{index + 1}</td>
+      <td
+        className="px-2 py-2.5 text-xs font-mono"
+        style={{ color: 'var(--dt-color-text-tertiary)' }}
+      >
+        {index + 1}
+      </td>
 
       {/* Rule Name */}
       <td className="px-3 py-2.5">
@@ -99,7 +107,11 @@ export function RuleRow({
           type="text"
           value={rule.ruleName}
           onChange={(e) => onUpdate(rule.id, { ruleName: e.target.value })}
-          className="w-full bg-transparent border-0 outline-none text-slate-800 text-sm placeholder:text-slate-300 focus:bg-white focus:ring-1 focus:ring-indigo-300 rounded px-1.5 py-0.5 -mx-1.5 transition-all"
+          className="w-full bg-transparent border-0 outline-none text-sm transition-all rounded px-1.5 py-0.5 -mx-1.5"
+          style={{
+            color: 'var(--dt-color-text-primary)',
+            fontFamily: 'var(--dt-font-mono)',
+          }}
           placeholder="Rule name..."
         />
       </td>
@@ -120,7 +132,7 @@ export function RuleRow({
             <AttributeBadge value={rule.dataAttribute} />
             <IconButton
               onClick={() => onEditAttribute(rule.id)}
-              className="opacity-0 group-hover/attr:opacity-100 text-slate-400 hover:text-slate-600 transition-opacity"
+              className="opacity-0 group-hover/attr:opacity-100 transition-opacity"
             >
               <PencilIcon size={12} />
             </IconButton>
@@ -139,12 +151,13 @@ export function RuleRow({
       {/* Amount */}
       <td className="px-3 py-2.5">
         <div className="flex items-center">
-          <span className="text-slate-400 text-sm mr-1">$</span>
+          <span className="text-sm mr-1" style={{ color: 'var(--dt-color-text-tertiary)' }}>$</span>
           <input
             type="number"
             value={rule.amount}
             onChange={(e) => onUpdate(rule.id, { amount: Number(e.target.value) })}
-            className="w-full bg-transparent border-0 outline-none text-slate-800 text-sm focus:bg-white focus:ring-1 focus:ring-indigo-300 rounded px-1.5 py-0.5 transition-all"
+            className="w-full bg-transparent border-0 outline-none text-sm transition-all rounded px-1.5 py-0.5"
+            style={{ color: 'var(--dt-color-text-primary)', fontFamily: 'var(--dt-font-mono)' }}
           />
         </div>
       </td>
@@ -161,7 +174,7 @@ export function RuleRow({
       <td className="px-3 py-2.5 relative">
         <IconButton
           onClick={() => onMenuToggle(rule.id)}
-          className="text-slate-300 hover:text-slate-600 opacity-0 group-hover:opacity-100 focus:opacity-100"
+          className="opacity-0 group-hover:opacity-100 focus:opacity-100"
         >
           <MoreHorizontalIcon size={16} />
         </IconButton>

@@ -20,15 +20,15 @@ export function AttributeEditor({ value, onChange, onClose }: AttributeEditorPro
             'px-2 py-0.5 rounded-full text-xs font-medium border transition-colors',
             attr === value
               ? attr === 'Income'
-                ? 'bg-emerald-100 text-emerald-700 border-emerald-300'
-                : 'bg-red-100 text-red-700 border-red-300'
-              : 'bg-white text-slate-500 border-slate-200 hover:border-slate-400',
+                ? 'bg-[var(--dt-color-success-muted)] text-[var(--dt-color-success-text)] border-[var(--dt-color-success-default)]'
+                : 'bg-[var(--dt-color-danger-muted)] text-[var(--dt-color-danger-text)] border-[var(--dt-color-danger-default)]'
+              : 'bg-[var(--dt-color-bg-raised)] text-[var(--dt-color-text-secondary)] border-[var(--dt-color-border-default)] hover:border-[var(--dt-color-border-emphasis)]',
           )}
         >
           {attr}
         </button>
       ))}
-      <IconButton onClick={onClose} className="text-slate-400 hover:text-slate-600">
+      <IconButton onClick={onClose}>
         <XIcon size={12} />
       </IconButton>
     </div>

@@ -13,7 +13,10 @@ export function IconButton({ onClick, children, className, title }: IconButtonPr
     <button
       onClick={onClick}
       title={title}
-      className={cn('transition-colors', className)}
+      className={cn(
+        'transition-colors text-[var(--dt-color-text-tertiary)] hover:text-[var(--dt-color-text-secondary)]',
+        className,
+      )}
     >
       {children}
     </button>

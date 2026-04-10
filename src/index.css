@@ -1,3 +1,4 @@
+@import "./tokens/variables.css";
 @import "tailwindcss";
 
 * {
@@ -6,8 +7,11 @@
 
 body {
   margin: 0;
-  font-family: system-ui, -apple-system, sans-serif;
-  background: #f8fafc;
+  font-family: var(--dt-font-mono);
+  font-size: var(--dt-font-size-base);
+  background: var(--dt-color-bg-canvas);
+  color: var(--dt-color-text-primary);
+  -webkit-font-smoothing: antialiased;
 }
 
 #root {

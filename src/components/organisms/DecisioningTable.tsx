@@ -72,7 +72,14 @@ export function DecisioningTable({ ruleset, onUpdate }: DecisioningTableProps) {
   }
 
   return (
-    <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+    <div
+      className="rounded-xl overflow-hidden"
+      style={{
+        background: 'var(--dt-color-bg-surface)',
+        border: 'var(--dt-border-width) solid var(--dt-color-border-default)',
+        boxShadow: 'var(--dt-shadow-md)',
+      }}
+    >
       <ToolbarActions
         rulesetName={ruleset.name}
         ruleCount={ruleset.rules.length}
@@ -85,7 +92,7 @@ export function DecisioningTable({ ruleset, onUpdate }: DecisioningTableProps) {
       <div className="overflow-x-auto">
         <table className="w-full text-sm">
           <thead>
-            <tr className="border-b border-slate-100 bg-slate-50">
+            <tr style={{ borderBottom: 'var(--dt-border-width) solid var(--dt-color-border-default)', background: 'var(--dt-color-bg-raised)' }}>
               <th className="w-10 px-3 py-2.5 text-center">
                 <Checkbox
                   checked={allSelected}
@@ -94,20 +101,41 @@ export function DecisioningTable({ ruleset, onUpdate }: DecisioningTableProps) {
                 />
               </th>
               <th className="w-8 px-1 py-2.5"></th>
-              <th className="w-10 px-2 py-2.5 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">#</th>
-              <th className="px-3 py-2.5 text-left text-xs font-medium text-slate-500 uppercase tracking-wider min-w-[180px]">Rule Name</th>
-              <th className="px-3 py-2.5 text-left text-xs font-medium text-slate-500 uppercase tracking-wider min-w-[140px]">Data Attribute</th>
-              <th className="px-3 py-2.5 text-left text-xs font-medium text-slate-500 uppercase tracking-wider w-[110px]">Operator</th>
-              <th className="px-3 py-2.5 text-left text-xs font-medium text-slate-500 uppercase tracking-wider min-w-[120px]">Amount</th>
-              <th className="px-3 py-2.5 text-left text-xs font-medium text-slate-500 uppercase tracking-wider w-[110px]">Outcome</th>
+              <th
+                className="w-10 px-2 py-2.5 text-left text-xs font-medium uppercase tracking-wider"
+                style={{ color: 'var(--dt-color-text-tertiary)', fontFamily: 'var(--dt-font-mono)', letterSpacing: 'var(--dt-letter-spacing-wide)' }}
+              >
+                #
+              </th>
+              {['Rule Name', 'Data Attribute', 'Operator', 'Amount', 'Outcome'].map((h) => (
+                <th
+                  key={h}
+                  className={`px-3 py-2.5 text-left text-xs font-medium uppercase tracking-wider ${
+                    h === 'Rule Name' ? 'min-w-[180px]' :
+                    h === 'Data Attribute' ? 'min-w-[140px]' :
+                    h === 'Operator' ? 'w-[110px]' :
+                    h === 'Amount' ? 'min-w-[120px]' :
+                    'w-[110px]'
+                  }`}
+                  style={{ color: 'var(--dt-color-text-tertiary)', fontFamily: 'var(--dt-font-mono)', letterSpacing: 'var(--dt-letter-spacing-wide)' }}
+                >
+                  {h}
+                </th>
+              ))}
               <th className="w-10 px-3 py-2.5"></th>
             </tr>
           </thead>
           <tbody>
             {ruleset.rules.length === 0 ? (
               <tr>
-                <td colSpan={9} className="py-12 text-center text-slate-400 text-sm">
-                  No rules yet. Click <strong className="text-slate-600">Add Rule</strong> to get started.
+                <td
+                  colSpan={9}
+                  className="py-12 text-center text-sm"
+                  style={{ color: 'var(--dt-color-text-tertiary)' }}
+                >
+                  No rules yet. Click{' '}
+                  <strong style={{ color: 'var(--dt-color-text-secondary)' }}>Add Rule</strong>{' '}
+                  to get started.
                 </td>
               </tr>
             ) : (

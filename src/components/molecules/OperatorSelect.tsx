@@ -30,11 +30,21 @@ export function OperatorSelect({ value, onChange }: OperatorSelectProps) {
       <select
         value={value}
         onChange={(e) => onChange(e.target.value as Operator)}
-        className="appearance-none bg-slate-50 border border-slate-200 rounded-lg px-2.5 py-1 pr-6 text-sm text-slate-700 cursor-pointer focus:outline-none focus:ring-2 focus:ring-indigo-300 focus:border-indigo-300 hover:border-slate-300 transition-colors"
+        className="appearance-none rounded-lg px-2.5 py-1 pr-6 text-sm cursor-pointer focus:outline-none transition-colors"
+        style={{
+          background: 'var(--dt-color-bg-raised)',
+          border: 'var(--dt-border-width) solid var(--dt-color-border-default)',
+          color: 'var(--dt-color-text-primary)',
+          fontFamily: 'var(--dt-font-mono)',
+        }}
         title={labels[value]}
       >
         {operators.map((op) => (
-          <option key={op} value={op}>
+          <option
+            key={op}
+            value={op}
+            style={{ background: 'var(--dt-color-bg-overlay)', color: 'var(--dt-color-text-primary)' }}
+          >
             {display[op]}{' '}
             {op === '>=' ? 'At least' : op === '<=' ? 'At most' : op === '>' ? 'Greater' : op === '<' ? 'Less' : 'Equals'}
           </option>
@@ -42,7 +52,7 @@ export function OperatorSelect({ value, onChange }: OperatorSelectProps) {
       </select>
       <ChevronDownIcon
         size={12}
-        className="absolute right-1.5 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none"
+        className="absolute right-1.5 top-1/2 -translate-y-1/2 pointer-events-none text-[var(--dt-color-text-tertiary)]"
       />
     </div>
   )

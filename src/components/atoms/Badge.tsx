@@ -12,8 +12,8 @@ export function AttributeBadge({ value }: AttributeBadgeProps) {
       className={cn(
         'inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium',
         value === 'Income'
-          ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
-          : 'bg-red-50 text-red-700 border border-red-200',
+          ? 'bg-[var(--dt-color-success-muted)] text-[var(--dt-color-success-text)] border border-[var(--dt-color-success-default)]'
+          : 'bg-[var(--dt-color-danger-muted)] text-[var(--dt-color-danger-text)] border border-[var(--dt-color-danger-default)]',
       )}
     >
       {value}
@@ -34,8 +34,8 @@ export function OutcomeBadge({ value, onChange }: OutcomeBadgeProps) {
       className={cn(
         'inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold border transition-colors',
         value === 'Approve'
-          ? 'bg-emerald-50 text-emerald-700 border-emerald-200 hover:bg-emerald-100'
-          : 'bg-red-50 text-red-700 border-red-200 hover:bg-red-100',
+          ? 'bg-[var(--dt-color-success-muted)] text-[var(--dt-color-success-text)] border-[var(--dt-color-success-default)] hover:bg-[var(--dt-color-success-subtle)]'
+          : 'bg-[var(--dt-color-danger-muted)] text-[var(--dt-color-danger-text)] border-[var(--dt-color-danger-default)] hover:bg-[var(--dt-color-danger-subtle)]',
       )}
     >
       {value === 'Approve' ? <CheckIcon size={11} /> : <XIcon size={11} />}

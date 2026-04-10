@@ -11,7 +11,13 @@ export interface RulesetTabsProps {
 
 export function RulesetTabs({ rulesets, activeRulesetId, onSelect, onAdd }: RulesetTabsProps) {
   return (
-    <div className="bg-white border-t border-slate-200 px-6 py-0 flex items-center gap-1 overflow-x-auto">
+    <div
+      className="px-6 py-0 flex items-center gap-1 overflow-x-auto"
+      style={{
+        background: 'var(--dt-color-bg-surface)',
+        borderTop: 'var(--dt-border-width) solid var(--dt-color-border-default)',
+      }}
+    >
       {rulesets.map((rs) => (
         <TabItem
           key={rs.id}
@@ -23,7 +29,8 @@ export function RulesetTabs({ rulesets, activeRulesetId, onSelect, onAdd }: Rule
       ))}
       <button
         onClick={onAdd}
-        className="px-3 py-3 text-slate-400 hover:text-slate-600 transition-colors flex items-center gap-1 text-sm"
+        className="px-3 py-3 transition-colors flex items-center gap-1 text-sm"
+        style={{ color: 'var(--dt-color-text-tertiary)' }}
       >
         <PlusIcon size={14} />
         Add Ruleset

@@ -1,0 +1,104 @@
+/**
+ * Design Token System — Dark Terminal Aesthetic
+ * DTCG-compatible CSS custom properties
+ */
+
+:root {
+  /* ─── Color: Background ─────────────────────────────── */
+  --dt-color-bg-canvas:        #0d1117;
+  --dt-color-bg-surface:       #161b22;
+  --dt-color-bg-raised:        #1c2230;
+  --dt-color-bg-overlay:       #21262d;
+  --dt-color-bg-subtle:        #1a1f28;
+
+  /* ─── Color: Border ──────────────────────────────────── */
+  --dt-color-border-default:   #30363d;
+  --dt-color-border-muted:     #21262d;
+  --dt-color-border-emphasis:  #39d353;
+
+  /* ─── Color: Text ────────────────────────────────────── */
+  --dt-color-text-primary:     #e6edf3;
+  --dt-color-text-secondary:   #8b949e;
+  --dt-color-text-tertiary:    #484f58;
+  --dt-color-text-placeholder: #3d444d;
+  --dt-color-text-inverse:     #0d1117;
+
+  /* ─── Color: Accent (terminal green) ─────────────────── */
+  --dt-color-accent-default:   #39d353;
+  --dt-color-accent-emphasis:  #56e66d;
+  --dt-color-accent-muted:     #0e2a1a;
+  --dt-color-accent-subtle:    #122318;
+  --dt-color-accent-text:      #56e66d;
+
+  /* ─── Color: Success ──────────────────────────────────── */
+  --dt-color-success-default:  #39d353;
+  --dt-color-success-emphasis: #56e66d;
+  --dt-color-success-muted:    #0e2a1a;
+  --dt-color-success-subtle:   #122318;
+  --dt-color-success-text:     #56e66d;
+
+  /* ─── Color: Danger ───────────────────────────────────── */
+  --dt-color-danger-default:   #f85149;
+  --dt-color-danger-emphasis:  #ff7b72;
+  --dt-color-danger-muted:     #3d1212;
+  --dt-color-danger-subtle:    #2d0e0e;
+  --dt-color-danger-text:      #ff7b72;
+
+  /* ─── Color: Neutral ──────────────────────────────────── */
+  --dt-color-neutral-default:  #6e7681;
+  --dt-color-neutral-muted:    #21262d;
+  --dt-color-neutral-subtle:   #1c2230;
+  --dt-color-neutral-text:     #8b949e;
+
+  /* ─── Typography ──────────────────────────────────────── */
+  --dt-font-mono: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', 'Consolas',
+                  ui-monospace, monospace;
+  --dt-font-sans: system-ui, -apple-system, 'Segoe UI', sans-serif;
+
+  --dt-font-size-xs:  0.6875rem;   /* 11px */
+  --dt-font-size-sm:  0.75rem;     /* 12px */
+  --dt-font-size-md:  0.8125rem;   /* 13px */
+  --dt-font-size-base: 0.875rem;   /* 14px */
+  --dt-font-size-lg:  1rem;        /* 16px */
+  --dt-font-size-xl:  1.125rem;    /* 18px */
+  --dt-font-size-2xl: 1.25rem;     /* 20px */
+
+  --dt-font-weight-normal:   400;
+  --dt-font-weight-medium:   500;
+  --dt-font-weight-semibold: 600;
+  --dt-font-weight-bold:     700;
+
+  --dt-line-height-tight:  1.25;
+  --dt-line-height-normal: 1.5;
+
+  --dt-letter-spacing-wide:  0.05em;
+  --dt-letter-spacing-wider: 0.08em;
+
+  /* ─── Spacing ──────────────────────────────────────────── */
+  --dt-space-0-5: 0.125rem;  /* 2px  */
+  --dt-space-1:   0.25rem;   /* 4px  */
+  --dt-space-1-5: 0.375rem;  /* 6px  */
+  --dt-space-2:   0.5rem;    /* 8px  */
+  --dt-space-2-5: 0.625rem;  /* 10px */
+  --dt-space-3:   0.75rem;   /* 12px */
+  --dt-space-4:   1rem;      /* 16px */
+  --dt-space-5:   1.25rem;   /* 20px */
+  --dt-space-6:   1.5rem;    /* 24px */
+
+  /* ─── Border ───────────────────────────────────────────── */
+  --dt-border-width:    1px;
+  --dt-radius-sm:       0.25rem;   /* 4px  */
+  --dt-radius-md:       0.375rem;  /* 6px  */
+  --dt-radius-lg:       0.5rem;    /* 8px  */
+  --dt-radius-xl:       0.75rem;   /* 12px */
+  --dt-radius-full:     9999px;
+
+  /* ─── Shadow ───────────────────────────────────────────── */
+  --dt-shadow-sm:  0 1px 3px rgba(0, 0, 0, 0.5);
+  --dt-shadow-md:  0 4px 12px rgba(0, 0, 0, 0.6);
+  --dt-shadow-lg:  0 8px 24px rgba(0, 0, 0, 0.7);
+
+  /* ─── Transition ───────────────────────────────────────── */
+  --dt-transition-fast:   100ms ease;
+  --dt-transition-normal: 150ms ease;
+}

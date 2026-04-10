@@ -9,11 +9,18 @@ export function TabItem({ id, name, isActive, onClick }: TabItemProps) {
   return (
     <button
       onClick={() => onClick(id)}
-      className={`px-4 py-3 text-sm font-medium border-t-2 whitespace-nowrap transition-colors ${
+      className="px-4 py-3 text-sm font-medium border-t-2 whitespace-nowrap transition-colors"
+      style={
         isActive
-          ? 'border-indigo-500 text-indigo-600'
-          : 'border-transparent text-slate-500 hover:text-slate-700 hover:border-slate-300'
-      }`}
+          ? {
+              borderColor: 'var(--dt-color-accent-default)',
+              color: 'var(--dt-color-accent-text)',
+            }
+          : {
+              borderColor: 'transparent',
+              color: 'var(--dt-color-text-secondary)',
+            }
+      }
     >
       {name}
     </button>

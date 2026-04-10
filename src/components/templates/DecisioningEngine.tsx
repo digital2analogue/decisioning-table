@@ -26,16 +26,46 @@ export function DecisioningEngine() {
   }
 
   return (
-    <div className="min-h-screen bg-slate-50 flex flex-col">
+    <div
+      className="min-h-screen flex flex-col"
+      style={{ background: 'var(--dt-color-bg-canvas)' }}
+    >
       {/* Header */}
-      <div className="bg-white border-b border-slate-200 px-6 py-4 flex items-center justify-between">
+      <div
+        className="px-6 py-4 flex items-center justify-between"
+        style={{
+          background: 'var(--dt-color-bg-surface)',
+          borderBottom: 'var(--dt-border-width) solid var(--dt-color-border-default)',
+        }}
+      >
         <div>
-          <h1 className="text-xl font-semibold text-slate-900">Decisioning Engine</h1>
-          <p className="text-sm text-slate-500 mt-0.5">Configure rules to automate approval decisions</p>
+          <h1
+            className="text-xl font-semibold"
+            style={{ color: 'var(--dt-color-text-primary)', fontFamily: 'var(--dt-font-mono)' }}
+          >
+            Decisioning Engine
+          </h1>
+          <p
+            className="text-sm mt-0.5"
+            style={{ color: 'var(--dt-color-text-secondary)' }}
+          >
+            Configure rules to automate approval decisions
+          </p>
         </div>
         <div className="flex items-center gap-2">
-          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-emerald-50 text-emerald-700 border border-emerald-200">
-            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+          <span
+            className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium border"
+            style={{
+              background: 'var(--dt-color-success-muted)',
+              color: 'var(--dt-color-success-text)',
+              borderColor: 'var(--dt-color-success-default)',
+              fontFamily: 'var(--dt-font-mono)',
+            }}
+          >
+            <span
+              className="w-1.5 h-1.5 rounded-full"
+              style={{ background: 'var(--dt-color-success-default)' }}
+            />
             Active
           </span>
         </div>

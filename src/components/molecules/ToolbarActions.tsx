@@ -18,16 +18,31 @@ export function ToolbarActions({
   onAddRule,
 }: ToolbarActionsProps) {
   return (
-    <div className="px-4 py-3 border-b border-slate-100 flex items-center justify-between">
+    <div
+      className="px-4 py-3 flex items-center justify-between"
+      style={{ borderBottom: 'var(--dt-border-width) solid var(--dt-color-border-default)' }}
+    >
       <div className="flex items-center gap-3">
-        <h2 className="text-sm font-semibold text-slate-800">{rulesetName}</h2>
-        <span className="text-xs text-slate-400 bg-slate-100 px-2 py-0.5 rounded-full">
+        <h2
+          className="text-sm font-semibold"
+          style={{ color: 'var(--dt-color-text-primary)', fontFamily: 'var(--dt-font-mono)' }}
+        >
+          {rulesetName}
+        </h2>
+        <span
+          className="text-xs px-2 py-0.5 rounded-full"
+          style={{
+            color: 'var(--dt-color-text-secondary)',
+            background: 'var(--dt-color-neutral-muted)',
+          }}
+        >
           {ruleCount} rule{ruleCount !== 1 ? 's' : ''}
         </span>
         {someSelected && (
           <button
             onClick={onDeleteSelected}
-            className="flex items-center gap-1 text-xs text-red-600 hover:text-red-700 ml-2"
+            className="flex items-center gap-1 text-xs ml-2 transition-colors"
+            style={{ color: 'var(--dt-color-danger-text)' }}
           >
             <Trash2Icon size={13} />
             Delete {selectedCount} selected
@@ -36,7 +51,12 @@ export function ToolbarActions({
       </div>
       <button
         onClick={onAddRule}
-        className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-white bg-indigo-600 hover:bg-indigo-700 rounded-lg transition-colors"
+        className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-lg transition-colors"
+        style={{
+          color: 'var(--dt-color-text-inverse)',
+          background: 'var(--dt-color-accent-default)',
+          fontFamily: 'var(--dt-font-mono)',
+        }}
       >
         <PlusIcon size={13} />
         Add Rule

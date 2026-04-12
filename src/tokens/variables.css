@@ -1,65 +1,107 @@
 :root {
-  /* === Backgrounds === */
-  --color-background-default: #0A0D0A;
-  --color-background-alt: #1E241E;
-  --color-background-elevated: #252E25;
-  --color-background-accent-subtle: rgba(74, 222, 110, 0.08);
-  --color-background-danger-subtle: rgba(248, 113, 113, 0.08);
-  --color-background-selected: rgba(74, 222, 110, 0.06);
+  /* ═══ Colors — C1 Blue theme ═══ */
 
-  /* === Foreground === */
-  --color-foreground-primary: #C8CFC4;
-  --color-foreground-secondary: #A0A89A;
-  --color-foreground-muted: #8B9683;
-  --color-foreground-accent: #4ADE6E;
-  --color-foreground-danger: #F87171;
-  --color-foreground-inverse: #0A0D0A;
+  /* Backgrounds */
+  --color-background-default: #FFFFFF;
+  --color-background-alt: #F5F6F7;
+  --color-background-elevated: #FFFFFF;
+  --color-background-action: #004977;
+  --color-background-accent-subtle: rgba(0, 73, 119, 0.07);
+  --color-background-danger-subtle: rgba(208, 48, 39, 0.07);
+  --color-background-selected: rgba(0, 73, 119, 0.05);
 
-  /* === Borders === */
-  --color-border-default: #1E241E;
-  --color-border-muted: #252E25;
-  --color-border-accent: #4ADE6E;
+  /* Foreground */
+  --color-foreground-primary: #1A1A2E;
+  --color-foreground-secondary: #4A4A5A;
+  --color-foreground-muted: #8A8A9A;
+  --color-foreground-accent: #004977;
+  --color-foreground-action: #004977;
+  --color-foreground-on-action: #FFFFFF;
+  --color-foreground-danger: #D03027;
+  --color-foreground-inverse: #FFFFFF;
 
-  /* === Spacing === */
+  /* Borders */
+  --color-border-default: #D8DCE0;
+  --color-border-muted: #EEF0F2;
+  --color-border-accent: #004977;
+
+  /* State */
+  --color-state-hover: #003A5C;
+  --color-state-focus: #004977;
+  --color-state-disabled: #D8DCE0;
+
+  /* Feedback */
+  --color-feedback-error: #D03027;
+  --color-feedback-success: #008545;
+
+  /* Derived tints */
+  --color-accent-subtle: color-mix(in srgb, var(--color-background-alt) 78%, var(--color-foreground-accent) 22%);
+  --color-accent-subtle-border: color-mix(in srgb, var(--color-background-alt) 55%, var(--color-foreground-accent) 45%);
+  --color-background-accent-hover: color-mix(in srgb, var(--color-background-alt) 55%, var(--color-foreground-accent) 45%);
+
+  /* ═══ Spacing ═══ */
+  --space-2xs: 2px;
   --space-xs: 4px;
+  --space-6: 6px;
   --space-sm: 8px;
   --space-md: 16px;
   --space-lg: 24px;
   --space-xl: 48px;
 
-  /* === Typography: font families === */
+  /* ═══ Typography ═══ */
+
+  /* Font families — all sans-serif for enterprise UI */
   --font-family-display: 'Space Grotesk', sans-serif;
-  --font-family-body: 'Spectral', serif;
+  --font-family-body: var(--font-family-display);
   --font-family-mono: 'JetBrains Mono', monospace;
 
-  /* === Typography: composite tokens === */
-  /* --font-title-small: Space Grotesk 400 1.5rem/1.25 */
+  /* Composite shorthand tokens */
+  --font-title-small: 400 1.5rem/1.25 var(--font-family-display);
+  --font-label-small: 400 0.75rem/1.25 var(--font-family-display);
+  --font-label-medium: 400 0.875rem/1.25 var(--font-family-display);
+  --font-body-medium: 400 0.875rem/1.6 var(--font-family-body);
+  --font-body-large: 400 1rem/1.6 var(--font-family-body);
+
+  /* Individual parts (for granular overrides) */
   --font-title-small-family: var(--font-family-display);
   --font-title-small-size: 1.5rem;
   --font-title-small-line-height: 1.25;
   --font-title-small-weight: 400;
 
-  /* --font-label-small: Space Grotesk 400 0.75rem/1.25 uppercase */
   --font-label-small-family: var(--font-family-display);
   --font-label-small-size: 0.75rem;
   --font-label-small-line-height: 1.25;
   --font-label-small-weight: 400;
 
-  /* --font-label-medium: Space Grotesk 400 0.875rem/1.25 */
   --font-label-medium-family: var(--font-family-display);
   --font-label-medium-size: 0.875rem;
   --font-label-medium-line-height: 1.25;
   --font-label-medium-weight: 400;
 
-  /* --font-body-medium: Spectral 400 0.875rem/1.6 */
   --font-body-medium-family: var(--font-family-body);
   --font-body-medium-size: 0.875rem;
   --font-body-medium-line-height: 1.6;
   --font-body-medium-weight: 400;
 
-  /* --font-body-large: Spectral 400 1rem/1.6 */
   --font-body-large-family: var(--font-family-body);
   --font-body-large-size: 1rem;
   --font-body-large-line-height: 1.6;
   --font-body-large-weight: 400;
+
+  /* ═══ Radii ═══ */
+  --radius-sm: 2px;
+  --radius-md: 4px;
+  --radius-card: 4px;
+  --radius-pill: 9999px;
+
+  /* ═══ Shadows ═══ */
+  --shadow-card: 0 2px 8px rgba(0, 0, 0, 0.08);
+  --shadow-menu: 0 6px 20px rgba(0, 0, 0, 0.12);
+
+  /* ═══ Motion ═══ */
+  --duration-fast: 120ms;
+  --easing-default: ease;
+
+  /* ═══ Letter-spacing ═══ */
+  --letter-spacing-wide: 0.06em;
 }

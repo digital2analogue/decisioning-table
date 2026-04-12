@@ -1,20 +1,6 @@
-@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500&family=Spectral:ital,opsz,wght@0,6..18,300;0,6..18,400;0,6..18,500;1,6..18,300;1,6..18,400&family=JetBrains+Mono:wght@400&display=swap');
+﻿@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500&family=Spectral:ital,opsz,wght@0,6..18,300;0,6..18,400;0,6..18,500;1,6..18,300;1,6..18,400&family=JetBrains+Mono:wght@400&display=swap');
 @import "./tokens/variables.css";
 @import "tailwindcss";
-
-/* ── Semantic token aliases ─────────────────────────────────────── */
-:root {
-  --color-background-default: var(--color-green-950);
-  --color-background-alt: var(--color-green-900);
-  --color-foreground-primary: var(--color-green-200);
-  --color-foreground-secondary: var(--color-green-400);
-  --color-foreground-muted: var(--color-green-600);
-  --color-foreground-accent: var(--color-green-accent);
-  --color-border-default: var(--color-green-900);
-  /* Derived subtle accent tints */
-  --color-accent-subtle: color-mix(in srgb, var(--color-green-900) 78%, var(--color-green-accent) 22%);
-  --color-accent-subtle-border: color-mix(in srgb, var(--color-green-900) 55%, var(--color-green-accent) 45%);
-}
 
 /* ── Base ───────────────────────────────────────────── */
 *, *::before, *::after {
@@ -39,7 +25,7 @@ html, body {
 /* ── Scrollbar (Webkit) ─────────────────────────────── */
 ::-webkit-scrollbar { width: 6px; height: 6px; }
 ::-webkit-scrollbar-track { background: var(--color-background-default); }
-::-webkit-scrollbar-thumb { background: var(--color-border-default); border-radius: 3px; }
+::-webkit-scrollbar-thumb { background: var(--color-border-default); border-radius: var(--radius-sm); }
 ::-webkit-scrollbar-thumb:hover { background: var(--color-foreground-muted); }
 
 /* ── Form resets ────────────────────────────────────── */
@@ -72,7 +58,7 @@ select option { background-color: var(--color-background-alt); color: var(--colo
   .dt-table-card {
     background-color: var(--color-background-alt);
     border: 1px solid var(--color-border-default);
-    border-radius: 12px; overflow: hidden;
+    border-radius: var(--radius-sm); overflow: hidden;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
   }
   .dt-thead-row { background-color: var(--color-background-default); border-bottom: 1px solid var(--color-border-default); }
@@ -105,7 +91,7 @@ select option { background-color: var(--color-background-alt); color: var(--colo
     color: var(--color-background-default);
     background-color: var(--color-foreground-accent);
     border: 1px solid var(--color-foreground-accent);
-    border-radius: 8px; padding: var(--space-xs) var(--space-sm);
+    border-radius: var(--radius-sm); padding: var(--space-xs) var(--space-sm);
     cursor: pointer; transition: background-color 120ms ease, border-color 120ms ease;
   }
   .dt-add-rule-btn:hover { background-color: var(--color-foreground-primary); border-color: var(--color-foreground-primary); }
@@ -135,7 +121,7 @@ select option { background-color: var(--color-background-alt); color: var(--colo
   .dt-rule-name-input {
     font: var(--font-body-medium); color: var(--color-foreground-primary);
     background: transparent; border: 0; outline: none; width: 100%;
-    border-radius: 3px; padding: 2px 6px; margin-left: -6px;
+    border-radius: var(--radius-sm); padding: 2px 6px; margin-left: -6px;
     transition: background-color 120ms ease, box-shadow 120ms ease;
   }
   .dt-rule-name-input::placeholder { color: var(--color-foreground-muted); }
@@ -144,7 +130,7 @@ select option { background-color: var(--color-background-alt); color: var(--colo
   .dt-amount-input {
     font: var(--font-body-medium); color: var(--color-foreground-primary);
     background: transparent; border: 0; outline: none; width: 100%;
-    border-radius: 3px; padding: 2px 4px;
+    border-radius: var(--radius-sm); padding: 2px 4px;
     transition: background-color 120ms ease, box-shadow 120ms ease;
   }
   .dt-amount-input:focus { background-color: var(--color-background-default); box-shadow: 0 0 0 1px var(--color-foreground-accent); }
@@ -152,7 +138,7 @@ select option { background-color: var(--color-background-alt); color: var(--colo
   /* ActionsMenu — molecule */
   .dt-menu {
     background-color: var(--color-background-alt); border: 1px solid var(--color-border-default);
-    border-radius: 8px; box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5);
+    border-radius: var(--radius-sm); box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5);
     padding: 4px 0; min-width: 140px;
     position: absolute; right: 0; top: 28px; z-index: 20;
   }
@@ -201,7 +187,7 @@ select option { background-color: var(--color-background-alt); color: var(--colo
     appearance: none; background-color: var(--color-background-default);
     border: 1px solid var(--color-border-default);
     color: var(--color-foreground-primary); font: var(--font-label-small);
-    border-radius: 8px; padding: 4px 24px 4px 10px;
+    border-radius: var(--radius-sm); padding: 4px 24px 4px 10px;
     cursor: pointer; transition: border-color 120ms ease;
   }
   .dt-operator-select:focus { outline: none; box-shadow: 0 0 0 2px var(--color-foreground-accent); border-color: var(--color-foreground-accent); }

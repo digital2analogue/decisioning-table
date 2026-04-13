@@ -1,6 +1,5 @@
-import { XIcon } from 'lucide-react'
+import { useEffect, useRef } from 'react'
 import type { DataAttribute } from '../../types'
-import { IconButton } from '../atoms/IconButton'
 
 export interface AttributeEditorProps {
   value: DataAttribute
@@ -8,27 +7,43 @@ export interface AttributeEditorProps {
   onClose: () => void
 }
 
+const ATTRIBUTES: DataAttribute[] = ['Income', 'Expense', 'Asset', 'Liability']
+
+function badgeClass(attr: DataAttribute): string {
+  switch (attr) {
+    case 'Income':
+      return 'dt-attr-btn dt-attr-btn-active-income'
+    case 'Expense':
+      return 'dt-attr-btn dt-attr-btn-active-expense'
+    case 'Asset':
+      return 'dt-attr-btn dt-attr-btn-active-asset'
+    case 'Liability':
+      return 'dt-attr-btn dt-attr-btn-active-liability'
+  }
+}
+
 export function AttributeEditor({ value, onChange, onClose }: AttributeEditorProps) {
+  const ref = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    function handleClick(e: MouseEvent) {
+      if (ref.current && !ref.current.contains(e.target as Node)) onClose()
+    }
+    document.addEventListener('mousedown', handleClick)
+    return () => document.removeEventListener('mousedown', handleClick)
+  }, [onClose])
+
   return (
-    <div className="flex items-center gap-1">
-      {(['Income', 'Expense'] as DataAttribute[]).map((attr) => (
+    <div ref={ref} className="dt-attr-popover">
+      {ATTRIBUTES.map((attr) => (
         <button
           key={attr}
           onClick={() => onChange(attr)}
-          className={`dt-attr-btn ${
-            attr === value
-              ? attr === 'Income'
-                ? 'dt-attr-btn-active-income'
-                : 'dt-attr-btn-active-expense'
-              : ''
-          }`}
+          className={badgeClass(attr)}
         >
           {attr}
         </button>
       ))}
-      <IconButton onClick={onClose}>
-        <XIcon size={12} />
-      </IconButton>
     </div>
   )
 }

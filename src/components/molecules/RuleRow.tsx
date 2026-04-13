@@ -105,8 +105,17 @@ export function RuleRow({
       </td>
 
       {/* Data Attribute */}
-      <td className="px-3 py-2.5">
-        {editingAttributeId === rule.id ? (
+      <td className="px-3 py-2.5 relative">
+        <div className="flex items-center gap-1.5 group/attr">
+          <AttributeBadge value={rule.dataAttribute} />
+          <IconButton
+            onClick={() => onEditAttribute(rule.id)}
+            className="dt-icon-reveal"
+          >
+            <PencilIcon size={12} />
+          </IconButton>
+        </div>
+        {editingAttributeId === rule.id && (
           <AttributeEditor
             value={rule.dataAttribute}
             onChange={(v) => {
@@ -115,16 +124,6 @@ export function RuleRow({
             }}
             onClose={onCloseAttribute}
           />
-        ) : (
-          <div className="flex items-center gap-1.5 group/attr">
-            <AttributeBadge value={rule.dataAttribute} />
-            <IconButton
-              onClick={() => onEditAttribute(rule.id)}
-              className="opacity-0 group-hover/attr:opacity-100 transition-opacity"
-            >
-              <PencilIcon size={12} />
-            </IconButton>
-          </div>
         )}
       </td>
 
@@ -161,7 +160,7 @@ export function RuleRow({
       <td className="px-3 py-2.5 relative">
         <IconButton
           onClick={() => onMenuToggle(rule.id)}
-          className="opacity-0 group-hover:opacity-100 focus:opacity-100"
+          className="dt-icon-reveal"
         >
           <MoreHorizontalIcon size={16} />
         </IconButton>

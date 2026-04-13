@@ -58,7 +58,7 @@ select option { background-color: var(--color-background-alt); color: var(--colo
   .dt-table-card {
     background-color: var(--color-background-alt);
     border: 1px solid var(--color-border-default);
-    border-radius: var(--radius-sm); overflow: hidden;
+    border-radius: var(--radius-sm); overflow: visible;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
   }
   .dt-thead-row { background-color: var(--color-background-default); border-bottom: 1px solid var(--color-border-default); }
@@ -74,6 +74,13 @@ select option { background-color: var(--color-background-alt); color: var(--colo
   /* ToolbarActions — molecule */
   .dt-toolbar { border-bottom: 1px solid var(--color-border-default); }
   .dt-toolbar-name { font: var(--font-label-medium); color: var(--color-foreground-primary); margin: 0; }
+  .dt-toolbar-name-input {
+    font: var(--font-label-medium); color: var(--color-foreground-primary);
+    background-color: var(--color-background-default);
+    border: 0; outline: none; border-radius: var(--radius-sm);
+    padding: 2px 6px; margin: -2px -6px;
+    box-shadow: 0 0 0 1px var(--color-foreground-accent);
+  }
   .dt-rule-count {
     font: var(--font-label-small); color: var(--color-foreground-muted);
     background-color: var(--color-background-default);
@@ -125,6 +132,7 @@ select option { background-color: var(--color-background-alt); color: var(--colo
     transition: background-color 120ms ease, box-shadow 120ms ease;
   }
   .dt-rule-name-input::placeholder { color: var(--color-foreground-muted); }
+  .dt-rule-name-input:hover { background-color: var(--color-background-alt); box-shadow: 0 0 0 1px var(--color-border-default); }
   .dt-rule-name-input:focus { background-color: var(--color-background-default); box-shadow: 0 0 0 1px var(--color-foreground-accent); }
   .dt-amount-prefix { font: var(--font-body-medium); color: var(--color-foreground-muted); margin-right: 2px; }
   .dt-amount-input {
@@ -161,15 +169,17 @@ select option { background-color: var(--color-background-alt); color: var(--colo
   /* Badge — atom */
   .dt-badge { display: inline-flex; align-items: center; font: var(--font-label-small); border-radius: 9999px; padding: 2px 8px; border: 1px solid var(--color-border-default); }
   .dt-badge-income { background-color: var(--color-accent-subtle); color: var(--color-foreground-accent); border-color: var(--color-accent-subtle-border); }
-  .dt-badge-expense { background-color: var(--color-background-default); color: var(--color-foreground-muted); border-color: var(--color-border-default); }
+  .dt-badge-expense { background-color: color-mix(in srgb, var(--color-background-default) 92%, var(--color-feedback-error) 8%); color: var(--color-feedback-error); border-color: color-mix(in srgb, var(--color-background-default) 60%, var(--color-feedback-error) 40%); }
+  .dt-badge-asset { background-color: var(--color-background-default); color: var(--color-foreground-secondary); border-color: var(--color-border-default); }
+  .dt-badge-liability { background-color: var(--color-background-default); color: var(--color-foreground-accent); border-color: var(--color-foreground-accent); border-style: dashed; }
   .dt-outcome-badge {
     display: inline-flex; align-items: center; gap: 4px;
     font: var(--font-label-small); border-radius: 9999px; padding: 4px 10px;
     border: 1px solid var(--color-border-default); cursor: pointer;
     transition: background-color 120ms ease, color 120ms ease, border-color 120ms ease;
   }
-  .dt-outcome-approve { background-color: var(--color-accent-subtle); color: var(--color-foreground-accent); border-color: var(--color-accent-subtle-border); }
-  .dt-outcome-approve:hover { background-color: color-mix(in srgb, var(--color-background-alt) 55%, var(--color-green-accent) 45%); }
+  .dt-outcome-approve { background-color: color-mix(in srgb, var(--color-background-alt) 85%, var(--color-feedback-success) 15%); color: var(--color-feedback-success); border-color: color-mix(in srgb, var(--color-background-alt) 55%, var(--color-feedback-success) 45%); }
+  .dt-outcome-approve:hover { background-color: color-mix(in srgb, var(--color-background-alt) 55%, var(--color-feedback-success) 45%); }
   .dt-outcome-deny { background-color: var(--color-background-default); color: var(--color-foreground-muted); border-color: var(--color-border-default); }
   .dt-outcome-deny:hover { background-color: var(--color-background-alt); color: var(--color-foreground-secondary); }
 
@@ -181,6 +191,11 @@ select option { background-color: var(--color-background-alt); color: var(--colo
   /* IconButton — atom */
   .dt-icon-btn { color: var(--color-foreground-muted); background: none; border: none; padding: 0; cursor: pointer; line-height: 0; transition: color 120ms ease; }
   .dt-icon-btn:hover { color: var(--color-foreground-secondary); }
+  .dt-icon-btn:focus-visible { color: var(--color-foreground-secondary); outline: 2px solid var(--color-foreground-accent); outline-offset: 2px; border-radius: var(--radius-sm); }
+
+  /* Reveal icon — subdued at rest, emphasized on parent hover/focus */
+  .dt-icon-reveal { color: var(--color-foreground-muted); }
+  *:hover > .dt-icon-reveal, *:focus-within > .dt-icon-reveal { color: var(--color-foreground-secondary); }
 
   /* OperatorSelect — molecule */
   .dt-operator-select {
@@ -204,5 +219,19 @@ select option { background-color: var(--color-background-alt); color: var(--colo
   }
   .dt-attr-btn:hover { border-color: var(--color-foreground-muted); color: var(--color-foreground-secondary); }
   .dt-attr-btn-active-income { background-color: var(--color-accent-subtle); color: var(--color-foreground-accent); border-color: var(--color-accent-subtle-border); }
-  .dt-attr-btn-active-expense { background-color: var(--color-background-alt); color: var(--color-foreground-secondary); border-color: var(--color-border-default); }
+  .dt-attr-btn-active-expense { background-color: color-mix(in srgb, var(--color-background-default) 92%, var(--color-feedback-error) 8%); color: var(--color-feedback-error); border-color: color-mix(in srgb, var(--color-background-default) 60%, var(--color-feedback-error) 40%); }
+  .dt-attr-btn-active-asset { background-color: var(--color-background-default); color: var(--color-foreground-secondary); border-color: var(--color-border-default); }
+  .dt-attr-btn-active-liability { background-color: var(--color-background-default); color: var(--color-foreground-accent); border-color: var(--color-foreground-accent); border-style: dashed; }
+
+  /* AttributeEditor popover */
+  .dt-attr-popover {
+    position: absolute; z-index: 20;
+    display: flex; flex-direction: column; gap: 4px;
+    background-color: var(--color-background-elevated);
+    border: 1px solid var(--color-border-default);
+    border-radius: var(--radius-sm); box-shadow: var(--shadow-menu);
+    padding: var(--space-sm);
+    min-width: 100px;
+  }
 }
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        

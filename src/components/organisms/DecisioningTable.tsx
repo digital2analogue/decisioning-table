@@ -80,9 +80,10 @@ export function DecisioningTable({ ruleset, onUpdate }: DecisioningTableProps) {
         someSelected={someSelected}
         onDeleteSelected={deleteSelected}
         onAddRule={addRule}
+        onRename={(name) => onUpdate({ ...ruleset, name })}
       />
 
-      <div className="overflow-x-auto">
+      <div>
         <table className="w-full">
           <thead>
             <tr className="dt-thead-row">

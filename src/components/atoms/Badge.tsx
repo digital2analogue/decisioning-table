@@ -5,9 +5,22 @@ export interface AttributeBadgeProps {
   value: DataAttribute
 }
 
+function badgeVariant(value: DataAttribute): string {
+  switch (value) {
+    case 'Income':
+      return 'dt-badge-income'
+    case 'Expense':
+      return 'dt-badge-expense'
+    case 'Asset':
+      return 'dt-badge-asset'
+    case 'Liability':
+      return 'dt-badge-liability'
+  }
+}
+
 export function AttributeBadge({ value }: AttributeBadgeProps) {
   return (
-    <span className={`dt-badge ${value === 'Income' ? 'dt-badge-income' : 'dt-badge-expense'}`}>
+    <span className={`dt-badge ${badgeVariant(value)}`}>
       {value}
     </span>
   )

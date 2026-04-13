@@ -1,4 +1,4 @@
-export type DataAttribute = 'Income' | 'Expense'
+export type DataAttribute = 'Income' | 'Expense' | 'Asset' | 'Liability'
 export type Operator = '>' | '>=' | '<' | '<=' | '='
 export type Outcome = 'Approve' | 'Deny'
 

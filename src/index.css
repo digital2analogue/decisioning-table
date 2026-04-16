@@ -46,24 +46,24 @@ select option { background-color: var(--color-background-alt); color: var(--colo
   .dt-page-title { font: var(--font-title-small); color: var(--color-foreground-primary); margin: 0; }
   .dt-page-subtitle { font: var(--font-body-large); color: var(--color-foreground-secondary); margin: var(--space-xs) 0 0; }
   .dt-status-badge {
-    display: inline-flex; align-items: center; gap: 6px;
+    display: inline-flex; align-items: center; gap: var(--space-6);
     background-color: var(--color-background-default);
     color: var(--color-foreground-accent);
     border: 1px solid var(--color-foreground-accent);
-    font: var(--font-label-small); border-radius: 9999px; padding: 4px 10px;
+    font: var(--font-label-small); border-radius: var(--radius-pill); padding: var(--space-xs) var(--space-sm);
   }
-  .dt-status-dot { width: 6px; height: 6px; border-radius: 9999px; background-color: var(--color-foreground-accent); flex-shrink: 0; }
+  .dt-status-dot { width: 6px; height: 6px; border-radius: var(--radius-pill); background-color: var(--color-foreground-accent); flex-shrink: 0; }
 
   /* DecisioningTable — organism */
   .dt-table-card {
     background-color: var(--color-background-alt);
     border: 1px solid var(--color-border-default);
-    border-radius: var(--radius-sm); overflow: visible;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    border-radius: var(--radius-md); overflow: visible;
+    box-shadow: var(--shadow-card);
   }
   .dt-thead-row { background-color: var(--color-background-default); border-bottom: 1px solid var(--color-border-default); }
-  .dt-th { font: var(--font-label-small); color: var(--color-foreground-muted); text-transform: uppercase; letter-spacing: 0.06em; }
-  .dt-tbody-row { border-bottom: 1px solid var(--color-border-default); transition: background-color 120ms ease; }
+  .dt-th { font: var(--font-label-small); color: var(--color-foreground-muted); text-transform: uppercase; letter-spacing: var(--letter-spacing-wide); }
+  .dt-tbody-row { border-bottom: 1px solid var(--color-border-default); transition: background-color var(--duration-fast) var(--easing-default); }
   .dt-tbody-row:hover { background-color: var(--color-background-default); }
   .dt-tbody-row-dragging { opacity: 0.35; background-color: var(--color-background-default); }
   .dt-tbody-row-over { border-top: 2px solid var(--color-foreground-accent); }
@@ -84,24 +84,25 @@ select option { background-color: var(--color-background-alt); color: var(--colo
   .dt-rule-count {
     font: var(--font-label-small); color: var(--color-foreground-muted);
     background-color: var(--color-background-default);
-    border: 1px solid var(--color-border-default); border-radius: 9999px; padding: 1px 8px;
+    border: 1px solid var(--color-border-default); border-radius: var(--radius-pill); padding: 1px var(--space-sm);
   }
   .dt-delete-selected {
-    display: inline-flex; align-items: center; gap: 4px;
-    font: var(--font-label-small); color: var(--color-foreground-muted);
-    background: none; border: none; cursor: pointer; transition: color 120ms ease; padding: 0;
+    display: inline-flex; align-items: center; gap: var(--space-xs);
+    font: var(--font-label-small); color: var(--color-feedback-error);
+    background: none; border: none; cursor: pointer; transition: color var(--duration-fast) var(--easing-default); padding: 0;
+    opacity: 0.7;
   }
-  .dt-delete-selected:hover { color: var(--color-foreground-secondary); }
+  .dt-delete-selected:hover { opacity: 1; }
   .dt-add-rule-btn {
-    display: inline-flex; align-items: center; gap: 6px;
+    display: inline-flex; align-items: center; gap: var(--space-6);
     font: var(--font-label-small);
-    color: var(--color-background-default);
-    background-color: var(--color-foreground-accent);
-    border: 1px solid var(--color-foreground-accent);
-    border-radius: var(--radius-sm); padding: var(--space-xs) var(--space-sm);
-    cursor: pointer; transition: background-color 120ms ease, border-color 120ms ease;
+    color: var(--color-foreground-on-action);
+    background-color: var(--color-background-action);
+    border: 1px solid var(--color-background-action);
+    border-radius: var(--radius-md); padding: var(--space-xs) var(--space-sm);
+    cursor: pointer; transition: background-color var(--duration-fast) var(--easing-default), border-color var(--duration-fast) var(--easing-default);
   }
-  .dt-add-rule-btn:hover { background-color: var(--color-foreground-primary); border-color: var(--color-foreground-primary); }
+  .dt-add-rule-btn:hover { background-color: var(--color-state-hover); border-color: var(--color-state-hover); }
 
   /* TabItem — molecule */
   .dt-tab-item {
@@ -109,18 +110,18 @@ select option { background-color: var(--color-background-alt); color: var(--colo
     background: none; border: none; border-top: 2px solid transparent;
     cursor: pointer; white-space: nowrap;
     padding: var(--space-sm) var(--space-md);
-    transition: color 120ms ease, border-color 120ms ease;
+    transition: color var(--duration-fast) var(--easing-default), border-color var(--duration-fast) var(--easing-default);
   }
   .dt-tab-item:hover { color: var(--color-foreground-secondary); border-top-color: var(--color-border-default); }
-  .dt-tab-item-active { color: var(--color-foreground-accent); border-top-color: var(--color-foreground-accent); }
+  .dt-tab-item-active { color: var(--color-foreground-accent); border-top-color: var(--color-foreground-accent); font-weight: var(--font-weight-medium); }
 
   /* RulesetTabs — organism */
   .dt-tabs-bar { background-color: var(--color-background-alt); border-top: 1px solid var(--color-border-default); }
   .dt-add-ruleset-btn {
-    display: inline-flex; align-items: center; gap: 4px;
+    display: inline-flex; align-items: center; gap: var(--space-xs);
     font: var(--font-label-medium); color: var(--color-foreground-muted);
     background: none; border: none; cursor: pointer;
-    padding: var(--space-sm); transition: color 120ms ease;
+    padding: var(--space-sm); transition: color var(--duration-fast) var(--easing-default);
   }
   .dt-add-ruleset-btn:hover { color: var(--color-foreground-secondary); }
 
@@ -128,55 +129,55 @@ select option { background-color: var(--color-background-alt); color: var(--colo
   .dt-rule-name-input {
     font: var(--font-body-medium); color: var(--color-foreground-primary);
     background: transparent; border: 0; outline: none; width: 100%;
-    border-radius: var(--radius-sm); padding: 2px 6px; margin-left: -6px;
-    transition: background-color 120ms ease, box-shadow 120ms ease;
+    border-radius: var(--radius-sm); padding: var(--space-2xs) var(--space-6); margin-left: calc(-1 * var(--space-6));
+    transition: background-color var(--duration-fast) var(--easing-default), box-shadow var(--duration-fast) var(--easing-default);
   }
   .dt-rule-name-input::placeholder { color: var(--color-foreground-muted); }
   .dt-rule-name-input:hover { background-color: var(--color-background-alt); box-shadow: 0 0 0 1px var(--color-border-default); }
-  .dt-rule-name-input:focus { background-color: var(--color-background-default); box-shadow: 0 0 0 1px var(--color-foreground-accent); }
-  .dt-amount-prefix { font: var(--font-body-medium); color: var(--color-foreground-muted); margin-right: 2px; }
+  .dt-rule-name-input:focus { background-color: var(--color-background-default); box-shadow: 0 0 0 2px var(--color-state-focus); }
+  .dt-amount-prefix { font: var(--font-body-medium); color: var(--color-foreground-muted); margin-right: var(--space-2xs); }
   .dt-amount-input {
     font: var(--font-body-medium); color: var(--color-foreground-primary);
     background: transparent; border: 0; outline: none; width: 100%;
-    border-radius: var(--radius-sm); padding: 2px 4px;
-    transition: background-color 120ms ease, box-shadow 120ms ease;
+    border-radius: var(--radius-sm); padding: var(--space-2xs) var(--space-xs);
+    transition: background-color var(--duration-fast) var(--easing-default), box-shadow var(--duration-fast) var(--easing-default);
   }
-  .dt-amount-input:focus { background-color: var(--color-background-default); box-shadow: 0 0 0 1px var(--color-foreground-accent); }
+  .dt-amount-input:focus { background-color: var(--color-background-default); box-shadow: 0 0 0 2px var(--color-state-focus); }
 
   /* ActionsMenu — molecule */
   .dt-menu {
-    background-color: var(--color-background-alt); border: 1px solid var(--color-border-default);
-    border-radius: var(--radius-sm); box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5);
-    padding: 4px 0; min-width: 140px;
+    background-color: var(--color-background-elevated); border: 1px solid var(--color-border-default);
+    border-radius: var(--radius-md); box-shadow: var(--shadow-menu);
+    padding: var(--space-xs) 0; min-width: 140px;
     position: absolute; right: 0; top: 28px; z-index: 20;
   }
   .dt-menu-item {
-    display: flex; align-items: center; gap: 8px; width: 100%;
+    display: flex; align-items: center; gap: var(--space-sm); width: 100%;
     font: var(--font-label-medium); color: var(--color-foreground-secondary);
-    background: none; border: none; cursor: pointer; padding: 6px 12px;
-    transition: background-color 120ms ease, color 120ms ease; text-align: left;
+    background: none; border: none; cursor: pointer; padding: var(--space-6) var(--space-sm);
+    transition: background-color var(--duration-fast) var(--easing-default), color var(--duration-fast) var(--easing-default); text-align: left;
   }
-  .dt-menu-item:hover { background-color: var(--color-background-default); color: var(--color-foreground-primary); }
-  .dt-menu-divider { border: none; border-top: 1px solid var(--color-border-default); margin: 4px 0; }
+  .dt-menu-item:hover { background-color: var(--color-background-selected); color: var(--color-foreground-primary); }
+  .dt-menu-divider { border: none; border-top: 1px solid var(--color-border-muted); margin: var(--space-xs) 0; }
   .dt-menu-item-danger {
-    display: flex; align-items: center; gap: 8px; width: 100%;
-    font: var(--font-label-medium); color: var(--color-foreground-muted);
-    background: none; border: none; cursor: pointer; padding: 6px 12px;
-    transition: background-color 120ms ease, color 120ms ease; text-align: left;
+    display: flex; align-items: center; gap: var(--space-sm); width: 100%;
+    font: var(--font-label-medium); color: var(--color-foreground-danger);
+    background: none; border: none; cursor: pointer; padding: var(--space-6) var(--space-sm);
+    transition: background-color var(--duration-fast) var(--easing-default), color var(--duration-fast) var(--easing-default); text-align: left;
   }
-  .dt-menu-item-danger:hover { background-color: var(--color-background-default); color: var(--color-foreground-secondary); }
+  .dt-menu-item-danger:hover { background-color: var(--color-background-danger-subtle); color: var(--color-foreground-danger); }
 
   /* Badge — atom */
-  .dt-badge { display: inline-flex; align-items: center; font: var(--font-label-small); border-radius: 9999px; padding: 2px 8px; border: 1px solid var(--color-border-default); }
+  .dt-badge { display: inline-flex; align-items: center; font: var(--font-label-small); border-radius: var(--radius-pill); padding: var(--space-2xs) var(--space-sm); border: 1px solid var(--color-border-default); }
   .dt-badge-income { background-color: var(--color-accent-subtle); color: var(--color-foreground-accent); border-color: var(--color-accent-subtle-border); }
   .dt-badge-expense { background-color: color-mix(in srgb, var(--color-background-default) 92%, var(--color-feedback-error) 8%); color: var(--color-feedback-error); border-color: color-mix(in srgb, var(--color-background-default) 60%, var(--color-feedback-error) 40%); }
   .dt-badge-asset { background-color: var(--color-background-default); color: var(--color-foreground-secondary); border-color: var(--color-border-default); }
   .dt-badge-liability { background-color: var(--color-background-default); color: var(--color-foreground-accent); border-color: var(--color-foreground-accent); border-style: dashed; }
   .dt-outcome-badge {
-    display: inline-flex; align-items: center; gap: 4px;
-    font: var(--font-label-small); border-radius: 9999px; padding: 4px 10px;
+    display: inline-flex; align-items: center; gap: var(--space-xs);
+    font: var(--font-label-small); border-radius: var(--radius-pill); padding: var(--space-xs) var(--space-sm);
     border: 1px solid var(--color-border-default); cursor: pointer;
-    transition: background-color 120ms ease, color 120ms ease, border-color 120ms ease;
+    transition: background-color var(--duration-fast) var(--easing-default), color var(--duration-fast) var(--easing-default), border-color var(--duration-fast) var(--easing-default);
   }
   .dt-outcome-approve { background-color: color-mix(in srgb, var(--color-background-alt) 85%, var(--color-feedback-success) 15%); color: var(--color-feedback-success); border-color: color-mix(in srgb, var(--color-background-alt) 55%, var(--color-feedback-success) 45%); }
   .dt-outcome-approve:hover { background-color: color-mix(in srgb, var(--color-background-alt) 55%, var(--color-feedback-success) 45%); }
@@ -184,14 +185,14 @@ select option { background-color: var(--color-background-alt); color: var(--colo
   .dt-outcome-deny:hover { background-color: var(--color-background-alt); color: var(--color-foreground-secondary); }
 
   /* DragHandle — atom */
-  .dt-drag-handle { color: var(--color-foreground-muted); cursor: grab; transition: color 120ms ease; }
+  .dt-drag-handle { color: var(--color-foreground-muted); cursor: grab; transition: color var(--duration-fast) var(--easing-default); }
   .dt-drag-handle:active { cursor: grabbing; }
   .dt-drag-handle:hover { color: var(--color-foreground-secondary); }
 
   /* IconButton — atom */
-  .dt-icon-btn { color: var(--color-foreground-muted); background: none; border: none; padding: 0; cursor: pointer; line-height: 0; transition: color 120ms ease; }
+  .dt-icon-btn { color: var(--color-foreground-muted); background: none; border: none; padding: 0; cursor: pointer; line-height: 0; transition: color var(--duration-fast) var(--easing-default); }
   .dt-icon-btn:hover { color: var(--color-foreground-secondary); }
-  .dt-icon-btn:focus-visible { color: var(--color-foreground-secondary); outline: 2px solid var(--color-foreground-accent); outline-offset: 2px; border-radius: var(--radius-sm); }
+  .dt-icon-btn:focus-visible { color: var(--color-foreground-secondary); outline: 2px solid var(--color-state-focus); outline-offset: 2px; border-radius: var(--radius-sm); }
 
   /* Reveal icon — subdued at rest, emphasized on parent hover/focus */
   .dt-icon-reveal { color: var(--color-foreground-muted); }
@@ -202,10 +203,10 @@ select option { background-color: var(--color-background-alt); color: var(--colo
     appearance: none; background-color: var(--color-background-default);
     border: 1px solid var(--color-border-default);
     color: var(--color-foreground-primary); font: var(--font-label-small);
-    border-radius: var(--radius-sm); padding: 4px 24px 4px 10px;
-    cursor: pointer; transition: border-color 120ms ease;
+    border-radius: var(--radius-sm); padding: var(--space-xs) var(--space-lg) var(--space-xs) var(--space-sm);
+    cursor: pointer; transition: border-color var(--duration-fast) var(--easing-default);
   }
-  .dt-operator-select:focus { outline: none; box-shadow: 0 0 0 2px var(--color-foreground-accent); border-color: var(--color-foreground-accent); }
+  .dt-operator-select:focus { outline: none; box-shadow: 0 0 0 2px var(--color-state-focus); border-color: var(--color-state-focus); }
   .dt-operator-select:hover { border-color: var(--color-foreground-muted); }
   .dt-operator-select option { background-color: var(--color-background-alt); color: var(--color-foreground-primary); }
   .dt-select-chevron { color: var(--color-foreground-muted); }
@@ -214,8 +215,8 @@ select option { background-color: var(--color-background-alt); color: var(--colo
   .dt-attr-btn {
     font: var(--font-label-small); border: 1px solid var(--color-border-default);
     color: var(--color-foreground-muted); background-color: var(--color-background-default);
-    border-radius: 9999px; padding: 2px 8px; cursor: pointer;
-    transition: background-color 120ms ease, color 120ms ease, border-color 120ms ease;
+    border-radius: var(--radius-pill); padding: var(--space-2xs) var(--space-sm); cursor: pointer;
+    transition: background-color var(--duration-fast) var(--easing-default), color var(--duration-fast) var(--easing-default), border-color var(--duration-fast) var(--easing-default);
   }
   .dt-attr-btn:hover { border-color: var(--color-foreground-muted); color: var(--color-foreground-secondary); }
   .dt-attr-btn-active-income { background-color: var(--color-accent-subtle); color: var(--color-foreground-accent); border-color: var(--color-accent-subtle-border); }

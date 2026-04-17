@@ -1,6 +1,7 @@
 export type DataAttribute = 'Income' | 'Expense' | 'Asset' | 'Liability'
 export type Operator = '>' | '>=' | '<' | '<=' | '='
 export type Outcome = 'Approve' | 'Deny'
+export type RuleStatus = 'active' | 'draft' | 'disabled'
 
 export interface Rule {
   id: string
@@ -10,6 +11,7 @@ export interface Rule {
   operator: Operator
   amount: number
   outcome: Outcome
+  status: RuleStatus
 }
 
 export interface Ruleset {

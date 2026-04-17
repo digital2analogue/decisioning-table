@@ -7,11 +7,15 @@ export interface RulesetTabsProps {
   activeRulesetId: string
   onSelect: (id: string) => void
   onAdd: () => void
+  onRename: (id: string, name: string) => void
 }
 
-export function RulesetTabs({ rulesets, activeRulesetId, onSelect, onAdd }: RulesetTabsProps) {
+export function RulesetTabs({ rulesets, activeRulesetId, onSelect, onAdd, onRename }: RulesetTabsProps) {
   return (
-    <div className="dt-tabs-bar px-6 flex items-center gap-1 overflow-x-auto">
+    <div className="dt-tabs-bar px-2 flex items-center gap-0 overflow-x-auto">
+      <button onClick={onAdd} className="dt-add-ruleset-btn">
+        <PlusIcon size={14} />
+      </button>
       {rulesets.map((rs) => (
         <TabItem
           key={rs.id}
@@ -19,12 +23,9 @@ export function RulesetTabs({ rulesets, activeRulesetId, onSelect, onAdd }: Rule
           name={rs.name}
           isActive={rs.id === activeRulesetId}
           onClick={onSelect}
+          onRename={onRename}
         />
       ))}
-      <button onClick={onAdd} className="dt-add-ruleset-btn">
-        <PlusIcon size={14} />
-        Add Ruleset
-      </button>
     </div>
   )
 }

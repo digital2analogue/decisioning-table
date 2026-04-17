@@ -13,6 +13,7 @@ export const initialRulesets: Ruleset[] = [
         operator: '>=',
         amount: 75000,
         outcome: 'Approve',
+        status: 'active',
       },
       {
         id: 'r-2',
@@ -22,6 +23,7 @@ export const initialRulesets: Ruleset[] = [
         operator: '<',
         amount: 20000,
         outcome: 'Deny',
+        status: 'active',
       },
       {
         id: 'r-3',
@@ -31,6 +33,7 @@ export const initialRulesets: Ruleset[] = [
         operator: '>',
         amount: 50000,
         outcome: 'Deny',
+        status: 'active',
       },
       {
         id: 'r-4',
@@ -40,6 +43,7 @@ export const initialRulesets: Ruleset[] = [
         operator: '>=',
         amount: 40000,
         outcome: 'Approve',
+        status: 'draft',
       },
       {
         id: 'r-5',
@@ -49,6 +53,7 @@ export const initialRulesets: Ruleset[] = [
         operator: '<=',
         amount: 15000,
         outcome: 'Approve',
+        status: 'disabled',
       },
     ],
   },
@@ -64,6 +69,7 @@ export const initialRulesets: Ruleset[] = [
         operator: '>',
         amount: 100000,
         outcome: 'Approve',
+        status: 'active',
       },
       {
         id: 'r-7',
@@ -73,6 +79,7 @@ export const initialRulesets: Ruleset[] = [
         operator: '=',
         amount: 30000,
         outcome: 'Deny',
+        status: 'active',
       },
     ],
   },
@@ -88,6 +95,7 @@ export const initialRulesets: Ruleset[] = [
         operator: '>=',
         amount: 0,
         outcome: 'Approve',
+        status: 'active',
       },
     ],
   },

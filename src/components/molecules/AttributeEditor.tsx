@@ -1,5 +1,6 @@
-import { useEffect, useRef } from 'react'
 import type { DataAttribute } from '../../types'
+import { SelectMenu } from '../atoms/SelectMenu'
+import type { SelectMenuOption } from '../atoms/SelectMenu'
 
 export interface AttributeEditorProps {
   value: DataAttribute
@@ -7,43 +8,41 @@ export interface AttributeEditorProps {
   onClose: () => void
 }
 
-const ATTRIBUTES: DataAttribute[] = ['Income', 'Expense', 'Asset', 'Liability']
-
-function badgeClass(attr: DataAttribute): string {
-  switch (attr) {
-    case 'Income':
-      return 'dt-attr-btn dt-attr-btn-active-income'
-    case 'Expense':
-      return 'dt-attr-btn dt-attr-btn-active-expense'
-    case 'Asset':
-      return 'dt-attr-btn dt-attr-btn-active-asset'
-    case 'Liability':
-      return 'dt-attr-btn dt-attr-btn-active-liability'
-  }
-}
+const OPTIONS: SelectMenuOption<DataAttribute>[] = [
+  {
+    value: 'Income',
+    label: 'Income',
+    description: 'Money coming in',
+    leading: <span className="dt-attr-swatch dt-attr-swatch-income" aria-hidden />,
+  },
+  {
+    value: 'Expense',
+    label: 'Expense',
+    description: 'Money going out',
+    leading: <span className="dt-attr-swatch dt-attr-swatch-expense" aria-hidden />,
+  },
+  {
+    value: 'Asset',
+    label: 'Asset',
+    description: 'Something owned',
+    leading: <span className="dt-attr-swatch dt-attr-swatch-asset" aria-hidden />,
+  },
+  {
+    value: 'Liability',
+    label: 'Liability',
+    description: 'Something owed',
+    leading: <span className="dt-attr-swatch dt-attr-swatch-liability" aria-hidden />,
+  },
+]
 
 export function AttributeEditor({ value, onChange, onClose }: AttributeEditorProps) {
-  const ref = useRef<HTMLDivElement>(null)
-
-  useEffect(() => {
-    function handleClick(e: MouseEvent) {
-      if (ref.current && !ref.current.contains(e.target as Node)) onClose()
-    }
-    document.addEventListener('mousedown', handleClick)
-    return () => document.removeEventListener('mousedown', handleClick)
-  }, [onClose])
-
   return (
-    <div ref={ref} className="dt-attr-popover">
-      {ATTRIBUTES.map((attr) => (
-        <button
-          key={attr}
-          onClick={() => onChange(attr)}
-          className={badgeClass(attr)}
-        >
-          {attr}
-        </button>
-      ))}
-    </div>
+    <SelectMenu<DataAttribute>
+      value={value}
+      options={OPTIONS}
+      onChange={onChange}
+      onClose={onClose}
+      ariaLabel="Data attribute"
+    />
   )
 }

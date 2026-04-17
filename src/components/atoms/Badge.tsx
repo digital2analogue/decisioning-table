@@ -1,28 +1,25 @@
 import { CheckIcon, XIcon } from 'lucide-react'
 import type { DataAttribute, Outcome } from '../../types'
+import { Pill } from './Pill'
+import type { PillTone, PillVariant } from './Pill'
 
 export interface AttributeBadgeProps {
   value: DataAttribute
 }
 
-function badgeVariant(value: DataAttribute): string {
-  switch (value) {
-    case 'Income':
-      return 'dt-badge-income'
-    case 'Expense':
-      return 'dt-badge-expense'
-    case 'Asset':
-      return 'dt-badge-asset'
-    case 'Liability':
-      return 'dt-badge-liability'
-  }
+const ATTRIBUTE_STYLE: Record<DataAttribute, { tone: PillTone; variant: PillVariant }> = {
+  Income: { tone: 'blue', variant: 'soft' },
+  Expense: { tone: 'red', variant: 'soft' },
+  Asset: { tone: 'neutral', variant: 'soft' },
+  Liability: { tone: 'blue', variant: 'outline-dashed' },
 }
 
 export function AttributeBadge({ value }: AttributeBadgeProps) {
+  const { tone, variant } = ATTRIBUTE_STYLE[value]
   return (
-    <span className={`dt-badge ${badgeVariant(value)}`}>
+    <Pill tone={tone} variant={variant}>
       {value}
-    </span>
+    </Pill>
   )
 }
 
@@ -32,14 +29,15 @@ export interface OutcomeBadgeProps {
 }
 
 export function OutcomeBadge({ value, onChange }: OutcomeBadgeProps) {
+  const isApprove = value === 'Approve'
   return (
-    <button
-      onClick={() => onChange(value === 'Approve' ? 'Deny' : 'Approve')}
+    <Pill
+      tone={isApprove ? 'green' : 'muted'}
+      leading={isApprove ? <CheckIcon size={11} /> : <XIcon size={11} />}
+      onClick={() => onChange(isApprove ? 'Deny' : 'Approve')}
       title="Click to toggle"
-      className={`dt-outcome-badge ${value === 'Approve' ? 'dt-outcome-approve' : 'dt-outcome-deny'}`}
     >
-      {value === 'Approve' ? <CheckIcon size={11} /> : <XIcon size={11} />}
       {value}
-    </button>
+    </Pill>
   )
 }

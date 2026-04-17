@@ -4,6 +4,8 @@ import type { Rule, Ruleset } from '../../types'
 import { initialRulesets } from '../../data'
 import { DecisioningTable } from '../organisms/DecisioningTable'
 import { RulesetTabs } from '../organisms/RulesetTabs'
+import { SelectMenu } from '../atoms/SelectMenu'
+import type { SelectMenuOption } from '../atoms/SelectMenu'
 
 export function DecisioningEngine() {
   const [rulesets, setRulesets] = useState<Ruleset[]>(initialRulesets)
@@ -12,7 +14,19 @@ export function DecisioningEngine() {
   const [titleDraft, setTitleDraft] = useState('My Decision Model')
   const [title, setTitle] = useState('My Decision Model')
   const [addRuleMenuOpen, setAddRuleMenuOpen] = useState(false)
+  const [addExistingOpen, setAddExistingOpen] = useState(false)
   const titleInputRef = useRef<HTMLInputElement>(null)
+
+  // Rules from all rulesets other than the active one, flattened for the picker.
+  const existingRuleOptions: SelectMenuOption<string>[] = rulesets
+    .filter((rs) => rs.id !== activeRulesetId)
+    .flatMap((rs) =>
+      rs.rules.map((r) => ({
+        value: r.id,
+        label: r.ruleName,
+        description: `from ${rs.name}`,
+      })),
+    )
 
   const activeRuleset = rulesets.find((rs) => rs.id === activeRulesetId)!
 
@@ -55,6 +69,20 @@ export function DecisioningEngine() {
       status: 'draft',
     }
     updateRuleset({ ...rs, rules: [...rs.rules, newRule] })
+  }
+
+  function addExistingRule(sourceRuleId: string) {
+    const source = rulesets.flatMap((rs) => rs.rules).find((r) => r.id === sourceRuleId)
+    if (!source) return
+    const rs = rulesets.find((r) => r.id === activeRulesetId)
+    if (!rs) return
+    const cloned: Rule = {
+      ...source,
+      id: `rule-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`,
+      selected: false,
+    }
+    updateRuleset({ ...rs, rules: [...rs.rules, cloned] })
+    setAddExistingOpen(false)
   }
 
   return (
@@ -139,8 +167,8 @@ export function DecisioningEngine() {
                   <button
                     role="menuitem"
                     onClick={() => {
-                      // TODO: implement "add existing rule" picker (choose from another ruleset)
                       setAddRuleMenuOpen(false)
+                      setAddExistingOpen(true)
                     }}
                     className="dt-menu-item"
                   >
@@ -149,6 +177,24 @@ export function DecisioningEngine() {
                   </button>
                 </div>
               </>
+            )}
+            {addExistingOpen && (
+              existingRuleOptions.length > 0 ? (
+                <SelectMenu<string>
+                  value=""
+                  options={existingRuleOptions}
+                  onChange={addExistingRule}
+                  onClose={() => setAddExistingOpen(false)}
+                  ariaLabel="Pick a rule to copy from another ruleset"
+                />
+              ) : (
+                <>
+                  <div className="fixed inset-0 z-10" onClick={() => setAddExistingOpen(false)} />
+                  <div role="menu" className="dt-menu dt-menu-split">
+                    <div className="dt-menu-empty">No rules in other rulesets to add</div>
+                  </div>
+                </>
+              )
             )}
           </div>
         </div>

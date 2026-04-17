@@ -222,6 +222,11 @@ select option { background-color: var(--color-background-alt); color: var(--colo
   }
   .dt-menu-item:hover { background-color: var(--color-background-selected); color: var(--color-foreground-default); }
   .dt-menu-item-text { padding-left: calc(var(--space-xs) + 13px + var(--space-xs)); }
+  .dt-menu-empty {
+    font: var(--font-label-small); color: var(--color-foreground-muted);
+    padding: var(--space-xs) var(--space-sm);
+    text-align: left;
+  }
   .dt-menu-divider { border: none; border-top: 1px solid var(--color-border-muted); margin: var(--space-2xs) 0; }
   .dt-menu-item-danger {
     display: flex; align-items: center; gap: var(--space-xs); width: 100%;

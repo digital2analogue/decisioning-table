@@ -186,6 +186,7 @@ export function DecisioningEngine() {
                   onChange={addExistingRule}
                   onClose={() => setAddExistingOpen(false)}
                   ariaLabel="Pick a rule to copy from another ruleset"
+                  align="right"
                 />
               ) : (
                 <>

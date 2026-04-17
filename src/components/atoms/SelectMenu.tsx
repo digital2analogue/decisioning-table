@@ -15,6 +15,8 @@ export interface SelectMenuProps<T extends string> {
   onChange: (value: T) => void
   onClose: () => void
   ariaLabel?: string
+  /** Horizontal anchor of the popover relative to its positioned parent. Defaults to 'left'. */
+  align?: 'left' | 'right'
 }
 
 export function SelectMenu<T extends string>({
@@ -23,6 +25,7 @@ export function SelectMenu<T extends string>({
   onChange,
   onClose,
   ariaLabel,
+  align = 'left',
 }: SelectMenuProps<T>) {
   const ref = useRef<HTMLDivElement>(null)
 
@@ -42,7 +45,7 @@ export function SelectMenu<T extends string>({
   }, [onClose])
 
   return (
-    <div ref={ref} role="menu" aria-label={ariaLabel} className="dt-select-menu">
+    <div ref={ref} role="menu" aria-label={ariaLabel} className={`dt-select-menu dt-select-menu-align-${align}`}>
       {options.map((opt) => {
         const selected = opt.value === value
         return (

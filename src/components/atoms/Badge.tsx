@@ -1,10 +1,11 @@
-import { CheckIcon, XIcon } from 'lucide-react'
+import { CheckIcon, XIcon, ChevronDownIcon } from 'lucide-react'
 import type { DataAttribute, Outcome } from '../../types'
 import { Pill } from './Pill'
 import type { PillTone, PillVariant } from './Pill'
 
 export interface AttributeBadgeProps {
   value: DataAttribute
+  onClick: () => void
 }
 
 const ATTRIBUTE_STYLE: Record<DataAttribute, { tone: PillTone; variant: PillVariant }> = {
@@ -14,10 +15,17 @@ const ATTRIBUTE_STYLE: Record<DataAttribute, { tone: PillTone; variant: PillVari
   Liability: { tone: 'blue', variant: 'outline-dashed' },
 }
 
-export function AttributeBadge({ value }: AttributeBadgeProps) {
+export function AttributeBadge({ value, onClick }: AttributeBadgeProps) {
   const { tone, variant } = ATTRIBUTE_STYLE[value]
   return (
-    <Pill tone={tone} variant={variant}>
+    <Pill
+      tone={tone}
+      variant={variant}
+      trailing={<ChevronDownIcon size={10} className="dt-status-chevron" aria-hidden />}
+      onClick={onClick}
+      ariaHasPopup="menu"
+      title={`Data attribute: ${value} — click to change`}
+    >
       {value}
     </Pill>
   )

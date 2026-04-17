@@ -75,7 +75,8 @@ select option { background-color: var(--color-background-alt); color: var(--colo
   .dt-test-model-btn:hover { color: var(--color-foreground-default); border-color: var(--color-foreground-muted); }
 
   /* Split button — primary action + dropdown chevron */
-  .dt-split-btn { display: inline-flex; align-items: stretch; }
+  .dt-split-btn { display: inline-flex; align-items: stretch; position: relative; }
+  .dt-menu-split { top: calc(100% + 4px); min-width: 180px; }
   .dt-split-btn-main {
     display: inline-flex; align-items: center; gap: var(--space-2xs);
     font: var(--font-label-medium); color: var(--color-foreground-on-action);

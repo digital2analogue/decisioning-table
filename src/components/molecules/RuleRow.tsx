@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef } from 'react'
 import { useDrag, useDrop } from 'react-dnd'
-import { PencilIcon, MoreHorizontalIcon } from 'lucide-react'
+import { MoreHorizontalIcon } from 'lucide-react'
 import type { Rule, DragItem } from '../../types'
 import { cn } from '../../lib/utils'
 import { Checkbox } from '../atoms/Checkbox'
@@ -156,15 +156,10 @@ export function RuleRow({
 
       {/* Data Attribute */}
       <td className="px-3 py-2.5 relative">
-        <div className="flex items-center gap-1.5 group/attr">
-          <AttributeBadge value={rule.dataAttribute} />
-          <IconButton
-            onClick={() => onEditAttribute(rule.id)}
-            className="dt-icon-reveal"
-          >
-            <PencilIcon size={12} />
-          </IconButton>
-        </div>
+        <AttributeBadge
+          value={rule.dataAttribute}
+          onClick={() => onEditAttribute(rule.id)}
+        />
         {editingAttributeId === rule.id && (
           <AttributeEditor
             value={rule.dataAttribute}

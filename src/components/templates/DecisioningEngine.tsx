@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react'
-import { ChevronDownIcon, PencilIcon, CheckIcon, FlaskConicalIcon, PlusIcon } from 'lucide-react'
+import { ChevronDownIcon, PencilIcon, CheckIcon, FlaskConicalIcon, PlusIcon, LinkIcon } from 'lucide-react'
 import type { Rule, Ruleset } from '../../types'
 import { initialRulesets } from '../../data'
 import { DecisioningTable } from '../organisms/DecisioningTable'
@@ -11,6 +11,7 @@ export function DecisioningEngine() {
   const [editingTitle, setEditingTitle] = useState(false)
   const [titleDraft, setTitleDraft] = useState('My Decision Model')
   const [title, setTitle] = useState('My Decision Model')
+  const [addRuleMenuOpen, setAddRuleMenuOpen] = useState(false)
   const titleInputRef = useRef<HTMLInputElement>(null)
 
   const activeRuleset = rulesets.find((rs) => rs.id === activeRulesetId)!
@@ -102,13 +103,53 @@ export function DecisioningEngine() {
             Test model
           </button>
           <div className="dt-split-btn">
-            <button onClick={addRuleToActive} className="dt-split-btn-main">
+            <button
+              onClick={() => {
+                addRuleToActive()
+                setAddRuleMenuOpen(false)
+              }}
+              className="dt-split-btn-main"
+            >
               <PlusIcon size={14} />
               Add rule
             </button>
-            <button className="dt-split-btn-chevron">
+            <button
+              onClick={() => setAddRuleMenuOpen((v) => !v)}
+              className="dt-split-btn-chevron"
+              aria-haspopup="menu"
+              aria-expanded={addRuleMenuOpen}
+            >
               <ChevronDownIcon size={14} />
             </button>
+            {addRuleMenuOpen && (
+              <>
+                <div className="fixed inset-0 z-10" onClick={() => setAddRuleMenuOpen(false)} />
+                <div role="menu" className="dt-menu dt-menu-split">
+                  <button
+                    role="menuitem"
+                    onClick={() => {
+                      addRuleToActive()
+                      setAddRuleMenuOpen(false)
+                    }}
+                    className="dt-menu-item"
+                  >
+                    <PlusIcon size={13} />
+                    Add new rule
+                  </button>
+                  <button
+                    role="menuitem"
+                    onClick={() => {
+                      // TODO: implement "add existing rule" picker (choose from another ruleset)
+                      setAddRuleMenuOpen(false)
+                    }}
+                    className="dt-menu-item"
+                  >
+                    <LinkIcon size={13} />
+                    Add existing rule
+                  </button>
+                </div>
+              </>
+            )}
           </div>
         </div>
       </div>

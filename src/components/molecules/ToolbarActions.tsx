@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react'
-import { PlusIcon, Trash2Icon, PencilIcon } from 'lucide-react'
+import { Trash2Icon, PencilIcon, CheckIcon } from 'lucide-react'
 
 export interface ToolbarActionsProps {
   rulesetName: string
@@ -38,18 +38,28 @@ export function ToolbarActions({
     <div className="dt-toolbar px-4 py-3 flex items-center justify-between">
       <div className="flex items-center gap-3">
         {editing ? (
-          <input
-            ref={inputRef}
-            type="text"
-            value={draft}
-            onChange={(e) => setDraft(e.target.value)}
-            onBlur={commit}
-            onKeyDown={(e) => {
-              if (e.key === 'Enter') commit()
-              if (e.key === 'Escape') { setDraft(rulesetName); setEditing(false) }
-            }}
-            className="dt-toolbar-name-input"
-          />
+          <div className="flex items-center gap-2">
+            <input
+              ref={inputRef}
+              type="text"
+              value={draft}
+              onChange={(e) => setDraft(e.target.value)}
+              onBlur={() => setTimeout(commit, 100)}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') commit()
+                if (e.key === 'Escape') { setDraft(rulesetName); setEditing(false) }
+              }}
+              className="dt-toolbar-name-input"
+            />
+            <button
+              onMouseDown={(e) => e.preventDefault()}
+              onClick={commit}
+              className="dt-confirm-btn"
+              title="Save"
+            >
+              <CheckIcon size={14} />
+            </button>
+          </div>
         ) : (
           <div className="flex items-center gap-1.5 group/name">
             <h2 className="dt-toolbar-name">{rulesetName}</h2>
@@ -72,10 +82,6 @@ export function ToolbarActions({
           </button>
         )}
       </div>
-      <button onClick={onAddRule} className="dt-add-rule-btn">
-        <PlusIcon size={13} />
-        Add Rule
-      </button>
     </div>
   )
 }

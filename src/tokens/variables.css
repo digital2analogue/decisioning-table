@@ -51,7 +51,7 @@
   /* ═══ Typography ═══ */
 
   /* Font families — all sans-serif for enterprise UI */
-  --font-family-display: 'Space Grotesk', sans-serif;
+  --font-family-display: 'Inter', sans-serif;
   --font-family-body: var(--font-family-display);
   --font-family-mono: 'JetBrains Mono', monospace;
 

@@ -2,7 +2,6 @@ import { useState } from 'react'
 import type { Rule, Ruleset } from '../../types'
 import { Checkbox } from '../atoms/Checkbox'
 import { RuleRow } from '../molecules/RuleRow'
-import { ToolbarActions } from '../molecules/ToolbarActions'
 
 export interface DecisioningTableProps {
   ruleset: Ruleset
@@ -25,19 +24,6 @@ export function DecisioningTable({ ruleset, onUpdate }: DecisioningTableProps) {
       ...ruleset,
       rules: ruleset.rules.map((r) => ({ ...r, selected: checked })),
     })
-  }
-
-  function addRule() {
-    const newRule: Rule = {
-      id: `r-${Date.now()}`,
-      selected: false,
-      ruleName: 'New Rule',
-      dataAttribute: 'Income',
-      operator: '>=',
-      amount: 0,
-      outcome: 'Approve',
-    }
-    onUpdate({ ...ruleset, rules: [...ruleset.rules, newRule] })
   }
 
   function deleteRule(id: string) {
@@ -65,74 +51,57 @@ export function DecisioningTable({ ruleset, onUpdate }: DecisioningTableProps) {
 
   const allSelected = ruleset.rules.length > 0 && ruleset.rules.every((r) => r.selected)
   const someSelected = ruleset.rules.some((r) => r.selected)
-  const selectedCount = ruleset.rules.filter((r) => r.selected).length
-
-  function deleteSelected() {
-    onUpdate({ ...ruleset, rules: ruleset.rules.filter((r) => !r.selected) })
-  }
 
   return (
-    <div className="dt-table-card">
-      <ToolbarActions
-        rulesetName={ruleset.name}
-        ruleCount={ruleset.rules.length}
-        selectedCount={selectedCount}
-        someSelected={someSelected}
-        onDeleteSelected={deleteSelected}
-        onAddRule={addRule}
-        onRename={(name) => onUpdate({ ...ruleset, name })}
-      />
-
-      <div>
-        <table className="w-full">
-          <thead>
-            <tr className="dt-thead-row">
-              <th className="w-10 px-3 py-2.5 text-center">
-                <Checkbox
-                  checked={allSelected}
-                  indeterminate={someSelected && !allSelected}
-                  onChange={toggleAll}
-                />
-              </th>
-              <th className="w-8 px-1 py-2.5"></th>
-              <th className="dt-th w-10 px-2 py-2.5 text-left tracking-wider">#</th>
-              <th className="dt-th px-3 py-2.5 text-left tracking-wider min-w-[180px]">Rule Name</th>
-              <th className="dt-th px-3 py-2.5 text-left tracking-wider min-w-[140px]">Data Attribute</th>
-              <th className="dt-th px-3 py-2.5 text-left tracking-wider w-[110px]">Operator</th>
-              <th className="dt-th px-3 py-2.5 text-left tracking-wider min-w-[120px]">Amount</th>
-              <th className="dt-th px-3 py-2.5 text-left tracking-wider w-[110px]">Outcome</th>
-              <th className="w-10 px-3 py-2.5"></th>
+    <div className="dt-table-edge">
+      <table className="w-full">
+        <thead>
+          <tr className="dt-thead-row">
+            <th className="w-10 px-3 py-2.5 text-center">
+              <Checkbox
+                checked={allSelected}
+                indeterminate={someSelected && !allSelected}
+                onChange={toggleAll}
+              />
+            </th>
+            <th className="w-8 px-1 py-2.5"></th>
+            <th className="dt-th w-10 px-2 py-2.5 text-left tracking-wider">#</th>
+            <th className="dt-th px-3 py-2.5 text-left tracking-wider min-w-[180px]">Rule name</th>
+            <th className="dt-th px-3 py-2.5 text-left tracking-wider min-w-[140px]">Data attribute</th>
+            <th className="dt-th px-3 py-2.5 text-left tracking-wider w-[110px]">Operator</th>
+            <th className="dt-th px-3 py-2.5 text-left tracking-wider min-w-[120px]">Amount</th>
+            <th className="dt-th px-3 py-2.5 text-left tracking-wider w-[110px]">Outcome</th>
+            <th className="w-10 px-3 py-2.5"></th>
+          </tr>
+        </thead>
+        <tbody>
+          {ruleset.rules.length === 0 ? (
+            <tr>
+              <td colSpan={9} className="dt-empty-cell py-12 text-center">
+                No rules yet. Click <strong>Add rule</strong> to get started.
+              </td>
             </tr>
-          </thead>
-          <tbody>
-            {ruleset.rules.length === 0 ? (
-              <tr>
-                <td colSpan={9} className="dt-empty-cell py-12 text-center">
-                  No rules yet. Click <strong>Add Rule</strong> to get started.
-                </td>
-              </tr>
-            ) : (
-              ruleset.rules.map((rule, index) => (
-                <RuleRow
-                  key={rule.id}
-                  rule={rule}
-                  index={index}
-                  editingAttributeId={editingAttributeId}
-                  openMenuId={openMenuId}
-                  onEditAttribute={(id) => setEditingAttributeId(id)}
-                  onCloseAttribute={() => setEditingAttributeId(null)}
-                  onMenuToggle={(id) => setOpenMenuId(openMenuId === id ? null : id)}
-                  onMenuClose={() => setOpenMenuId(null)}
-                  onUpdate={updateRule}
-                  onDelete={deleteRule}
-                  onDuplicate={duplicateRule}
-                  onMove={moveRow}
-                />
-              ))
-            )}
-          </tbody>
-        </table>
-      </div>
+          ) : (
+            ruleset.rules.map((rule, index) => (
+              <RuleRow
+                key={rule.id}
+                rule={rule}
+                index={index}
+                editingAttributeId={editingAttributeId}
+                openMenuId={openMenuId}
+                onEditAttribute={(id) => setEditingAttributeId(id)}
+                onCloseAttribute={() => setEditingAttributeId(null)}
+                onMenuToggle={(id) => setOpenMenuId(openMenuId === id ? null : id)}
+                onMenuClose={() => setOpenMenuId(null)}
+                onUpdate={updateRule}
+                onDelete={deleteRule}
+                onDuplicate={duplicateRule}
+                onMove={moveRow}
+              />
+            ))
+          )}
+        </tbody>
+      </table>
     </div>
   )
 }

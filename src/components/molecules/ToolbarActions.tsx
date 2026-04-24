@@ -7,7 +7,8 @@ export interface ToolbarActionsProps {
   selectedCount: number
   someSelected: boolean
   onDeleteSelected: () => void
-  onAddRule: () => void
+  /** onAddRule is reserved for a future "+ Add rule" toolbar button. */
+  onAddRule?: () => void
   onRename: (name: string) => void
 }
 
@@ -17,7 +18,6 @@ export function ToolbarActions({
   selectedCount,
   someSelected,
   onDeleteSelected,
-  onAddRule,
   onRename,
 }: ToolbarActionsProps) {
   const [editing, setEditing] = useState(false)

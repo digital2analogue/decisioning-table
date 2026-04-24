@@ -90,9 +90,10 @@ select option { background-color: var(--color-background-alt); color: var(--colo
     display: inline-flex; align-items: center;
     color: var(--color-foreground-on-action);
     background-color: var(--color-background-action);
-    border: 1px solid var(--color-background-action); border-left: 1px solid rgba(255,255,255,0.2);
+    border: 1px solid var(--color-background-action);
+    border-left: 1px solid color-mix(in srgb, var(--color-foreground-on-action) 28%, transparent);
     border-radius: 0 var(--radius-md) var(--radius-md) 0;
-    padding: var(--space-xs) var(--space-6);
+    padding: var(--space-xs) var(--space-sm);
     cursor: pointer; transition: background-color var(--duration-fast) var(--easing-default);
   }
   .dt-split-btn-chevron:hover { background-color: var(--color-state-hover); }
@@ -223,8 +224,20 @@ select option { background-color: var(--color-background-alt); color: var(--colo
   }
   .dt-menu-item-danger:hover { background-color: var(--color-background-danger-subtle); color: var(--color-foreground-danger); }
 
-  /* Badge — atom */
-  .dt-badge { display: inline-flex; align-items: center; font: var(--font-label-small); border-radius: var(--radius-pill); padding: var(--space-2xs) var(--space-sm); border: 1px solid var(--color-border-default); }
+  /* Badge — atom.
+     Explicit min-height + line-height locks rendered size so all variants read
+     as identical pills regardless of text content, color-mix jitter, or
+     subpixel rendering in screenshots. */
+  .dt-badge {
+    display: inline-flex; align-items: center; justify-content: center;
+    font: var(--font-label-small); line-height: 1;
+    border-radius: var(--radius-pill);
+    padding: var(--space-2xs) var(--space-sm);
+    min-height: 22px;
+    border: 1px solid var(--color-border-default);
+    white-space: nowrap;
+    box-sizing: border-box;
+  }
   .dt-badge-income { background-color: var(--color-accent-subtle); color: var(--color-foreground-accent); border-color: var(--color-accent-subtle-border); }
   .dt-badge-expense { background-color: color-mix(in srgb, var(--color-background-default) 92%, var(--color-feedback-error) 8%); color: var(--color-feedback-error); border-color: color-mix(in srgb, var(--color-background-default) 60%, var(--color-feedback-error) 40%); }
   .dt-badge-asset { background-color: var(--color-background-default); color: var(--color-foreground-secondary); border-color: var(--color-border-default); }
@@ -268,12 +281,18 @@ select option { background-color: var(--color-background-alt); color: var(--colo
   .dt-icon-reveal { color: var(--color-foreground-muted); }
   *:hover > .dt-icon-reveal, *:focus-within > .dt-icon-reveal { color: var(--color-foreground-secondary); }
 
-  /* OperatorSelect — molecule */
+  /* OperatorSelect — molecule
+     Sized to read as a confident peer of the AttributeBadge, not a shrunken
+     dropdown. Uses label-medium (14px) instead of label-small (12px), and a
+     min-width so the glyph-only content doesn't collapse into a postage stamp. */
   .dt-operator-select {
     appearance: none; background-color: var(--color-background-default);
     border: 1px solid var(--color-border-default);
-    color: var(--color-foreground-primary); font: var(--font-label-small);
-    border-radius: var(--radius-sm); padding: var(--space-xs) var(--space-lg) var(--space-xs) var(--space-sm);
+    color: var(--color-foreground-primary); font: var(--font-label-medium);
+    line-height: 1.4;
+    border-radius: var(--radius-sm);
+    padding: var(--space-2xs) var(--space-lg) var(--space-2xs) var(--space-sm);
+    min-width: 52px;
     cursor: pointer; transition: border-color var(--duration-fast) var(--easing-default);
   }
   .dt-operator-select:focus { outline: none; box-shadow: 0 0 0 2px var(--color-state-focus); border-color: var(--color-state-focus); }

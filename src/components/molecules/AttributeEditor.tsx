@@ -22,7 +22,7 @@ function badgeClass(attr: DataAttribute): string {
   }
 }
 
-export function AttributeEditor({ value, onChange, onClose }: AttributeEditorProps) {
+export function AttributeEditor({ onChange, onClose }: AttributeEditorProps) {
   const ref = useRef<HTMLDivElement>(null)
 
   useEffect(() => {

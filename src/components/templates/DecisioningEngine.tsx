@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react'
-import { ChevronDownIcon, PencilIcon, CheckIcon, FlaskConicalIcon, PlusIcon } from 'lucide-react'
+import { ChevronDownIcon, PencilIcon, CheckIcon, FlaskRoundIcon, PlusIcon } from 'lucide-react'
 import type { Ruleset } from '../../types'
 import { initialRulesets } from '../../data'
 import { DecisioningTable } from '../organisms/DecisioningTable'
@@ -82,7 +82,7 @@ export function DecisioningEngine() {
         </div>
         <div className="flex items-center gap-3">
           <button className="dt-test-model-btn">
-            <FlaskConicalIcon size={14} />
+            <FlaskRoundIcon size={14} />
             Test model
           </button>
           <div className="dt-split-btn">

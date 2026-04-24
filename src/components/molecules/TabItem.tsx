@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react'
-import { ChevronDownIcon, PencilIcon, CheckIcon } from 'lucide-react'
+import { ChevronDownIcon, CheckIcon } from 'lucide-react'
 
 export interface TabItemProps {
   id: string

@@ -17,7 +17,6 @@ export function ToolbarActions({
   selectedCount,
   someSelected,
   onDeleteSelected,
-  onAddRule,
   onRename,
 }: ToolbarActionsProps) {
   const [editing, setEditing] = useState(false)

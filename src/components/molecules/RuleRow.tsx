@@ -1,25 +1,21 @@
-import { useCallback, useRef } from 'react'
+import { useCallback, useRef, useState } from 'react'
 import { useDrag, useDrop } from 'react-dnd'
-import { PencilIcon, MoreHorizontalIcon } from 'lucide-react'
+import { MoreHorizontalIcon, GripVerticalIcon } from 'lucide-react'
 import type { Rule, DragItem } from '../../types'
 import { cn } from '../../lib/utils'
 import { Checkbox } from '../atoms/Checkbox'
-import { DragHandle } from '../atoms/DragHandle'
-import { AttributeBadge, OutcomeBadge } from '../atoms/Badge'
+import { AttributeSelectBadge, OutcomeBadge } from '../atoms/Badge'
 import { IconButton } from '../atoms/IconButton'
 import { OperatorSelect } from './OperatorSelect'
-import { AttributeEditor } from './AttributeEditor'
 import { ActionsMenu } from './ActionsMenu'
+import { ConditionalCell } from './ConditionalCell'
 
 export const DND_TYPE = 'RULE_ROW'
 
 export interface RuleRowProps {
   rule: Rule
   index: number
-  editingAttributeId: string | null
   openMenuId: string | null
-  onEditAttribute: (id: string) => void
-  onCloseAttribute: () => void
   onMenuToggle: (id: string) => void
   onMenuClose: () => void
   onUpdate: (id: string, patch: Partial<Rule>) => void
@@ -31,10 +27,7 @@ export interface RuleRowProps {
 export function RuleRow({
   rule,
   index,
-  editingAttributeId,
   openMenuId,
-  onEditAttribute,
-  onCloseAttribute,
   onMenuToggle,
   onMenuClose,
   onUpdate,
@@ -43,6 +36,7 @@ export function RuleRow({
   onMove,
 }: RuleRowProps) {
   const rowRef = useRef<HTMLTableRowElement>(null)
+  const [amountFocused, setAmountFocused] = useState(false)
 
   const [{ isDragging }, drag, dragPreview] = useDrag<DragItem, unknown, { isDragging: boolean }>({
     type: DND_TYPE,
@@ -61,9 +55,7 @@ export function RuleRow({
   })
 
   const handleRef = useCallback(
-    (el: HTMLTableCellElement | null) => {
-      drag(el)
-    },
+    (el: HTMLTableCellElement | null) => { drag(el) },
     [drag],
   )
 
@@ -87,44 +79,30 @@ export function RuleRow({
         />
       </td>
 
-      {/* Drag Handle */}
-      <DragHandle dragRef={handleRef} />
-
-      {/* Row # */}
-      <td className="dt-row-number px-2 py-2.5">{index + 1}</td>
+      {/* Drag handle + Row # — merged into one cell */}
+      <td ref={handleRef} className="dt-drag-handle-cell px-2 py-2.5 text-center">
+        <GripVerticalIcon size={14} className="dt-drag-grip" />
+        <span className="dt-row-number">{index + 1}</span>
+      </td>
 
       {/* Rule Name */}
-      <td className="px-3 py-2.5">
+      <td className="dt-col-sticky px-3 py-2.5 max-w-[240px]">
         <input
           type="text"
           value={rule.ruleName}
           onChange={(e) => onUpdate(rule.id, { ruleName: e.target.value })}
           className="dt-rule-name-input"
           placeholder="Rule name..."
+          title={rule.ruleName}
         />
       </td>
 
       {/* Data Attribute */}
-      <td className="px-3 py-2.5 relative">
-        <div className="flex items-center gap-1.5 group/attr">
-          <AttributeBadge value={rule.dataAttribute} />
-          <IconButton
-            onClick={() => onEditAttribute(rule.id)}
-            className="dt-icon-reveal"
-          >
-            <PencilIcon size={12} />
-          </IconButton>
-        </div>
-        {editingAttributeId === rule.id && (
-          <AttributeEditor
-            value={rule.dataAttribute}
-            onChange={(v) => {
-              onUpdate(rule.id, { dataAttribute: v })
-              onCloseAttribute()
-            }}
-            onClose={onCloseAttribute}
-          />
-        )}
+      <td className="px-3 py-2.5">
+        <AttributeSelectBadge
+          value={rule.dataAttribute}
+          onChange={(v) => onUpdate(rule.id, { dataAttribute: v })}
+        />
       </td>
 
       {/* Operator */}
@@ -140,12 +118,34 @@ export function RuleRow({
         <div className="flex items-center">
           <span className="dt-amount-prefix">$</span>
           <input
-            type="number"
-            value={rule.amount}
-            onChange={(e) => onUpdate(rule.id, { amount: Number(e.target.value) })}
+            type={amountFocused ? 'number' : 'text'}
+            value={amountFocused ? rule.amount : rule.amount.toLocaleString()}
+            onChange={(e) => onUpdate(rule.id, { amount: Number(e.target.value.replace(/,/g, '')) })}
+            onFocus={() => setAmountFocused(true)}
+            onBlur={() => setAmountFocused(false)}
             className="dt-amount-input"
           />
         </div>
+      </td>
+
+      {/* Existing Account */}
+      <td className="px-3 py-2.5 min-w-[200px]">
+        <ConditionalCell
+          operator={rule.existingAccountOperator}
+          variable={rule.existingAccountVariable}
+          onOperatorChange={(op) => onUpdate(rule.id, { existingAccountOperator: op })}
+          onVariableChange={(v) => onUpdate(rule.id, { existingAccountVariable: v })}
+        />
+      </td>
+
+      {/* Annual Income */}
+      <td className="px-3 py-2.5 min-w-[200px]">
+        <ConditionalCell
+          operator={rule.annualIncomeOperator}
+          variable={rule.annualIncomeVariable}
+          onOperatorChange={(op) => onUpdate(rule.id, { annualIncomeOperator: op })}
+          onVariableChange={(v) => onUpdate(rule.id, { annualIncomeVariable: v })}
+        />
       </td>
 
       {/* Outcome */}

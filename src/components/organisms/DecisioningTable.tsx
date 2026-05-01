@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { TableIcon } from 'lucide-react'
 import type { Rule, Ruleset } from '../../types'
 import { Checkbox } from '../atoms/Checkbox'
 import { RuleRow } from '../molecules/RuleRow'
@@ -9,7 +10,6 @@ export interface DecisioningTableProps {
 }
 
 export function DecisioningTable({ ruleset, onUpdate }: DecisioningTableProps) {
-  const [editingAttributeId, setEditingAttributeId] = useState<string | null>(null)
   const [openMenuId, setOpenMenuId] = useState<string | null>(null)
 
   function updateRule(id: string, patch: Partial<Rule>) {
@@ -64,12 +64,13 @@ export function DecisioningTable({ ruleset, onUpdate }: DecisioningTableProps) {
                 onChange={toggleAll}
               />
             </th>
-            <th className="w-8 px-1 py-2.5"></th>
-            <th className="dt-th w-10 px-2 py-2.5 text-left tracking-wider">#</th>
-            <th className="dt-th px-3 py-2.5 text-left tracking-wider min-w-[180px]">Rule name</th>
+            <th className="dt-th w-14 px-2 py-2.5 text-center tracking-wider">#</th>
+            <th className="dt-th dt-col-sticky-head px-3 py-2.5 text-left tracking-wider min-w-[240px]">Rule name</th>
             <th className="dt-th px-3 py-2.5 text-left tracking-wider min-w-[140px]">Data attribute</th>
             <th className="dt-th px-3 py-2.5 text-left tracking-wider w-[110px]">Operator</th>
             <th className="dt-th px-3 py-2.5 text-left tracking-wider min-w-[120px]">Amount</th>
+            <th className="dt-th px-3 py-2.5 text-left tracking-wider min-w-[160px]">Existing Account</th>
+            <th className="dt-th px-3 py-2.5 text-left tracking-wider min-w-[160px]">Annual Income</th>
             <th className="dt-th px-3 py-2.5 text-left tracking-wider w-[110px]">Outcome</th>
             <th className="w-10 px-3 py-2.5"></th>
           </tr>
@@ -77,8 +78,12 @@ export function DecisioningTable({ ruleset, onUpdate }: DecisioningTableProps) {
         <tbody>
           {ruleset.rules.length === 0 ? (
             <tr>
-              <td colSpan={9} className="dt-empty-cell py-12 text-center">
-                No rules yet. Click <strong>Add rule</strong> to get started.
+              <td colSpan={11} className="dt-empty-cell">
+                <div className="dt-empty-state">
+                  <TableIcon size={28} className="dt-empty-icon" />
+                  <p className="dt-empty-title">No rules yet</p>
+                  <p className="dt-empty-subtitle">Click <strong>Add rule</strong> to define your first decision rule.</p>
+                </div>
               </td>
             </tr>
           ) : (
@@ -87,10 +92,7 @@ export function DecisioningTable({ ruleset, onUpdate }: DecisioningTableProps) {
                 key={rule.id}
                 rule={rule}
                 index={index}
-                editingAttributeId={editingAttributeId}
                 openMenuId={openMenuId}
-                onEditAttribute={(id) => setEditingAttributeId(id)}
-                onCloseAttribute={() => setEditingAttributeId(null)}
                 onMenuToggle={(id) => setOpenMenuId(openMenuId === id ? null : id)}
                 onMenuClose={() => setOpenMenuId(null)}
                 onUpdate={updateRule}

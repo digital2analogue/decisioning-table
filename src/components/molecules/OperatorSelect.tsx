@@ -9,19 +9,11 @@ export interface OperatorSelectProps {
 const operators: Operator[] = ['>', '>=', '<', '<=', '=']
 
 const labels: Record<Operator, string> = {
-  '>': '> Greater than',
-  '>=': '≥ At least',
-  '<': '< Less than',
-  '<=': '≤ At most',
-  '=': '= Equals',
-}
-
-const display: Record<Operator, string> = {
-  '>': '>',
-  '>=': '≥',
-  '<': '<',
-  '<=': '≤',
-  '=': '=',
+  '>':  'Greater than',
+  '>=': 'At least',
+  '<':  'Less than',
+  '<=': 'At most',
+  '=':  'Equals',
 }
 
 export function OperatorSelect({ value, onChange }: OperatorSelectProps) {
@@ -35,8 +27,7 @@ export function OperatorSelect({ value, onChange }: OperatorSelectProps) {
       >
         {operators.map((op) => (
           <option key={op} value={op}>
-            {display[op]}{' '}
-            {op === '>=' ? 'At least' : op === '<=' ? 'At most' : op === '>' ? 'Greater' : op === '<' ? 'Less' : 'Equals'}
+            {labels[op]}
           </option>
         ))}
       </select>

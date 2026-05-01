@@ -1,23 +1,44 @@
 import { useState, useRef, useEffect } from 'react'
 import { ChevronDownIcon, PencilIcon, CheckIcon, PlayIcon, PlusIcon } from 'lucide-react'
-import type { Ruleset } from '../../types'
+import type { Ruleset, ModelConfig } from '../../types'
 import { initialRulesets } from '../../data'
 import { DecisioningTable } from '../organisms/DecisioningTable'
 import { RulesetTabs } from '../organisms/RulesetTabs'
 
-export function DecisioningEngine() {
+interface DecisioningEngineProps {
+  modelConfig?: ModelConfig | null
+}
+
+export function DecisioningEngine({ modelConfig }: DecisioningEngineProps) {
   const [rulesets, setRulesets] = useState<Ruleset[]>(initialRulesets)
   const [activeRulesetId, setActiveRulesetId] = useState(initialRulesets[0].id)
   const [editingTitle, setEditingTitle] = useState(false)
-  const [titleDraft, setTitleDraft] = useState('My Decision Model')
-  const [title, setTitle] = useState('My Decision Model')
+  const [chevronOpen, setChevronOpen] = useState(false)
+  const defaultTitle = modelConfig?.modelName ?? 'My Decision Model'
+  const [titleDraft, setTitleDraft] = useState(defaultTitle)
+  const [title, setTitle] = useState(defaultTitle)
+  const [editingDesc, setEditingDesc] = useState(false)
+  const defaultDesc = modelConfig?.modelDescription ?? ''
+  const [descDraft, setDescDraft] = useState(defaultDesc)
+  const [desc, setDesc] = useState(defaultDesc)
   const titleInputRef = useRef<HTMLInputElement>(null)
+  const descInputRef = useRef<HTMLInputElement>(null)
 
   const activeRuleset = rulesets.find((rs) => rs.id === activeRulesetId)!
 
   useEffect(() => {
     if (editingTitle) titleInputRef.current?.focus()
   }, [editingTitle])
+
+  useEffect(() => {
+    if (editingDesc) descInputRef.current?.focus()
+  }, [editingDesc])
+
+  function commitDesc() {
+    const trimmed = descDraft.trim()
+    setDesc(trimmed)
+    setEditingDesc(false)
+  }
 
   function commitTitle() {
     const trimmed = titleDraft.trim()
@@ -38,6 +59,26 @@ export function DecisioningEngine() {
     }
     setRulesets((prev) => [...prev, newRuleset])
     setActiveRulesetId(id)
+  }
+
+  function addRule() {
+    const rs = rulesets.find(r => r.id === activeRulesetId)
+    if (rs) {
+      const newRule = {
+        id: `rule-${Date.now()}`,
+        selected: false,
+        ruleName: `Line of credit ${rs.rules.length + 1}`,
+        dataAttribute: 'Income' as const,
+        operator: '>' as const,
+        amount: 0,
+        outcome: 'Approve' as const,
+        existingAccountOperator: '==' as const,
+        existingAccountVariable: '',
+        annualIncomeOperator: '==' as const,
+        annualIncomeVariable: '',
+      }
+      updateRuleset({ ...rs, rules: [...rs.rules, newRule] })
+    }
   }
 
   return (
@@ -70,15 +111,54 @@ export function DecisioningEngine() {
                 <h1 className="dt-page-title">{title}</h1>
                 <button
                   onClick={() => { setTitleDraft(title); setEditingTitle(true) }}
-                  className="dt-icon-btn dt-icon-reveal"
+                  className="dt-icon-btn dt-icon-reveal dt-edit-cta"
                   title="Rename"
                 >
-                  <PencilIcon size={14} />
+                  <PencilIcon size={12} />
+                  Edit
                 </button>
               </>
             )}
           </div>
-          <p className="dt-page-subtitle">Add a description</p>
+          <div className="flex items-center gap-1.5 group/desc">
+            {editingDesc ? (
+              <div className="flex items-center gap-2">
+                <input
+                  ref={descInputRef}
+                  type="text"
+                  value={descDraft}
+                  onChange={(e) => setDescDraft(e.target.value)}
+                  onBlur={commitDesc}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter') commitDesc()
+                    if (e.key === 'Escape') { setDescDraft(desc); setEditingDesc(false) }
+                  }}
+                  className="dt-page-subtitle-input"
+                  placeholder="Add a description…"
+                />
+                <button onMouseDown={(e) => e.preventDefault()} onClick={commitDesc} className="dt-confirm-btn" title="Save">
+                  <CheckIcon size={14} />
+                </button>
+              </div>
+            ) : (
+              <>
+                <p
+                  className={`dt-page-subtitle${!desc ? ' dt-page-subtitle--empty' : ''}`}
+                  onClick={() => { setDescDraft(desc); setEditingDesc(true) }}
+                >
+                  {desc || 'Add a description…'}
+                </p>
+                <button
+                  onClick={() => { setDescDraft(desc); setEditingDesc(true) }}
+                  className="dt-icon-btn dt-icon-reveal dt-edit-cta"
+                  title="Edit description"
+                >
+                  <PencilIcon size={12} />
+                  Edit
+                </button>
+              </>
+            )}
+          </div>
         </div>
         <div className="flex items-center gap-3">
           <button className="dt-test-model-btn">
@@ -86,27 +166,32 @@ export function DecisioningEngine() {
             Test model
           </button>
           <div className="dt-split-btn">
-            <button onClick={() => {
-              const rs = rulesets.find(r => r.id === activeRulesetId)
-              if (rs) {
-                const newRule = {
-                  id: `rule-${Date.now()}`,
-                  selected: false,
-                  ruleName: `Line of credit ${rs.rules.length + 1}`,
-                  dataAttribute: 'Income' as const,
-                  operator: '>' as const,
-                  amount: 0,
-                  outcome: 'Approve' as const,
-                }
-                updateRuleset({ ...rs, rules: [...rs.rules, newRule] })
-              }
-            }} className="dt-split-btn-main">
+            <button onClick={addRule} className="dt-split-btn-main">
               <PlusIcon size={14} />
               Add rule
             </button>
-            <button className="dt-split-btn-chevron">
+            <button
+              className="dt-split-btn-chevron"
+              onClick={() => setChevronOpen((o) => !o)}
+              aria-haspopup="true"
+              aria-expanded={chevronOpen}
+            >
               <ChevronDownIcon size={14} />
             </button>
+            {chevronOpen && (
+              <>
+                <div className="fixed inset-0 z-20" onClick={() => setChevronOpen(false)} />
+                <div className="dt-split-btn-menu">
+                  <button className="dt-split-btn-menu-item" onClick={() => { addRule(); setChevronOpen(false) }}>
+                    Add rule
+                  </button>
+                  <hr className="dt-split-btn-menu-divider" />
+                  <button className="dt-split-btn-menu-item" onClick={() => setChevronOpen(false)}>
+                    Add existing rule
+                  </button>
+                </div>
+              </>
+            )}
           </div>
         </div>
       </div>

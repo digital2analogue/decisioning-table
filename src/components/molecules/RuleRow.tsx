@@ -160,7 +160,6 @@ export function RuleRow({
       <td className="px-3 py-2.5 relative">
         <IconButton
           onClick={() => onMenuToggle(rule.id)}
-          className="dt-icon-reveal"
         >
           <MoreHorizontalIcon size={16} />
         </IconButton>

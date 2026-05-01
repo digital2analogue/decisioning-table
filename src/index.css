@@ -145,7 +145,7 @@ select option { background-color: var(--color-background-elevated); color: var(-
   .dt-attr-dot-liability { background-color: var(--color-foreground-accent-purple); }
 
   .dt-outcome-seg { display: inline-flex; border: 1px solid var(--color-border-default); border-radius: var(--radius-sm); overflow: hidden; background-color: var(--color-background-alt); box-shadow: inset 0 1px 3px rgba(15,26,46,0.10); }
-  .dt-outcome-seg-btn { font: var(--font-label-small); letter-spacing: var(--letter-spacing-label); padding: 3px 9px; border: none; background: none; cursor: pointer; color: var(--color-foreground-secondary); transition: background-color var(--duration-fast) var(--easing-default), color var(--duration-fast) var(--easing-default), box-shadow var(--duration-fast) var(--easing-default); }
+  .dt-outcome-seg-btn { font: var(--font-label-small); letter-spacing: var(--letter-spacing-label); padding: 3px 9px; border: none; background: none; cursor: pointer; color: var(--color-foreground-muted); transition: background-color var(--duration-fast) var(--easing-default), color var(--duration-fast) var(--easing-default), box-shadow var(--duration-fast) var(--easing-default); }
   .dt-outcome-seg-btn:first-child { border-right: 1px solid var(--color-border-default); }
   .dt-outcome-seg-btn:hover:not(.dt-outcome-seg-approve):not(.dt-outcome-seg-deny) { background-color: var(--color-background-default); }
   .dt-outcome-seg-approve { background-color: var(--color-background-success-alt); color: var(--color-foreground-success); box-shadow: 0 1px 2px rgba(15,26,46,0.10), 0 0 0 0.5px rgba(15,26,46,0.06); }

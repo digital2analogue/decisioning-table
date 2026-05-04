@@ -1,5 +1,8 @@
+import { useCallback, useEffect, useRef, useState } from 'react'
+import { createPortal } from 'react-dom'
 import { ChevronDownIcon } from 'lucide-react'
 import type { Operator } from '../../types'
+import { cn } from '../../lib/utils'
 
 export interface OperatorSelectProps {
   value: Operator
@@ -16,25 +19,78 @@ const labels: Record<Operator, string> = {
   '=':  'Equals',
 }
 
+interface DropdownPos { top: number; left: number; width: number }
+
 export function OperatorSelect({ value, onChange }: OperatorSelectProps) {
+  const triggerRef = useRef<HTMLDivElement>(null)
+  const [isOpen, setIsOpen] = useState(false)
+  const [pos, setPos] = useState<DropdownPos | null>(null)
+
+  const open = useCallback(() => {
+    if (triggerRef.current) {
+      const r = triggerRef.current.getBoundingClientRect()
+      setPos({ top: r.bottom + 4, left: r.left, width: r.width })
+    }
+    setIsOpen(true)
+  }, [])
+
+  useEffect(() => {
+    function handleClose(e: MouseEvent) {
+      if (triggerRef.current && !triggerRef.current.contains(e.target as Node)) {
+        setIsOpen(false)
+      }
+    }
+    function handleScroll() { setIsOpen(false) }
+    document.addEventListener('mousedown', handleClose)
+    document.addEventListener('scroll', handleScroll, true)
+    return () => {
+      document.removeEventListener('mousedown', handleClose)
+      document.removeEventListener('scroll', handleScroll, true)
+    }
+  }, [])
+
   return (
-    <div className="relative inline-block">
-      <select
-        value={value}
-        onChange={(e) => onChange(e.target.value as Operator)}
-        className="dt-operator-select"
+    <div ref={triggerRef} className="inline-block">
+      <button
+        type="button"
+        onClick={() => isOpen ? setIsOpen(false) : open()}
+        className="dt-select-trigger"
         title={labels[value]}
+        aria-haspopup="listbox"
+        aria-expanded={isOpen}
       >
-        {operators.map((op) => (
-          <option key={op} value={op}>
-            {labels[op]}
-          </option>
-        ))}
-      </select>
-      <ChevronDownIcon
-        size={12}
-        className="dt-select-chevron absolute right-1.5 top-1/2 -translate-y-1/2 pointer-events-none"
-      />
+        <span>{labels[value]}</span>
+        <ChevronDownIcon size={12} className="dt-select-chevron" />
+      </button>
+
+      {isOpen && pos && createPortal(
+        <div
+          className="dt-conditional-dropdown"
+          role="listbox"
+          style={{ position: 'fixed', top: pos.top, left: pos.left, minWidth: pos.width, zIndex: 9999 }}
+        >
+          {operators.map((op) => (
+            <button
+              key={op}
+              type="button"
+              role="option"
+              aria-selected={value === op}
+              onMouseDown={(e) => {
+                e.preventDefault()
+                onChange(op)
+                setIsOpen(false)
+              }}
+              className={cn(
+                'dt-conditional-dropdown-item',
+                value === op && 'dt-conditional-dropdown-item-active'
+              )}
+            >
+              {labels[op]}
+            </button>
+          ))}
+        </div>,
+        document.body,
+      )}
     </div>
   )
 }

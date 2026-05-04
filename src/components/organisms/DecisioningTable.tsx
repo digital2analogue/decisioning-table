@@ -4,13 +4,15 @@ import type { Rule, Ruleset } from '../../types'
 import { Checkbox } from '../atoms/Checkbox'
 import { RuleRow } from '../molecules/RuleRow'
 import { ChildRuleRow } from '../molecules/ChildRuleRow'
+import { AddRowButton } from '../molecules/AddRowButton'
 
 export interface DecisioningTableProps {
   ruleset: Ruleset
   onUpdate: (ruleset: Ruleset) => void
+  onAddRule: () => void
 }
 
-export function DecisioningTable({ ruleset, onUpdate }: DecisioningTableProps) {
+export function DecisioningTable({ ruleset, onUpdate, onAddRule }: DecisioningTableProps) {
   const [openMenuId, setOpenMenuId] = useState<string | null>(null)
   const [expandedIds, setExpandedIds] = useState<Set<string>>(() => {
     // Default: parents with children start expanded so the feature is discoverable
@@ -191,6 +193,11 @@ export function DecisioningTable({ ruleset, onUpdate }: DecisioningTableProps) {
           )}
         </tbody>
       </table>
+      {ruleset.rules.length > 0 && (
+        <div className="dt-add-row">
+          <AddRowButton onAddRule={onAddRule} />
+        </div>
+      )}
     </div>
   )
 }

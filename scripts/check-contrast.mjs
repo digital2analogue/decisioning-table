@@ -149,6 +149,9 @@ const PAIRINGS = [
   // AND / OR logic chips (specific brand-amber + brand-blue tints)
   { text: '--color-foreground-accent-blue',   bg: '--color-background-accent-subtle',  label: 'Nested: AND logic chip' },
   { text: '--color-foreground-warning-dark',  bg: '--color-background-warning-subtle', label: 'Nested: OR logic chip' },
+  // Add-row footer button (default + hover)
+  { text: '--color-foreground-muted',         bg: '--color-background-elevated',       label: 'Add-row + button (default)' },
+  { text: '--color-foreground-action',        bg: '--color-background-accent-blue',    label: 'Add-row + button (hover)' },
 ]
 
 // ─── Run ───────────────────────────────────────────────────────────────────────

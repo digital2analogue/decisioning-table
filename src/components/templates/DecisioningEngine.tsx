@@ -199,7 +199,7 @@ export function DecisioningEngine({ modelConfig }: DecisioningEngineProps) {
       {/* Table area — edge-to-edge */}
       <div className="flex-1">
         {activeRuleset && (
-          <DecisioningTable ruleset={activeRuleset} onUpdate={updateRuleset} />
+          <DecisioningTable ruleset={activeRuleset} onUpdate={updateRuleset} onAddRule={addRule} />
         )}
       </div>
 

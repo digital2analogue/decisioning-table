@@ -147,7 +147,7 @@ export function ConditionalCell({
                 setIsOperatorOpen(false)
               }}
               className={cn(
-                'dt-conditional-dropdown-item dt-conditional-dropdown-item--mono',
+                'dt-conditional-dropdown-item',
                 operator === op && 'dt-conditional-dropdown-item-active'
               )}
             >

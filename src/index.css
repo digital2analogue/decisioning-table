@@ -206,8 +206,6 @@ select option { background-color: var(--color-background-elevated); color: var(-
 
   /* ── Nested rule rows (parent + child) ──────────────── */
 
-  /* Parent row when expanded — left rail starts here so it stitches into children */
-  .dt-parent-row-expanded .dt-col-sticky { box-shadow: inset 2px 0 0 var(--color-border-accent); }
 
   /* Parent rule name layout: chevron · IF · name · sub count */
   .dt-parent-name-wrap { display: flex; align-items: center; gap: var(--space-sm); min-width: 0; }

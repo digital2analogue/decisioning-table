@@ -71,6 +71,9 @@ select option { background-color: var(--color-background-elevated); color: var(-
   /* Column separators on every column boundary (skips child rows so the indented region reads as continuous, not segmented) */
   .dt-table-edge th + th,
   .dt-table-edge tr:not(.dt-child-row) td + td { border-left: 1px solid var(--color-border-default); }
+  /* No separator between the # column and the rule-name column — keeps the row-id area visually attached to the rule */
+  .dt-table-edge tr:not(.dt-child-row) td.dt-col-sticky,
+  .dt-table-edge th.dt-col-sticky-head { border-left: none; }
   .dt-th { font-family: var(--font-family-sans); font-size: var(--font-size-xs); font-weight: var(--font-weight-semibold); line-height: var(--font-line-height-snug); color: var(--color-foreground-secondary); text-transform: uppercase; letter-spacing: var(--letter-spacing-all-caps); }
   .dt-tbody-row { border-bottom: 1px solid var(--color-border-muted); background-color: var(--color-background-elevated); transition: background-color var(--duration-fast) var(--easing-default); }
   .dt-tbody-row:hover td:first-child { box-shadow: inset 3px 0 0 var(--color-foreground-action); }

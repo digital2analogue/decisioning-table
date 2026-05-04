@@ -247,11 +247,11 @@ select option { background-color: var(--color-background-elevated); color: var(-
   /* CSS-drawn tree connector — vertical line through siblings, half-horizontal to chip on each child */
   .dt-child-connector-cell { position: relative; padding: 0 !important; }
   .dt-child-tree-line {
-    position: absolute; top: 0; bottom: 0; left: 50%;
+    position: absolute; top: 0; bottom: 0; right: 0;
     width: 1px; background-color: var(--color-border-elevated);
   }
   .dt-child-tree-line::after {
-    content: ''; position: absolute; top: 50%; left: 0; right: -10px; height: 1px;
+    content: ''; position: absolute; top: 50%; left: 0; right: -8px; height: 1px;
     background-color: var(--color-border-elevated);
   }
   /* Last child crops the lower half of the vertical line */

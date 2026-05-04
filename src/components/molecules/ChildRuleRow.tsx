@@ -128,6 +128,8 @@ export function ChildRuleRow({
           <IconButton
             onClick={onMenuToggle}
             ariaLabel={`Sub-condition actions for ${rule.ruleName || 'unnamed sub-condition'}`}
+            ariaHasPopup="menu"
+            ariaExpanded={menuOpen}
           >
             <MoreHorizontalIcon size={16} />
           </IconButton>

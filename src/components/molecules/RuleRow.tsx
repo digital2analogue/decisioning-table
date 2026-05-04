@@ -185,6 +185,8 @@ export function RuleRow({
           <IconButton
             onClick={() => onMenuToggle(rule.id)}
             ariaLabel={`Row actions for ${rule.ruleName || `rule ${index + 1}`}`}
+            ariaHasPopup="menu"
+            ariaExpanded={openMenuId === rule.id}
           >
             <MoreHorizontalIcon size={16} />
           </IconButton>

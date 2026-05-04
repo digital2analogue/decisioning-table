@@ -240,10 +240,9 @@ select option { background-color: var(--color-background-elevated); color: var(-
   .dt-child-row:hover { background-color: color-mix(in srgb, var(--color-background-alt) 88%, var(--color-background-action) 12%); }
   .dt-child-row .dt-col-sticky { background-color: var(--color-background-alt); }
   .dt-child-row:hover .dt-col-sticky { background-color: color-mix(in srgb, var(--color-background-alt) 88%, var(--color-background-action) 12%); }
-  /* Continuous blue rail on the left edge of every child row, stitched to parent above */
-  .dt-child-row .dt-col-sticky { position: sticky; left: 0; z-index: 2; box-shadow: inset 2px 0 0 var(--color-border-accent); }
+  .dt-child-row .dt-col-sticky { position: sticky; left: 0; z-index: 2; }
   .dt-child-row-last { border-bottom: 1px solid var(--color-border-default); }
-  .dt-child-row-last .dt-col-sticky { box-shadow: inset 2px 0 0 var(--color-border-accent), inset 0 -1px 0 var(--color-border-default); }
+  .dt-child-row-last .dt-col-sticky { box-shadow: inset 0 -1px 0 var(--color-border-default); }
   /* Children's leading cells (legacy marker class — kept for semantic clarity in JSX; column-separator borders are excluded at the table-level rule) */
   .dt-child-cell-bare { border-left: none; }
 

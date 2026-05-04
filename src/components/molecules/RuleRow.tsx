@@ -41,6 +41,7 @@ export function RuleRow({
   onToggleExpand,
 }: RuleRowProps) {
   const rowRef = useRef<HTMLTableRowElement>(null)
+  const actionsAnchorRef = useRef<HTMLDivElement>(null)
   const childCount = rule.children?.length ?? 0
   const hasChildren = childCount > 0
 
@@ -179,20 +180,23 @@ export function RuleRow({
       </td>
 
       {/* Actions */}
-      <td className="px-3 py-2.5 relative">
-        <IconButton
-          onClick={() => onMenuToggle(rule.id)}
-          ariaLabel={`Row actions for ${rule.ruleName || `rule ${index + 1}`}`}
-        >
-          <MoreHorizontalIcon size={16} />
-        </IconButton>
-        {openMenuId === rule.id && (
-          <ActionsMenu
-            onDuplicate={() => onDuplicate(rule.id)}
-            onDelete={() => onDelete(rule.id)}
-            onClose={onMenuClose}
-          />
-        )}
+      <td className="px-3 py-2.5">
+        <div ref={actionsAnchorRef} className="relative inline-block">
+          <IconButton
+            onClick={() => onMenuToggle(rule.id)}
+            ariaLabel={`Row actions for ${rule.ruleName || `rule ${index + 1}`}`}
+          >
+            <MoreHorizontalIcon size={16} />
+          </IconButton>
+          {openMenuId === rule.id && (
+            <ActionsMenu
+              anchorRef={actionsAnchorRef}
+              onDuplicate={() => onDuplicate(rule.id)}
+              onDelete={() => onDelete(rule.id)}
+              onClose={onMenuClose}
+            />
+          )}
+        </div>
       </td>
     </tr>
   )

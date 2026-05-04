@@ -1,3 +1,4 @@
+import { useRef } from 'react'
 import { MoreHorizontalIcon } from 'lucide-react'
 import type { Rule, LogicOperator } from '../../types'
 import { cn } from '../../lib/utils'
@@ -31,6 +32,7 @@ export function ChildRuleRow({
   onDelete,
   onDuplicate,
 }: ChildRuleRowProps) {
+  const actionsAnchorRef = useRef<HTMLDivElement>(null)
   const op: LogicOperator = rule.logicOperator ?? 'AND'
 
   function toggleLogic() {
@@ -121,20 +123,23 @@ export function ChildRuleRow({
       <td className="px-3 py-2.5"></td>
 
       {/* Actions */}
-      <td className="px-3 py-2.5 relative">
-        <IconButton
-          onClick={onMenuToggle}
-          ariaLabel={`Sub-condition actions for ${rule.ruleName || 'unnamed sub-condition'}`}
-        >
-          <MoreHorizontalIcon size={16} />
-        </IconButton>
-        {menuOpen && (
-          <ActionsMenu
-            onDuplicate={() => onDuplicate(parentId, rule.id)}
-            onDelete={() => onDelete(parentId, rule.id)}
-            onClose={onMenuClose}
-          />
-        )}
+      <td className="px-3 py-2.5">
+        <div ref={actionsAnchorRef} className="relative inline-block">
+          <IconButton
+            onClick={onMenuToggle}
+            ariaLabel={`Sub-condition actions for ${rule.ruleName || 'unnamed sub-condition'}`}
+          >
+            <MoreHorizontalIcon size={16} />
+          </IconButton>
+          {menuOpen && (
+            <ActionsMenu
+              anchorRef={actionsAnchorRef}
+              onDuplicate={() => onDuplicate(parentId, rule.id)}
+              onDelete={() => onDelete(parentId, rule.id)}
+              onClose={onMenuClose}
+            />
+          )}
+        </div>
       </td>
     </tr>
   )

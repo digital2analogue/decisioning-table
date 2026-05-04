@@ -68,9 +68,9 @@ select option { background-color: var(--color-background-elevated); color: var(-
   .dt-table-edge table { min-width: max-content; }
   .dt-thead-row { background-color: var(--color-background-accent-blue); border-bottom: 1px solid var(--color-border-default); }
 
-  /* Column separators on every column boundary */
+  /* Column separators on every column boundary (skips child rows so the indented region reads as continuous, not segmented) */
   .dt-table-edge th + th,
-  .dt-table-edge td + td { border-left: 1px solid var(--color-border-default); }
+  .dt-table-edge tr:not(.dt-child-row) td + td { border-left: 1px solid var(--color-border-default); }
   .dt-th { font-family: var(--font-family-sans); font-size: var(--font-size-xs); font-weight: var(--font-weight-semibold); line-height: var(--font-line-height-snug); color: var(--color-foreground-secondary); text-transform: uppercase; letter-spacing: var(--letter-spacing-all-caps); }
   .dt-tbody-row { border-bottom: 1px solid var(--color-border-muted); background-color: var(--color-background-elevated); transition: background-color var(--duration-fast) var(--easing-default); }
   .dt-tbody-row:hover td:first-child { box-shadow: inset 3px 0 0 var(--color-foreground-action); }
@@ -244,10 +244,8 @@ select option { background-color: var(--color-background-elevated); color: var(-
   .dt-child-row .dt-col-sticky { position: sticky; left: 0; z-index: 2; box-shadow: inset 2px 0 0 var(--color-border-accent); }
   .dt-child-row-last { border-bottom: 1px solid var(--color-border-default); }
   .dt-child-row-last .dt-col-sticky { box-shadow: inset 2px 0 0 var(--color-border-accent), inset 0 -1px 0 var(--color-border-default); }
-  /* Drop column separators inside child rows so the indented region reads as continuous, not segmented */
-  .dt-child-row td + td { border-left: none; }
-  /* Children's leading cells lose default column-separator borders for a cleaner look */
-  .dt-child-cell-bare { border-left: none !important; }
+  /* Children's leading cells (legacy marker class — kept for semantic clarity in JSX; column-separator borders are excluded at the table-level rule) */
+  .dt-child-cell-bare { border-left: none; }
 
   /* CSS-drawn tree connector — vertical line through siblings, half-horizontal to chip on each child */
   .dt-child-connector-cell { position: relative; padding: 0 !important; }
@@ -277,10 +275,10 @@ select option { background-color: var(--color-background-elevated); color: var(-
     transition: background-color var(--duration-fast) var(--easing-default), box-shadow var(--duration-fast) var(--easing-default);
   }
   .dt-logic-chip:focus-visible { outline: none; box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-background-action) 22%, transparent); }
-  .dt-logic-chip-and { background-color: #e5ebfc; color: #2456E4; }
-  .dt-logic-chip-and:hover { background-color: color-mix(in srgb, #e5ebfc 80%, #2456E4 20%); }
-  .dt-logic-chip-or  { background-color: #FAEEDA; color: #854F0B; }
-  .dt-logic-chip-or:hover  { background-color: color-mix(in srgb, #FAEEDA 80%, #854F0B 20%); }
+  .dt-logic-chip-and { background-color: var(--color-background-accent-subtle); color: var(--color-foreground-accent-blue); }
+  .dt-logic-chip-and:hover { background-color: color-mix(in srgb, var(--color-background-accent-subtle) 80%, var(--color-foreground-accent-blue) 20%); }
+  .dt-logic-chip-or  { background-color: var(--color-background-warning-subtle); color: var(--color-foreground-warning-dark); }
+  .dt-logic-chip-or:hover  { background-color: color-mix(in srgb, var(--color-background-warning-subtle) 80%, var(--color-foreground-warning-dark) 20%); }
 
   /* Last-child outcome hint — pure grammar, no chrome */
   .dt-child-outcome-hint {

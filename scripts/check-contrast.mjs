@@ -147,8 +147,8 @@ const PAIRINGS = [
   { text: '--color-foreground-default',   bg: '--color-background-alt', label: 'Nested: child rule name input' },
   { text: '--color-foreground-muted',     bg: '--color-background-alt', label: 'Nested: child amount prefix / connector' },
   // AND / OR logic chips (specific brand-amber + brand-blue tints)
-  { text: '#2456E4',                      bg: '#e5ebfc',                label: 'Nested: AND logic chip' },
-  { text: '#854F0B',                      bg: '#FAEEDA',                label: 'Nested: OR logic chip' },
+  { text: '--color-foreground-accent-blue',   bg: '--color-background-accent-subtle',  label: 'Nested: AND logic chip' },
+  { text: '--color-foreground-warning-dark',  bg: '--color-background-warning-subtle', label: 'Nested: OR logic chip' },
   // Last-child outcome hint (over child row bg)
   { text: '--color-foreground-success',   bg: '--color-background-alt', label: 'Nested: last-child Approve hint' },
   { text: '--color-foreground-danger',    bg: '--color-background-alt', label: 'Nested: last-child Deny hint' },
@@ -158,6 +158,7 @@ const PAIRINGS = [
 
 const MIN_RATIO = 4.5
 let failed = 0
+let unresolved = 0
 
 console.log('\n  Contrast check — WCAG AA (4.5:1 minimum)\n')
 console.log(`  ${'Pair'.padEnd(52)} ${'Ratio'.padStart(7)}  Status`)
@@ -168,7 +169,11 @@ for (const { text, bg, label } of PAIRINGS) {
   const bgHex   = typeof bg   === 'string' && bg.startsWith('--')   ? tok(bg)   : bg
 
   if (!textHex || !bgHex) {
-    console.log(`  ${'[unresolved] ' + label}`)
+    const missing = []
+    if (!textHex) missing.push(`text=${text}`)
+    if (!bgHex)   missing.push(`bg=${bg}`)
+    unresolved++
+    console.log(`  ${label.padEnd(52)} ${'—'.padStart(7)}    ❌ UNRESOLVED (${missing.join(', ')})`)
     continue
   }
 
@@ -180,8 +185,13 @@ for (const { text, bg, label } of PAIRINGS) {
 
 console.log()
 
-if (failed > 0) {
-  console.error(`  ❌ ${failed} contrast failure(s). Fix token values or pairing CSS before shipping.\n`)
+const totalProblems = failed + unresolved
+
+if (totalProblems > 0) {
+  const parts = []
+  if (failed > 0)     parts.push(`${failed} contrast failure(s)`)
+  if (unresolved > 0) parts.push(`${unresolved} unresolved pairing(s)`)
+  console.error(`  ❌ ${parts.join(' + ')}. Fix token values, pairing CSS, or manifest references before shipping.\n`)
   process.exit(1)
 } else {
   console.log(`  ✅ All ${PAIRINGS.length} pairs pass WCAG AA\n`)

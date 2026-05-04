@@ -1,4 +1,4 @@
-import { useCallback, useRef, useState } from 'react'
+import { useCallback, useRef } from 'react'
 import { useDrag, useDrop } from 'react-dnd'
 import { MoreHorizontalIcon, GripVerticalIcon, ChevronDownIcon, ChevronRightIcon } from 'lucide-react'
 import type { Rule, DragItem } from '../../types'
@@ -6,6 +6,7 @@ import { cn } from '../../lib/utils'
 import { Checkbox } from '../atoms/Checkbox'
 import { AttributeSelectBadge, OutcomeBadge } from '../atoms/Badge'
 import { IconButton } from '../atoms/IconButton'
+import { AmountCell } from '../atoms/AmountCell'
 import { OperatorSelect } from './OperatorSelect'
 import { ActionsMenu } from './ActionsMenu'
 import { ConditionalCell } from './ConditionalCell'
@@ -40,7 +41,6 @@ export function RuleRow({
   onToggleExpand,
 }: RuleRowProps) {
   const rowRef = useRef<HTMLTableRowElement>(null)
-  const [amountFocused, setAmountFocused] = useState(false)
   const childCount = rule.children?.length ?? 0
   const hasChildren = childCount > 0
 
@@ -144,17 +144,10 @@ export function RuleRow({
 
       {/* Amount */}
       <td className="px-3 py-2.5">
-        <div className="flex items-center">
-          <span className="dt-amount-prefix">$</span>
-          <input
-            type={amountFocused ? 'number' : 'text'}
-            value={amountFocused ? rule.amount : rule.amount.toLocaleString()}
-            onChange={(e) => onUpdate(rule.id, { amount: Number(e.target.value.replace(/,/g, '')) })}
-            onFocus={() => setAmountFocused(true)}
-            onBlur={() => setAmountFocused(false)}
-            className="dt-amount-input"
-          />
-        </div>
+        <AmountCell
+          value={rule.amount}
+          onChange={(amount) => onUpdate(rule.id, { amount })}
+        />
       </td>
 
       {/* Existing Account */}
@@ -189,6 +182,7 @@ export function RuleRow({
       <td className="px-3 py-2.5 relative">
         <IconButton
           onClick={() => onMenuToggle(rule.id)}
+          ariaLabel={`Row actions for ${rule.ruleName || `rule ${index + 1}`}`}
         >
           <MoreHorizontalIcon size={16} />
         </IconButton>

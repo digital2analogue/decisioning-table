@@ -1,9 +1,9 @@
-import { useState } from 'react'
 import { ArrowRightIcon, MoreHorizontalIcon } from 'lucide-react'
 import type { Rule, LogicOperator, Outcome } from '../../types'
 import { cn } from '../../lib/utils'
 import { AttributeSelectBadge } from '../atoms/Badge'
 import { IconButton } from '../atoms/IconButton'
+import { AmountCell } from '../atoms/AmountCell'
 import { OperatorSelect } from './OperatorSelect'
 import { ConditionalCell } from './ConditionalCell'
 import { ActionsMenu } from './ActionsMenu'
@@ -33,7 +33,6 @@ export function ChildRuleRow({
   onDelete,
   onDuplicate,
 }: ChildRuleRowProps) {
-  const [amountFocused, setAmountFocused] = useState(false)
   const op: LogicOperator = rule.logicOperator ?? 'AND'
 
   function toggleLogic() {
@@ -94,17 +93,10 @@ export function ChildRuleRow({
 
       {/* Amount */}
       <td className="px-3 py-2.5">
-        <div className="flex items-center">
-          <span className="dt-amount-prefix">$</span>
-          <input
-            type={amountFocused ? 'number' : 'text'}
-            value={amountFocused ? rule.amount : rule.amount.toLocaleString()}
-            onChange={(e) => onUpdate(parentId, rule.id, { amount: Number(e.target.value.replace(/,/g, '')) })}
-            onFocus={() => setAmountFocused(true)}
-            onBlur={() => setAmountFocused(false)}
-            className="dt-amount-input"
-          />
-        </div>
+        <AmountCell
+          value={rule.amount}
+          onChange={(amount) => onUpdate(parentId, rule.id, { amount })}
+        />
       </td>
 
       {/* Existing Account */}
@@ -145,7 +137,10 @@ export function ChildRuleRow({
 
       {/* Actions */}
       <td className="px-3 py-2.5 relative">
-        <IconButton onClick={onMenuToggle}>
+        <IconButton
+          onClick={onMenuToggle}
+          ariaLabel={`Sub-condition actions for ${rule.ruleName || 'unnamed sub-condition'}`}
+        >
           <MoreHorizontalIcon size={16} />
         </IconButton>
         {menuOpen && (

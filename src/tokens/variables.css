@@ -49,11 +49,13 @@
   --color-background-success-alt: #dcfce7;
   --color-background-warning: #d97706;
   --color-background-warning-alt: #fef3c7;
+  --color-background-warning-subtle: #FAEEDA; /* TODO: move to brand-tokens — OR logic chip fill (peachier than warning-alt) */
   --color-background-info: #2456e4;
   --color-background-info-alt: #e5ebfc;
   --color-foreground-success: #15803d;
   --color-foreground-on-success: #ffffff;
   --color-foreground-warning: #92400e;
+  --color-foreground-warning-dark: #854F0B; /* TODO: move to brand-tokens — OR logic chip foreground (deeper amber for chip-on-tint contrast) */
   --color-foreground-on-warning: #1A1A2E; /* DE light-mode override; brand-tokens ships #fff for dark theme */
   --color-foreground-info: #2456e4;
   --color-foreground-on-info: #ffffff;
@@ -118,6 +120,7 @@
   --shadow-none: 0 0 0 0 transparent;
   --shadow-sm: 0 1px 2px 0 rgba(15, 26, 46, 0.06);
   --shadow-card: 0 2px 8px rgba(15, 26, 46, 0.07);
+  --shadow-md: 0 4px 16px rgba(15, 26, 46, 0.10); /* TODO: move to brand-tokens — mid-elevation (above card, below menu) for popovers and hover-lifted CTAs */
   --shadow-menu: 0 8px 28px rgba(15, 26, 46, 0.12), 0 2px 6px rgba(15, 26, 46, 0.06);
   --shadow-xl: 0 20px 48px rgba(15, 26, 46, 0.14);
   /* Motion */

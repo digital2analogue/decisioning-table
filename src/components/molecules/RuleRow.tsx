@@ -1,6 +1,6 @@
 import { useCallback, useRef, useState } from 'react'
 import { useDrag, useDrop } from 'react-dnd'
-import { MoreHorizontalIcon, GripVerticalIcon } from 'lucide-react'
+import { MoreHorizontalIcon, GripVerticalIcon, ChevronDownIcon, ChevronRightIcon } from 'lucide-react'
 import type { Rule, DragItem } from '../../types'
 import { cn } from '../../lib/utils'
 import { Checkbox } from '../atoms/Checkbox'
@@ -22,6 +22,8 @@ export interface RuleRowProps {
   onDelete: (id: string) => void
   onDuplicate: (id: string) => void
   onMove: (dragIndex: number, hoverIndex: number) => void
+  isExpanded: boolean
+  onToggleExpand: (id: string) => void
 }
 
 export function RuleRow({
@@ -34,9 +36,13 @@ export function RuleRow({
   onDelete,
   onDuplicate,
   onMove,
+  isExpanded,
+  onToggleExpand,
 }: RuleRowProps) {
   const rowRef = useRef<HTMLTableRowElement>(null)
   const [amountFocused, setAmountFocused] = useState(false)
+  const childCount = rule.children?.length ?? 0
+  const hasChildren = childCount > 0
 
   const [{ isDragging }, drag, dragPreview] = useDrag<DragItem, unknown, { isDragging: boolean }>({
     type: DND_TYPE,
@@ -69,6 +75,7 @@ export function RuleRow({
         isDragging ? 'dt-tbody-row-dragging' : '',
         isOver && !isDragging ? 'dt-tbody-row-over' : '',
         rule.selected && !isDragging ? 'dt-tbody-row-selected' : '',
+        hasChildren && isExpanded ? 'dt-parent-row-expanded' : '',
       )}
     >
       {/* Checkbox */}
@@ -86,15 +93,37 @@ export function RuleRow({
       </td>
 
       {/* Rule Name */}
-      <td className="dt-col-sticky px-3 py-2.5 max-w-[240px]">
-        <input
-          type="text"
-          value={rule.ruleName}
-          onChange={(e) => onUpdate(rule.id, { ruleName: e.target.value })}
-          className="dt-rule-name-input"
-          placeholder="Rule name..."
-          title={rule.ruleName}
-        />
+      <td className="dt-col-sticky px-3 py-2.5 max-w-[260px]">
+        <div className="dt-parent-name-wrap">
+          {hasChildren ? (
+            <button
+              type="button"
+              onClick={() => onToggleExpand(rule.id)}
+              className="dt-expand-toggle"
+              aria-expanded={isExpanded}
+              aria-label={isExpanded ? 'Collapse sub-conditions' : 'Expand sub-conditions'}
+              title={isExpanded ? 'Collapse sub-conditions' : 'Expand sub-conditions'}
+            >
+              {isExpanded ? <ChevronDownIcon size={14} /> : <ChevronRightIcon size={14} />}
+            </button>
+          ) : (
+            <span className="dt-expand-toggle-spacer" aria-hidden="true" />
+          )}
+          {hasChildren && <span className="dt-if-prefix" aria-hidden="true">IF</span>}
+          <input
+            type="text"
+            value={rule.ruleName}
+            onChange={(e) => onUpdate(rule.id, { ruleName: e.target.value })}
+            className="dt-rule-name-input"
+            placeholder="Rule name..."
+            title={rule.ruleName}
+          />
+          {hasChildren && (
+            <span className="dt-sub-count" title={`${childCount} sub-condition${childCount === 1 ? '' : 's'}`}>
+              ({childCount})
+            </span>
+          )}
+        </div>
       </td>
 
       {/* Data Attribute */}

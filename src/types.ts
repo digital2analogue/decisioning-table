@@ -31,6 +31,8 @@ export interface ModelConfig {
   selectedDataElements: string[]
 }
 
+export type LogicOperator = 'AND' | 'OR'
+
 export interface Rule {
   id: string
   selected: boolean
@@ -43,6 +45,8 @@ export interface Rule {
   existingAccountVariable: string
   annualIncomeOperator: ConditionalOperator
   annualIncomeVariable: string
+  children?: Rule[]
+  logicOperator?: LogicOperator
 }
 
 export interface Ruleset {

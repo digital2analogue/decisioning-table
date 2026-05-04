@@ -204,6 +204,107 @@ select option { background-color: var(--color-background-elevated); color: var(-
   .dt-tbody-row-selected .dt-col-sticky { background-color: color-mix(in srgb, var(--color-background-elevated) 94%, var(--color-background-action) 6%); }
   .dt-tbody-row-selected:hover .dt-col-sticky { background-color: color-mix(in srgb, var(--color-background-elevated) 91%, var(--color-background-action) 9%); }
 
+  /* ── Nested rule rows (parent + child) ──────────────── */
+
+  /* Parent row when expanded — left rail starts here so it stitches into children */
+  .dt-parent-row-expanded .dt-col-sticky { box-shadow: inset 2px 0 0 var(--color-border-accent); }
+
+  /* Parent rule name layout: chevron · IF · name · sub count */
+  .dt-parent-name-wrap { display: flex; align-items: center; gap: var(--space-sm); min-width: 0; }
+  .dt-expand-toggle {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 22px; height: 22px; padding: 0; flex-shrink: 0;
+    color: var(--color-foreground-muted); background: transparent; border: 1px solid transparent;
+    border-radius: var(--radius-sm); cursor: pointer; line-height: 0;
+    transition: color var(--duration-fast) var(--easing-default), background-color var(--duration-fast) var(--easing-default), border-color var(--duration-fast) var(--easing-default);
+  }
+  .dt-expand-toggle:hover { color: var(--color-foreground-action); background-color: var(--color-background-accent-blue); }
+  .dt-expand-toggle:focus-visible { outline: none; color: var(--color-foreground-action); box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-background-action) 18%, transparent); }
+  .dt-expand-toggle-spacer { display: inline-block; width: 22px; height: 22px; flex-shrink: 0; }
+  /* IF prefix — pure grammar, no chrome */
+  .dt-if-prefix {
+    flex-shrink: 0;
+    font-family: var(--font-family-mono); font-size: 0.6875rem; font-weight: var(--font-weight-medium);
+    line-height: 1; letter-spacing: var(--letter-spacing-all-caps);
+    color: var(--color-foreground-muted); text-transform: uppercase;
+  }
+  /* Sub-count — neutral mono inline counter */
+  .dt-sub-count {
+    flex-shrink: 0;
+    font-family: var(--font-family-mono); font-size: var(--font-size-xs); line-height: 1;
+    color: var(--color-foreground-muted); font-variant-numeric: tabular-nums;
+  }
+
+  /* Child rows */
+  .dt-child-row { background-color: var(--color-background-alt); }
+  .dt-child-row:hover { background-color: color-mix(in srgb, var(--color-background-alt) 88%, var(--color-background-action) 12%); }
+  .dt-child-row .dt-col-sticky { background-color: var(--color-background-alt); }
+  .dt-child-row:hover .dt-col-sticky { background-color: color-mix(in srgb, var(--color-background-alt) 88%, var(--color-background-action) 12%); }
+  /* Continuous blue rail on the left edge of every child row, stitched to parent above */
+  .dt-child-row .dt-col-sticky { position: sticky; left: 0; z-index: 2; box-shadow: inset 2px 0 0 var(--color-border-accent); }
+  .dt-child-row-last { border-bottom: 1px solid var(--color-border-default); }
+  .dt-child-row-last .dt-col-sticky { box-shadow: inset 2px 0 0 var(--color-border-accent), inset 0 -1px 0 var(--color-border-default); }
+  /* Drop column separators inside child rows so the indented region reads as continuous, not segmented */
+  .dt-child-row td + td { border-left: none; }
+  /* Children's leading cells lose default column-separator borders for a cleaner look */
+  .dt-child-cell-bare { border-left: none !important; }
+
+  /* CSS-drawn tree connector — vertical line through siblings, half-horizontal to chip on each child */
+  .dt-child-connector-cell { position: relative; padding: 0 !important; }
+  .dt-child-tree-line {
+    position: absolute; top: 0; bottom: 0; left: 50%;
+    width: 1px; background-color: var(--color-border-elevated);
+  }
+  .dt-child-tree-line::after {
+    content: ''; position: absolute; top: 50%; left: 0; right: -10px; height: 1px;
+    background-color: var(--color-border-elevated);
+  }
+  /* Last child crops the lower half of the vertical line */
+  .dt-child-row-last .dt-child-tree-line { bottom: 50%; }
+
+  /* Child rule name layout: AND/OR chip · name */
+  .dt-child-name-cell { padding-left: var(--space-md) !important; }
+  .dt-child-name-wrap { display: flex; align-items: center; gap: var(--space-sm); min-width: 0; }
+
+  /* AND / OR logic chips */
+  .dt-logic-chip {
+    display: inline-flex; align-items: center; justify-content: center;
+    flex-shrink: 0; min-width: 36px;
+    font-family: var(--font-family-mono); font-size: 0.6875rem; font-weight: var(--font-weight-semibold);
+    line-height: 1; letter-spacing: var(--letter-spacing-all-caps);
+    border-radius: var(--radius-sm); padding: 4px var(--space-sm);
+    border: 1px solid transparent; cursor: pointer;
+    transition: background-color var(--duration-fast) var(--easing-default), box-shadow var(--duration-fast) var(--easing-default);
+  }
+  .dt-logic-chip:focus-visible { outline: none; box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-background-action) 22%, transparent); }
+  .dt-logic-chip-and { background-color: #e5ebfc; color: #2456E4; }
+  .dt-logic-chip-and:hover { background-color: color-mix(in srgb, #e5ebfc 80%, #2456E4 20%); }
+  .dt-logic-chip-or  { background-color: #FAEEDA; color: #854F0B; }
+  .dt-logic-chip-or:hover  { background-color: color-mix(in srgb, #FAEEDA 80%, #854F0B 20%); }
+
+  /* Last-child outcome hint — pure grammar, no chrome */
+  .dt-child-outcome-hint {
+    display: inline-flex; align-items: center; gap: var(--space-xs);
+    font: var(--font-label-small); letter-spacing: var(--letter-spacing-label);
+    font-style: italic; padding: 0;
+  }
+  .dt-child-outcome-hint-approve { color: var(--color-foreground-success); }
+  .dt-child-outcome-hint-deny    { color: var(--color-foreground-danger); }
+
+  /* Expand motion — child rows slide in from the top with a tiny stagger */
+  @keyframes dt-child-row-in {
+    from { opacity: 0; transform: translateY(-4px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  .dt-child-row { animation: dt-child-row-in var(--duration-normal) var(--easing-out) both; }
+  .dt-child-row:nth-child(2) { animation-delay: 30ms; }
+  .dt-child-row:nth-child(3) { animation-delay: 60ms; }
+  .dt-child-row:nth-child(4) { animation-delay: 90ms; }
+  .dt-child-row:nth-child(5) { animation-delay: 120ms; }
+  @media (prefers-reduced-motion: reduce) {
+    .dt-child-row { animation: none; }
+  }
+
 
   /* ── Onboarding flow (ob-) ──────────────────────────── */
 

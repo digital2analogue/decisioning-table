@@ -141,6 +141,17 @@ const PAIRINGS = [
   { text: '--color-foreground-action',    bg: WHITE,        label: 'Onboarding: nav + CTA links' },
   { text: '--color-foreground-default',   bg: WHITE,        label: 'Onboarding: element labels' },
   { text: '--color-foreground-secondary', bg: '--color-background-alt', label: 'Onboarding: category headers' },
+  // Nested rules — parent affordances (both now use fg-muted, no chrome)
+  { text: '--color-foreground-muted',     bg: WHITE,                    label: 'Nested: IF prefix + sub-count' },
+  // Nested rules — child rows (bg-alt is the child row background)
+  { text: '--color-foreground-default',   bg: '--color-background-alt', label: 'Nested: child rule name input' },
+  { text: '--color-foreground-muted',     bg: '--color-background-alt', label: 'Nested: child amount prefix / connector' },
+  // AND / OR logic chips (specific brand-amber + brand-blue tints)
+  { text: '#2456E4',                      bg: '#e5ebfc',                label: 'Nested: AND logic chip' },
+  { text: '#854F0B',                      bg: '#FAEEDA',                label: 'Nested: OR logic chip' },
+  // Last-child outcome hint (over child row bg)
+  { text: '--color-foreground-success',   bg: '--color-background-alt', label: 'Nested: last-child Approve hint' },
+  { text: '--color-foreground-danger',    bg: '--color-background-alt', label: 'Nested: last-child Deny hint' },
 ]
 
 // ─── Run ───────────────────────────────────────────────────────────────────────

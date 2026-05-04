@@ -149,9 +149,6 @@ const PAIRINGS = [
   // AND / OR logic chips (specific brand-amber + brand-blue tints)
   { text: '--color-foreground-accent-blue',   bg: '--color-background-accent-subtle',  label: 'Nested: AND logic chip' },
   { text: '--color-foreground-warning-dark',  bg: '--color-background-warning-subtle', label: 'Nested: OR logic chip' },
-  // Last-child outcome hint (over child row bg)
-  { text: '--color-foreground-success',   bg: '--color-background-alt', label: 'Nested: last-child Approve hint' },
-  { text: '--color-foreground-danger',    bg: '--color-background-alt', label: 'Nested: last-child Deny hint' },
 ]
 
 // ─── Run ───────────────────────────────────────────────────────────────────────

@@ -75,6 +75,7 @@ export function RuleRow({
         isDragging ? 'dt-tbody-row-dragging' : '',
         isOver && !isDragging ? 'dt-tbody-row-over' : '',
         rule.selected && !isDragging ? 'dt-tbody-row-selected' : '',
+        hasChildren && isExpanded ? 'dt-parent-row-expanded' : '',
       )}
     >
       {/* Checkbox */}

@@ -1,5 +1,5 @@
-import { ArrowRightIcon, MoreHorizontalIcon } from 'lucide-react'
-import type { Rule, LogicOperator, Outcome } from '../../types'
+import { MoreHorizontalIcon } from 'lucide-react'
+import type { Rule, LogicOperator } from '../../types'
 import { cn } from '../../lib/utils'
 import { AttributeSelectBadge } from '../atoms/Badge'
 import { IconButton } from '../atoms/IconButton'
@@ -11,7 +11,6 @@ import { ActionsMenu } from './ActionsMenu'
 export interface ChildRuleRowProps {
   rule: Rule
   parentId: string
-  parentOutcome: Outcome
   isLast: boolean
   menuOpen: boolean
   onMenuToggle: () => void
@@ -24,7 +23,6 @@ export interface ChildRuleRowProps {
 export function ChildRuleRow({
   rule,
   parentId,
-  parentOutcome,
   isLast,
   menuOpen,
   onMenuToggle,
@@ -119,21 +117,8 @@ export function ChildRuleRow({
         />
       </td>
 
-      {/* Outcome — last child shows hint resolving to parent outcome */}
-      <td className="px-3 py-2.5">
-        {isLast && (
-          <span
-            className={cn(
-              'dt-child-outcome-hint',
-              parentOutcome === 'Approve' ? 'dt-child-outcome-hint-approve' : 'dt-child-outcome-hint-deny',
-            )}
-            title={`Resolves to parent outcome: ${parentOutcome}`}
-          >
-            <ArrowRightIcon size={11} />
-            {parentOutcome}
-          </span>
-        )}
-      </td>
+      {/* Outcome — children inherit the parent outcome implicitly; cell stays empty to keep column alignment */}
+      <td className="px-3 py-2.5"></td>
 
       {/* Actions */}
       <td className="px-3 py-2.5 relative">

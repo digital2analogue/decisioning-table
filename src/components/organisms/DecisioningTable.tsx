@@ -176,7 +176,6 @@ export function DecisioningTable({ ruleset, onUpdate }: DecisioningTableProps) {
                       key={child.id}
                       rule={child}
                       parentId={rule.id}
-                      parentOutcome={rule.outcome}
                       isLast={ci === children.length - 1}
                       menuOpen={openMenuId === child.id}
                       onMenuToggle={() => setOpenMenuId(openMenuId === child.id ? null : child.id)}

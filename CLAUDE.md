@@ -70,7 +70,7 @@ Format:
 
 - **React 19 + Vite 8** — no framework router, single-page app
 - **Tailwind CSS v4** — utility layer; design tokens bridged via `@theme inline` in CSS
-- **Radix UI primitives** — Dialog, Dropdown, Select, Tabs, Checkbox
+- **Radix UI primitives** — Dialog, Dropdown, Select, Tabs, Checkbox (in deps; not all wired up)
 - **react-dnd** — drag-and-drop for rule row reordering
 - CSS namespace conventions: `dt-` (decisioning table), `ob-` (onboarding flow)
 
@@ -78,11 +78,67 @@ Format:
 
 All color is via CSS custom properties from `src/tokens/variables.css`. Components use class names defined in `src/index.css` — inline style overrides are rare and must use token variables, never hex values.
 
+**Cascade-layer trap (real, recurring):** `src/index.css` wraps component rules in `@layer components`. Per CSS layer cascade, **unlayered rules beat layered rules regardless of selector specificity.** If you add a global rule (`input::placeholder`, `select option`, etc.) outside the layer, it will silently override any in-layer override even with stronger selectors. **Keep all rules inside `@layer components`** unless you explicitly want a higher cascade priority.
+
 ## Sub-Brand Reference
 
 For decision-engine token values, read `../brand-tokens/build/css/decision-engine.css` directly. The brand-tokens `ai/DESIGN.md` covers the base dark theme only.
 
-## Known issues / follow-ups
+## Patterns & Conventions
 
-- **Pre-existing TS build error in [src/components/templates/DecisioningEngine.tsx:76](src/components/templates/DecisioningEngine.tsx#L76).** The `Rule` type in [src/types.ts](src/types.ts) gained four required fields (`existingAccountOperator`, `existingAccountVariable`, `annualIncomeOperator`, `annualIncomeVariable`) but the seed/initial Rule literal at line 76 wasn't updated. Blocks `npm run build` (vite step) until fixed.
-- **`scripts/check-contrast.mjs` silently skips unresolved pairs.** When a token in the PAIRINGS manifest can't be resolved, the script logs `[unresolved] <label>` but does not increment `failed` and still reports "all pass". This masked the `--color-foreground-primary` / `--color-foreground-accent` / `--color-feedback-error` undefined-token bugs for some time. Harden by treating unresolved as a failure.
+### Validation system
+- Required fields per Rule: `ruleName`, `dataAttribute`, `operator`, `amount`, `outcome` (parents only — children inherit outcome). Conditional fields are **optional** — they're scoping refinements, not preconditions.
+- Helpers live in [src/types.ts](src/types.ts): `isRuleValid()`, `isChildRuleValid()`, `isReadyForOutcome()`, `missingFields()`.
+- Invalid rule → row gets `data-rule-invalid="true"` + `aria-invalid="true"` on the `<tr>`. Two paired visual signals: warning triangle replaces the row number in the `#` column, AND the row gains a `--color-background-warning-subtle` tint. Selected state still wins (rows can be both invalid and selected; user choice trumps).
+- `ValidationBanner` (page-width amber) at top of page: counts incomplete rules in the active ruleset, "Jump to first incomplete →" CTA scrolls to first invalid row by `data-rule-id` and focuses its first empty input.
+
+### Draft rules
+- New rules from `addRule()` / `addChild()` start with all required fields null/empty. The user fills in cells as they go.
+- "Untouched draft" rows auto-cleanup on focusout if `relatedTarget` is outside the row AND no fields have been touched (see `isEmptyDraft()` in `RuleRow.tsx`).
+- `autoFocusRuleId` flows DecisioningEngine → DecisioningTable → RuleRow/ChildRuleRow as a per-id marker; the matching row focuses its name input on mount and clears the marker.
+
+### Add affordances (4 entry points by design)
+- **Top split-button** (`+ Add rule` blue) — primary CTA in the page header
+- **Bottom chromeless `+ Add rule` row** — sits in the tbody after the last rule, table-wide context
+- **Per-parent inline `+ Add sub-condition` row** — at the bottom of the expanded children group; chromeless, no tree connector
+- **Parent overflow menu → "Add sub-condition"** — always available, handles the no-children-yet case (parent has no expand chevron). Auto-expands the parent.
+
+### Toast + undo
+Destructive actions (delete rule, delete sub-condition) capture the removed item + position and show a `Toast` with an Undo action. Undo restores at the original index. See `DecisioningTable.tsx` `deleteRule` / `deleteChild`.
+
+### State coverage recipe
+Every interactive element should have rest, hover, focus-visible, and (if the action is destructive or stateful) active. Focus-visible recipes:
+- **Standard outset ring** (most elements): `outline: none; box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-background-action) 18%, transparent);` (use `--color-foreground-danger` 18% for destructive elements).
+- **Inset ring** (elements inside `overflow: hidden` parents OR with existing depth shadows): `outline: none; box-shadow: inset 0 0 0 2px var(--color-border-focus);` (e.g., `.dt-outcome-seg-btn`, `.dt-conditional-dropdown-item`).
+- Always use `:focus-visible` (not `:focus`) so mouse clicks don't trigger the ring.
+
+### Empty / draft picker styling
+Dashed border + muted text on `.dt-*-empty` modifier (`.dt-badge-empty`, `.dt-select-trigger-empty`, `.dt-conditional-operator.dt-conditional-operator-empty`). Hover transitions to action color + accent-blue tint.
+
+### Active dropdown item
+`.dt-conditional-dropdown-item-active` uses `--color-background-accent-blue` bg + `--color-foreground-action` text — distinct from hover (`bg-alt`). Used uniformly across every picker.
+
+### Row rail intensity hierarchy
+Three semantically distinct states with three visual weights, all on `td:first-child` via `box-shadow: inset 3px 0 0 ...`:
+1. **Hover** (transient, only fires on rows that aren't selected/expanded): `color-mix(action 50%, transparent)`
+2. **Expanded** (structural state): `color-mix(action 70%, transparent)`
+3. **Selected** (strongest, user-driven): solid `var(--color-foreground-action)`
+
+## Components inventory
+
+**Atoms** ([src/components/atoms/](src/components/atoms/)): `IconButton`, `Checkbox`, `Badge` (`AttributeSelectBadge`, `OutcomeBadge`), `AmountCell`
+
+**Molecules** ([src/components/molecules/](src/components/molecules/)): `RuleRow`, `ChildRuleRow`, `OperatorSelect`, `LogicOperatorSelect`, `ConditionalCell`, `ActionsMenu`, `Toast`, `ValidationBanner`, `OperatorSelect`, `TabItem`, `ToolbarActions`
+
+**Organisms** ([src/components/organisms/](src/components/organisms/)): `DecisioningTable`, `RulesetTabs`
+
+**Templates** ([src/components/templates/](src/components/templates/)): `DecisioningEngine`, `OnboardingFlow`
+
+## Known follow-ups (not bugs, just deferred)
+
+- **Data Element schema is incomplete.** Per the product spec ("Select data element(s)" modal), each `DataElement` has `Status`, `Description`, `Datatype`, `Attribute Path`, `Valid Values`, `Exception Values`. Current `DataElement` type in [src/types.ts](src/types.ts) has only `id`, `label`, `description`, `dataType`, `attributePath`, `category` — missing `status`, `validValues`, `exceptionValues`. Add when wiring the data-element selector modal.
+- **Stale field naming.** `existingAccountVariable` / `annualIncomeVariable` on `Rule` should conceptually be `existingAccountDataElement` / `annualIncomeDataElement` per the data model. Worth a rename pass when next touching this surface.
+- **TODO-marked local tokens.** Three tokens in [src/tokens/variables.css](src/tokens/variables.css) are flagged `/* TODO: move to brand-tokens */`: `--color-background-warning-subtle`, `--color-foreground-warning-dark`, `--shadow-md`, `--color-foreground-inactive`. Plus three composite shadow tokens (`--shadow-inset-trough`, `--shadow-segment-raised`, `--shadow-footer-up`). Backport when stable.
+- **Save-gating decision deferred.** Validation banner currently counts invalid rules but doesn't block the (nonexistent) save action. When a save flow lands, decide: block save with banner-only warning, or block save with a modal confirmation.
+- **No keyboard nav inside `ActionsMenu` dropdown.** Items have hover/focus-visible/active states but no arrow-key navigation, focus trap, or auto-focus first item on open. The audit recommended adopting Radix `DropdownMenu` (already in deps) for a clean fix — ~30 min vs ~4 hr to roll your own correctly. Same applies to the other portal-based pickers (`OperatorSelect`, `LogicOperatorSelect`, `ConditionalCell`).
+- **Drag-and-drop polish.** Drop indicator is a single 2px top border. Drag preview is `opacity: 0.4` with no "lift" effect. No edge auto-scroll. Out of scope for this work; its own session.

@@ -206,7 +206,7 @@ select option { background-color: var(--color-background-elevated); color: var(-
   .dt-badge-empty:hover { color: var(--color-foreground-action); border-color: var(--color-foreground-action); background-color: var(--color-background-accent-blue); filter: none; }
   .dt-select-trigger-empty { color: var(--color-foreground-muted); border-style: dashed; }
   .dt-select-trigger-empty:hover { color: var(--color-foreground-action); border-color: var(--color-foreground-action); }
-  .dt-conditional-operator-empty { color: var(--color-foreground-muted); border-style: dashed; }
+  .dt-conditional-operator-empty { font-family: var(--font-family-sans); color: var(--color-foreground-muted); border-style: dashed; }
   .dt-conditional-operator-empty:hover { color: var(--color-foreground-action); border-color: var(--color-foreground-action); }
 
   /* Validation banner — page-width amber alert summarizing incomplete rules */
@@ -223,7 +223,7 @@ select option { background-color: var(--color-background-elevated); color: var(-
   .dt-conditional-operator:hover { border-color: var(--color-foreground-muted); }
   .dt-conditional-operator:focus { outline: none; box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-background-action) 18%, transparent); border-color: var(--color-border-focus); background-color: var(--color-background-elevated); }
   .dt-conditional-variable { font-family: var(--font-family-mono); font-size: var(--font-size-sm); line-height: 1.4; color: var(--color-foreground-default); background-color: var(--color-background-alt); border: 1px solid var(--color-border-default); border-radius: var(--radius-sm); padding: var(--space-2xs) var(--space-sm); width: 100%; min-width: 0; transition: border-color var(--duration-fast) var(--easing-default), background-color var(--duration-fast) var(--easing-default); }
-  .dt-conditional-variable::placeholder { color: var(--color-foreground-muted); }
+  .dt-conditional-variable::placeholder { font-family: var(--font-family-sans); color: var(--color-foreground-muted); }
   .dt-conditional-variable:hover { border-color: var(--color-foreground-muted); }
   .dt-conditional-variable:focus { outline: none; box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-background-action) 18%, transparent); border-color: var(--color-border-focus); background-color: var(--color-background-elevated); }
   .dt-conditional-dropdown { background-color: var(--color-background-elevated); border: 1px solid var(--color-border-default); border-radius: var(--radius-sm); box-shadow: var(--shadow-md); z-index: 50; min-width: 160px; overflow: hidden; }

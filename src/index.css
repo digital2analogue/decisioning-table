@@ -25,7 +25,10 @@ html, body {
 
 /* ── Form resets ────────────────────────────────────── */
 input, select, textarea { color: var(--color-foreground-default); background: transparent; font-family: var(--font-family-sans); }
-input::placeholder { color: var(--color-foreground-muted); }
+/* Placeholders are always sans + muted, regardless of the input's content font.
+   Prevents mono-font inputs (amount, conditional variable) from inheriting
+   mono into prompt strings like "Amount", "Select variable", "Enter value". */
+input::placeholder, textarea::placeholder { font-family: var(--font-family-sans); color: var(--color-foreground-muted); }
 input[type="number"]::-webkit-inner-spin-button,
 input[type="number"]::-webkit-outer-spin-button { opacity: 0.3; }
 input[type="checkbox"] { accent-color: var(--color-foreground-action); }

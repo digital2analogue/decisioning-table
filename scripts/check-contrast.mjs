@@ -156,8 +156,11 @@ const PAIRINGS = [
   // Chromeless add-rule row affordance (default + hover)
   { text: '--color-foreground-muted',         bg: '--color-background-elevated',       label: 'Add-rule row btn (default)' },
   { text: '--color-foreground-action',        bg: '--color-background-accent-blue',    label: 'Add-rule row btn (hover)' },
-  // Row-level warning indicator (replaces row number)
-  { text: '--color-foreground-warning',       bg: '--color-background-elevated',       label: 'Invalid-row warning icon' },
+  // Row-level warning indicator (replaces row number) — sits on the tinted invalid row bg
+  { text: '--color-foreground-warning',       bg: '--color-background-warning-subtle', label: 'Invalid-row warning icon' },
+  // Default text inside invalid (tinted) rows — rule name, etc. — foreground-default on warning-subtle
+  { text: '--color-foreground-default',       bg: '--color-background-warning-subtle', label: 'Invalid-row body text' },
+  { text: '--color-foreground-muted',         bg: '--color-background-warning-subtle', label: 'Invalid-row placeholder text' },
   // Validation banner (page-width amber alert)
   { text: '--color-foreground-warning',       bg: '--color-background-warning-subtle', label: 'Validation banner body text' },
   { text: '--color-foreground-warning-dark',  bg: '--color-background-warning-subtle', label: 'Validation banner emphasized count' },

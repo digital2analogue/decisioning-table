@@ -52,8 +52,6 @@ export function ChildRuleRow({
   const op: LogicOperator = rule.logicOperator ?? 'AND'
   const isInvalid = !isChildRuleValid(rule)
   const missing = isInvalid ? missingFields(rule, true) : []
-  // Same progressive disclosure as parent rows: pickers hidden until named.
-  const isUnnamed = rule.ruleName.trim() === ''
 
   function handleFocusOut(e: React.FocusEvent<HTMLTableRowElement>) {
     if (e.currentTarget.contains(e.relatedTarget as Node | null)) return
@@ -86,15 +84,13 @@ export function ChildRuleRow({
         )}
       </td>
 
-      {/* Rule Name (sticky) — AND/OR picker (revealed once named) + name input */}
+      {/* Rule Name (sticky) — AND/OR picker + name input */}
       <td className="dt-col-sticky dt-child-name-cell px-3 py-2.5">
         <div className="dt-child-name-wrap">
-          {!isUnnamed && (
-            <LogicOperatorSelect
-              value={op}
-              onChange={(v) => onUpdate(parentId, rule.id, { logicOperator: v })}
-            />
-          )}
+          <LogicOperatorSelect
+            value={op}
+            onChange={(v) => onUpdate(parentId, rule.id, { logicOperator: v })}
+          />
           <input
             type="text"
             value={rule.ruleName}
@@ -108,56 +104,46 @@ export function ChildRuleRow({
 
       {/* Data Attribute */}
       <td className="px-3 py-2.5">
-        {!isUnnamed && (
-          <AttributeSelectBadge
-            value={rule.dataAttribute}
-            onChange={(v) => onUpdate(parentId, rule.id, { dataAttribute: v })}
-          />
-        )}
+        <AttributeSelectBadge
+          value={rule.dataAttribute}
+          onChange={(v) => onUpdate(parentId, rule.id, { dataAttribute: v })}
+        />
       </td>
 
       {/* Operator */}
       <td className="px-3 py-2.5">
-        {!isUnnamed && (
-          <OperatorSelect
-            value={rule.operator}
-            onChange={(v) => onUpdate(parentId, rule.id, { operator: v })}
-          />
-        )}
+        <OperatorSelect
+          value={rule.operator}
+          onChange={(v) => onUpdate(parentId, rule.id, { operator: v })}
+        />
       </td>
 
       {/* Amount */}
       <td className="px-3 py-2.5">
-        {!isUnnamed && (
-          <AmountCell
-            value={rule.amount}
-            onChange={(amount) => onUpdate(parentId, rule.id, { amount })}
-          />
-        )}
+        <AmountCell
+          value={rule.amount}
+          onChange={(amount) => onUpdate(parentId, rule.id, { amount })}
+        />
       </td>
 
       {/* Existing Account */}
       <td className="px-3 py-2.5 min-w-[200px]">
-        {!isUnnamed && (
-          <ConditionalCell
-            operator={rule.existingAccountOperator}
-            variable={rule.existingAccountVariable}
-            onOperatorChange={(o) => onUpdate(parentId, rule.id, { existingAccountOperator: o })}
-            onVariableChange={(v) => onUpdate(parentId, rule.id, { existingAccountVariable: v })}
-          />
-        )}
+        <ConditionalCell
+          operator={rule.existingAccountOperator}
+          variable={rule.existingAccountVariable}
+          onOperatorChange={(o) => onUpdate(parentId, rule.id, { existingAccountOperator: o })}
+          onVariableChange={(v) => onUpdate(parentId, rule.id, { existingAccountVariable: v })}
+        />
       </td>
 
       {/* Annual Income */}
       <td className="px-3 py-2.5 min-w-[200px]">
-        {!isUnnamed && (
-          <ConditionalCell
-            operator={rule.annualIncomeOperator}
-            variable={rule.annualIncomeVariable}
-            onOperatorChange={(o) => onUpdate(parentId, rule.id, { annualIncomeOperator: o })}
-            onVariableChange={(v) => onUpdate(parentId, rule.id, { annualIncomeVariable: v })}
-          />
-        )}
+        <ConditionalCell
+          operator={rule.annualIncomeOperator}
+          variable={rule.annualIncomeVariable}
+          onOperatorChange={(o) => onUpdate(parentId, rule.id, { annualIncomeOperator: o })}
+          onVariableChange={(v) => onUpdate(parentId, rule.id, { annualIncomeVariable: v })}
+        />
       </td>
 
       {/* Outcome — children inherit the parent outcome implicitly; cell stays empty to keep column alignment */}

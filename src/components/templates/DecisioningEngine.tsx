@@ -5,6 +5,7 @@ import { initialRulesets } from '../../data'
 import { DecisioningTable } from '../organisms/DecisioningTable'
 import { RulesetTabs } from '../organisms/RulesetTabs'
 import { ValidationBanner } from '../molecules/ValidationBanner'
+import { RuleSearch } from '../molecules/RuleSearch'
 
 interface DecisioningEngineProps {
   modelConfig?: ModelConfig | null
@@ -16,6 +17,7 @@ export function DecisioningEngine({ modelConfig }: DecisioningEngineProps) {
   // ID of the most recently added rule — RuleRow uses this to autofocus its
   // name input on mount so the user can immediately start typing.
   const [autoFocusRuleId, setAutoFocusRuleId] = useState<string | null>(null)
+  const [ruleNameQuery, setRuleNameQuery] = useState('')
   const [editingTitle, setEditingTitle] = useState(false)
   const [chevronOpen, setChevronOpen] = useState(false)
   const defaultTitle = modelConfig?.modelName ?? 'My Decision Model'
@@ -196,7 +198,7 @@ export function DecisioningEngine({ modelConfig }: DecisioningEngineProps) {
         </div>
         <div className="flex items-center gap-3">
           <button className="dt-test-model-btn">
-            <PlayIcon size={14} />
+            <PlayIcon size={14} fill="currentColor" />
             Test model
           </button>
           <span className="dt-header-divider" aria-hidden="true" />
@@ -236,6 +238,13 @@ export function DecisioningEngine({ modelConfig }: DecisioningEngineProps) {
       {/* Validation banner — surfaces incomplete rules in the active ruleset */}
       {activeRuleset && <ValidationBanner ruleset={activeRuleset} />}
 
+      {/* Table sub-nav — compact filter strip directly above the column headers.
+          Lives below the page toolbar + alert banner so filtering reads as
+          scoped to the active ruleset's rows, not the whole page. */}
+      <div className="dt-table-subnav">
+        <RuleSearch value={ruleNameQuery} onChange={setRuleNameQuery} />
+      </div>
+
       {/* Table area — edge-to-edge */}
       <div className="flex-1">
         {activeRuleset && (
@@ -244,6 +253,7 @@ export function DecisioningEngine({ modelConfig }: DecisioningEngineProps) {
             onUpdate={updateRuleset}
             onAddRule={addRule}
             onAddChild={addChild}
+            ruleNameQuery={ruleNameQuery}
             autoFocusRuleId={autoFocusRuleId}
             onAutoFocusConsumed={() => setAutoFocusRuleId(null)}
           />

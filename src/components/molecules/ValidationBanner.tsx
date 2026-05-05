@@ -1,6 +1,6 @@
-import { AlertTriangleIcon, ArrowRightIcon } from 'lucide-react'
+import { AlertTriangleIcon } from 'lucide-react'
 import type { Ruleset } from '../../types'
-import { isRuleValid, isChildRuleValid } from '../../types'
+import { isRuleValid, isChildRuleValid, isRuleTouched } from '../../types'
 
 export interface ValidationBannerProps {
   ruleset: Ruleset
@@ -15,9 +15,12 @@ interface InvalidRef {
 function collectInvalid(ruleset: Ruleset): InvalidRef[] {
   const out: InvalidRef[] = []
   for (const rule of ruleset.rules) {
-    if (!isRuleValid(rule)) out.push({ ruleId: rule.id, isChild: false })
+    // Untouched draft rules are skipped — a brand-new "+ Add rule" with no
+    // input shouldn't show as invalid. Once any field is set the rule is
+    // considered intentional and validation kicks in.
+    if (isRuleTouched(rule) && !isRuleValid(rule)) out.push({ ruleId: rule.id, isChild: false })
     for (const child of rule.children ?? []) {
-      if (!isChildRuleValid(child)) out.push({ ruleId: child.id, isChild: true })
+      if (isRuleTouched(child) && !isChildRuleValid(child)) out.push({ ruleId: child.id, isChild: true })
     }
   }
   return out
@@ -53,15 +56,14 @@ export function ValidationBanner({ ruleset }: ValidationBannerProps) {
   return (
     <div role="alert" className="dt-validation-banner">
       <span className="dt-validation-banner-icon" aria-hidden="true">
-        <AlertTriangleIcon size={16} />
+        <AlertTriangleIcon size={16} fill="currentColor" stroke="var(--color-background-warning-subtle)" />
       </span>
       <p className="dt-validation-banner-text">
-        <strong><span className="dt-metric">{count}</span> incomplete {noun}</strong> must be filled in before this decision model can run.
+        <strong><span className="dt-metric">{count}</span> incomplete {noun}</strong> must be filled in before this decision model can run.{' '}
+        <button type="button" onClick={scrollToFirst} className="dt-validation-banner-cta">
+          Jump to first incomplete
+        </button>
       </p>
-      <button type="button" onClick={scrollToFirst} className="dt-validation-banner-cta">
-        Jump to first incomplete
-        <ArrowRightIcon size={14} />
-      </button>
     </div>
   )
 }

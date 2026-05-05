@@ -1,90 +1,39 @@
-import { useState, useRef, useEffect, useCallback } from 'react'
-import { createPortal } from 'react-dom'
-import { ChevronDownIcon } from 'lucide-react'
+import { CheckIcon, XIcon, ChevronDownIcon } from 'lucide-react'
 import type { DataAttribute, Outcome } from '../../types'
+import { Picker, type PickerOption } from './Picker'
 
 // ─── AttributeSelectBadge ────────────────────────────────────────────────────
 
-const ATTRIBUTES: DataAttribute[] = ['Income', 'Expense', 'Asset', 'Liability']
-
-function badgeVariant(value: DataAttribute): string {
-  switch (value) {
-    case 'Income':   return 'dt-badge-income'
-    case 'Expense':  return 'dt-badge-expense'
-    case 'Asset':    return 'dt-badge-asset'
-    case 'Liability': return 'dt-badge-liability'
-  }
-}
+const ATTRIBUTE_OPTIONS: PickerOption<DataAttribute>[] = [
+  { value: 'Income', label: 'Income', leadingDotClass: 'dt-attr-dot-income' },
+  { value: 'Expense', label: 'Expense', leadingDotClass: 'dt-attr-dot-expense' },
+  { value: 'Asset', label: 'Asset', leadingDotClass: 'dt-attr-dot-asset' },
+  { value: 'Liability', label: 'Liability', leadingDotClass: 'dt-attr-dot-liability' },
+]
 
 export interface AttributeSelectBadgeProps {
   value: DataAttribute | null
   onChange: (v: DataAttribute) => void
+  error?: boolean
 }
 
-export function AttributeSelectBadge({ value, onChange }: AttributeSelectBadgeProps) {
-  const [isOpen, setIsOpen] = useState(false)
-  const [pos, setPos] = useState<{ top: number; left: number } | null>(null)
-  const triggerRef = useRef<HTMLButtonElement>(null)
-
-  const open = useCallback(() => {
-    if (triggerRef.current) {
-      const r = triggerRef.current.getBoundingClientRect()
-      setPos({ top: r.bottom + 4, left: r.left })
-    }
-    setIsOpen(true)
-  }, [])
-
-  useEffect(() => {
-    function handleClose(e: MouseEvent) {
-      if (triggerRef.current && !triggerRef.current.contains(e.target as Node)) {
-        setIsOpen(false)
-      }
-    }
-    function handleScroll() { setIsOpen(false) }
-    document.addEventListener('mousedown', handleClose)
-    document.addEventListener('scroll', handleScroll, true)
-    return () => {
-      document.removeEventListener('mousedown', handleClose)
-      document.removeEventListener('scroll', handleScroll, true)
-    }
-  }, [])
-
+export function AttributeSelectBadge({ value, onChange, error }: AttributeSelectBadgeProps) {
   return (
-    <>
-      <button
-        ref={triggerRef}
-        onClick={() => isOpen ? setIsOpen(false) : open()}
-        className={value ? `dt-badge dt-badge-select ${badgeVariant(value)}` : 'dt-badge dt-badge-select dt-badge-empty'}
-        aria-haspopup="listbox"
-        aria-expanded={isOpen}
-      >
-        {value ?? 'Select attribute'}
-        <ChevronDownIcon size={10} className="dt-select-chevron" style={{ flexShrink: 0 }} />
-      </button>
-
-      {isOpen && pos && createPortal(
-        <div
-          className="dt-conditional-dropdown"
-          style={{ position: 'fixed', top: pos.top, left: pos.left, zIndex: 9999, minWidth: 120 }}
-        >
-          {ATTRIBUTES.map((attr) => (
-            <button
-              key={attr}
-              onMouseDown={(e) => {
-                e.preventDefault()
-                onChange(attr)
-                setIsOpen(false)
-              }}
-              className={`dt-conditional-dropdown-item dt-attr-option ${attr === value ? 'dt-conditional-dropdown-item-active' : ''}`}
-            >
-              <span className={`dt-attr-dot dt-attr-dot-${attr.toLowerCase()}`} />
-              {attr}
-            </button>
-          ))}
-        </div>,
-        document.body
+    <Picker<DataAttribute>
+      value={value}
+      onChange={onChange}
+      options={ATTRIBUTE_OPTIONS}
+      placeholder="Select attribute"
+      triggerVariant="badge"
+      ariaLabel="Data attribute"
+      error={error}
+      renderTrigger={({ label }) => (
+        <>
+          {label}
+          <ChevronDownIcon size={12} className="dt-select-chevron" style={{ flexShrink: 0 }} />
+        </>
       )}
-    </>
+    />
   )
 }
 
@@ -106,7 +55,8 @@ export function OutcomeBadge({ value, onChange }: OutcomeBadgeProps) {
         onClick={() => onChange('Approve')}
         className={`dt-outcome-seg-btn ${value === 'Approve' ? 'dt-outcome-seg-approve' : ''}`}
       >
-        Approve
+        <CheckIcon size={12} className="dt-outcome-seg-icon" aria-hidden="true" />
+        <span>Approve</span>
       </button>
       <button
         type="button"
@@ -115,7 +65,8 @@ export function OutcomeBadge({ value, onChange }: OutcomeBadgeProps) {
         onClick={() => onChange('Deny')}
         className={`dt-outcome-seg-btn ${value === 'Deny' ? 'dt-outcome-seg-deny' : ''}`}
       >
-        Deny
+        <XIcon size={12} className="dt-outcome-seg-icon" aria-hidden="true" />
+        <span>Deny</span>
       </button>
     </div>
   )

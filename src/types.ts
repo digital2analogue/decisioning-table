@@ -88,6 +88,46 @@ export function isChildRuleValid(rule: Rule): boolean {
 }
 
 /**
+ * "Touched" = the user has set at least one field to a non-default value.
+ * Brand-new draft rules (e.g., from clicking "+ Add rule") are untouched
+ * until the user types or picks a value. Used to suppress validation chrome
+ * (banner + row warning icon) and the delete-undo toast for rules that the
+ * user effectively never started.
+ */
+export function isRuleTouched(rule: Rule): boolean {
+  return Boolean(
+    rule.ruleName.trim() ||
+    rule.dataAttribute ||
+    rule.operator ||
+    rule.amount !== null ||
+    rule.outcome ||
+    rule.existingAccountOperator ||
+    rule.existingAccountVariable ||
+    rule.annualIncomeOperator ||
+    rule.annualIncomeVariable ||
+    (rule.children && rule.children.some(isRuleTouched))
+  )
+}
+
+/**
+ * "Empty draft" — same shape as un-touched, but ignores `outcome` so the helper
+ * is reusable for both parent rows and child rows (children inherit outcome).
+ * Used by the auto-cleanup-on-focus-out logic in RuleRow + ChildRuleRow.
+ */
+export function isEmptyDraft(rule: Rule): boolean {
+  return (
+    rule.ruleName === '' &&
+    rule.dataAttribute === null &&
+    rule.operator === null &&
+    rule.amount === null &&
+    rule.existingAccountOperator === null &&
+    rule.existingAccountVariable === '' &&
+    rule.annualIncomeOperator === null &&
+    rule.annualIncomeVariable === ''
+  )
+}
+
+/**
  * Returns the list of missing required field labels (human-readable),
  * for use in tooltips and the validation banner. The `forChild` flag
  * suppresses the outcome field since children inherit from their parent.

@@ -129,7 +129,7 @@ export function OnboardingFlow({ onComplete }: OnboardingFlowProps) {
         <section ref={step1Ref} className="ob-section">
           <div className="ob-step-label-row">
             <span className="ob-step-label">Step 1 of 3</span>
-            {step1Complete && <span className="ob-step-check"><CheckIcon size={10} /></span>}
+            {step1Complete && <span className="ob-step-check"><CheckIcon size={12} /></span>}
           </div>
           <h2 className="ob-step-title">Assign an outcome for ruleset</h2>
           <p className="ob-step-description">
@@ -159,7 +159,7 @@ export function OnboardingFlow({ onComplete }: OnboardingFlowProps) {
         <section ref={step2Ref} className={`ob-section${!selectedOutcome ? ' ob-section--dimmed' : ''}`}>
           <div className="ob-step-label-row">
             <span className="ob-step-label">Step 2 of 3</span>
-            {step2Complete && <span className="ob-step-check"><CheckIcon size={10} /></span>}
+            {step2Complete && <span className="ob-step-check"><CheckIcon size={12} /></span>}
           </div>
           <h2 className="ob-step-title">Add a model name and description</h2>
           {selectedOutcomeOption && (
@@ -207,7 +207,7 @@ export function OnboardingFlow({ onComplete }: OnboardingFlowProps) {
         <section ref={step3Ref} className={`ob-section${!selectedOutcome ? ' ob-section--dimmed' : ''}`}>
           <div className="ob-step-label-row">
             <span className="ob-step-label">Step 3 of 3</span>
-            {step3Complete && <span className="ob-step-check"><CheckIcon size={10} /></span>}
+            {step3Complete && <span className="ob-step-check"><CheckIcon size={12} /></span>}
           </div>
           <h2 className="ob-step-title">Create your first rule</h2>
           <p className="ob-step-description">

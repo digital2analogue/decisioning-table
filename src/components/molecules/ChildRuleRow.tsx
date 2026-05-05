@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react'
 import { AlertTriangleIcon, MoreHorizontalIcon } from 'lucide-react'
 import type { Rule, LogicOperator } from '../../types'
-import { isChildRuleValid, missingFields } from '../../types'
+import { isChildRuleValid, isRuleTouched, isEmptyDraft, missingFields } from '../../types'
 import { cn } from '../../lib/utils'
 import { AttributeSelectBadge } from '../atoms/Badge'
 import { IconButton } from '../atoms/IconButton'
@@ -11,23 +11,12 @@ import { ConditionalCell } from './ConditionalCell'
 import { ActionsMenu } from './ActionsMenu'
 import { LogicOperatorSelect } from './LogicOperatorSelect'
 
-/** Same untouched-draft check used by RuleRow. Inline duplicate kept tight to preserve module scope. */
-function isEmptyDraftChild(rule: Rule): boolean {
-  return (
-    rule.ruleName === '' &&
-    rule.dataAttribute === null &&
-    rule.operator === null &&
-    rule.amount === null &&
-    rule.existingAccountOperator === null &&
-    rule.existingAccountVariable === '' &&
-    rule.annualIncomeOperator === null &&
-    rule.annualIncomeVariable === ''
-  )
-}
 
 export interface ChildRuleRowProps {
   rule: Rule
   parentId: string
+  childIndex: number
+  totalChildren: number
   isLast: boolean
   menuOpen: boolean
   onMenuToggle: () => void
@@ -35,6 +24,7 @@ export interface ChildRuleRowProps {
   onUpdate: (parentId: string, childId: string, patch: Partial<Rule>) => void
   onDelete: (parentId: string, childId: string) => void
   onDuplicate: (parentId: string, childId: string) => void
+  onMove: (parentId: string, fromIdx: number, toIdx: number) => void
   /** When true, focus the rule-name input on mount. */
   autoFocus?: boolean
   /** Called once autofocus has been applied so the parent can clear the marker. */
@@ -44,6 +34,8 @@ export interface ChildRuleRowProps {
 export function ChildRuleRow({
   rule,
   parentId,
+  childIndex,
+  totalChildren,
   isLast,
   menuOpen,
   onMenuToggle,
@@ -51,6 +43,7 @@ export function ChildRuleRow({
   onUpdate,
   onDelete,
   onDuplicate,
+  onMove,
   autoFocus,
   onAutoFocusConsumed,
 }: ChildRuleRowProps) {
@@ -64,12 +57,14 @@ export function ChildRuleRow({
     }
   }, [autoFocus, onAutoFocusConsumed])
   const op: LogicOperator = rule.logicOperator ?? 'AND'
-  const isInvalid = !isChildRuleValid(rule)
+  // Untouched drafts stay quiet — no warning icon, no tinted row bg —
+  // until the user has set at least one field.
+  const isInvalid = isRuleTouched(rule) && !isChildRuleValid(rule)
   const missing = isInvalid ? missingFields(rule, true) : []
 
   function handleFocusOut(e: React.FocusEvent<HTMLTableRowElement>) {
     if (e.currentTarget.contains(e.relatedTarget as Node | null)) return
-    if (isEmptyDraftChild(rule)) onDelete(parentId, rule.id)
+    if (isEmptyDraft(rule)) onDelete(parentId, rule.id)
   }
 
   return (
@@ -84,7 +79,7 @@ export function ChildRuleRow({
       <td className="dt-child-cell-bare px-3 py-2.5"></td>
 
       {/* Drag handle / # column — CSS-drawn tree connector + warning marker when invalid */}
-      <td className="dt-child-cell-bare dt-child-connector-cell px-2 py-2.5">
+      <td className="dt-child-cell-bare dt-child-connector-cell dt-col-sticky-num px-2 py-2.5">
         <span className="dt-child-tree-line" aria-hidden="true" />
         {isInvalid && (
           <span
@@ -93,7 +88,7 @@ export function ChildRuleRow({
             aria-label={`Incomplete sub-condition: missing ${missing.join(', ')}`}
             title={`Missing: ${missing.join(', ')}`}
           >
-            <AlertTriangleIcon size={12} />
+            <AlertTriangleIcon size={16} fill="currentColor" stroke="var(--color-background-warning-subtle)" />
           </span>
         )}
       </td>
@@ -110,18 +105,20 @@ export function ChildRuleRow({
             type="text"
             value={rule.ruleName}
             onChange={(e) => onUpdate(parentId, rule.id, { ruleName: e.target.value })}
-            className="dt-rule-name-input"
+            className={cn('dt-rule-name-input', missing.includes('rule name') && 'dt-cell-error')}
             placeholder="Sub-condition…"
             title={rule.ruleName}
+            aria-invalid={missing.includes('rule name') || undefined}
           />
         </div>
       </td>
 
-      {/* Data Attribute */}
-      <td className="px-3 py-2.5">
+      {/* Data Attribute — hidden via .dt-col-data-attribute (kept in JSX for easy re-enable) */}
+      <td className="dt-col-data-attribute px-3 py-2.5">
         <AttributeSelectBadge
           value={rule.dataAttribute}
           onChange={(v) => onUpdate(parentId, rule.id, { dataAttribute: v })}
+          error={missing.includes('data attribute')}
         />
       </td>
 
@@ -130,6 +127,7 @@ export function ChildRuleRow({
         <OperatorSelect
           value={rule.operator}
           onChange={(v) => onUpdate(parentId, rule.id, { operator: v })}
+          error={missing.includes('operator')}
         />
       </td>
 
@@ -138,6 +136,7 @@ export function ChildRuleRow({
         <AmountCell
           value={rule.amount}
           onChange={(amount) => onUpdate(parentId, rule.id, { amount })}
+          error={missing.includes('amount')}
         />
       </td>
 
@@ -183,6 +182,8 @@ export function ChildRuleRow({
               onDuplicate={() => onDuplicate(parentId, rule.id)}
               onDelete={() => onDelete(parentId, rule.id)}
               onClose={onMenuClose}
+              onMoveUp={childIndex > 0 ? () => onMove(parentId, childIndex, childIndex - 1) : undefined}
+              onMoveDown={childIndex < totalChildren - 1 ? () => onMove(parentId, childIndex, childIndex + 1) : undefined}
             />
           )}
         </div>

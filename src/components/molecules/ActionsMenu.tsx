@@ -8,9 +8,20 @@ export interface ActionsMenuProps {
   onDuplicate: () => void
   onDelete: () => void
   onClose: () => void
+  /** Reorder handlers — disabled when undefined (top/bottom of list). */
+  onMoveUp?: () => void
+  onMoveDown?: () => void
 }
 
-export function ActionsMenu({ anchorRef, onAddChild, onDuplicate, onDelete, onClose }: ActionsMenuProps) {
+export function ActionsMenu({
+  anchorRef,
+  onAddChild,
+  onDuplicate,
+  onDelete,
+  onClose,
+  onMoveUp,
+  onMoveDown,
+}: ActionsMenuProps) {
   const [pos, setPos] = useState<{ top: number; right: number } | null>(null)
 
   useEffect(() => {
@@ -35,6 +46,25 @@ export function ActionsMenu({ anchorRef, onAddChild, onDuplicate, onDelete, onCl
         role="menu"
         style={{ position: 'fixed', top: pos.top, right: pos.right, zIndex: 9999 }}
       >
+        <button
+          type="button"
+          role="menuitem"
+          onClick={() => { onMoveUp?.(); onClose() }}
+          disabled={!onMoveUp}
+          className="dt-menu-item"
+        >
+          Move up
+        </button>
+        <button
+          type="button"
+          role="menuitem"
+          onClick={() => { onMoveDown?.(); onClose() }}
+          disabled={!onMoveDown}
+          className="dt-menu-item"
+        >
+          Move down
+        </button>
+        <hr className="dt-menu-divider" />
         {onAddChild && (
           <button type="button" role="menuitem" onClick={() => { onAddChild(); onClose() }} className="dt-menu-item">
             Add sub-condition

@@ -1,8 +1,11 @@
 :root {
   /* Backgrounds */
-  --color-background-default: #F6F8FA;
+  --color-background-default: #FFFFFF;
   --color-background-alt: #F6F8FA;
-  --color-background-elevated: #FFFFFF;
+  --color-background-elevated: #FBFCFD;
+  /* Ghost-button hover bg — sits between bg-alt and border-muted so hover
+     reads against the (now near-white) page bg. */
+  --color-background-hover: #ECEEF2;
   --color-background-action: #2456E4;
   --color-background-accent: #4ade6e;
   --color-background-accent-subtle: #E5EBFC;
@@ -33,6 +36,13 @@
   --color-foreground-accent-on-amber: #0a0d0a;
   --color-foreground-action: #2456E4;
   --color-foreground-on-action: #FFFFFF;
+  /* Subtle/alternate action variants — paired tokens for hover, selected,
+     and other low-emphasis states that signal action without competing with
+     primary CTAs. Colors mirror existing accent-blue values; aliased here
+     so component CSS can be semantic ("action-alt") rather than incidental
+     ("accent-blue"). TODO: move to brand-tokens. */
+  --color-background-action-alt: #E5EBFC;
+  --color-foreground-on-action-alt: #2456E4;
   --color-foreground-danger: #C8002E;
   --color-foreground-on-danger: #ffffff;
   --color-foreground-inverse: #FFFFFF;
@@ -49,7 +59,7 @@
   --color-background-success-alt: #dcfce7;
   --color-background-warning: #d97706;
   --color-background-warning-alt: #fef3c7;
-  --color-background-warning-subtle: #FAEEDA; /* TODO: move to brand-tokens — OR logic chip fill (peachier than warning-alt) */
+  --color-background-warning-subtle: #FDF6E8; /* TODO: move to brand-tokens — lightened for invalid-row tint (was #FAEEDA, too saturated against white inputs) */
   --color-background-info: #2456e4;
   --color-background-info-alt: #e5ebfc;
   --color-foreground-success: #15803d;
@@ -78,6 +88,10 @@
   --space-md: 16px;
   --space-lg: 24px;
   --space-xl: 48px;
+  /* Sizing — control heights (TODO: move to brand-tokens once stabilized).
+     Single source of truth so text inputs, select triggers, chips, and any
+     custom input chrome all align in a row. */
+  --control-height-md: 32px;
   /* Fonts */
   --font-family-sans: 'Plus Jakarta Sans', sans-serif;
   --font-family-mono: 'DM Mono', 'JetBrains Mono', monospace;

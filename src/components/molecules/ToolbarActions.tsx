@@ -68,7 +68,7 @@ export function ToolbarActions({
               className="dt-icon-btn dt-icon-reveal"
               title="Rename"
             >
-              <PencilIcon size={13} />
+              <PencilIcon size={14} />
             </button>
           </div>
         )}
@@ -77,7 +77,7 @@ export function ToolbarActions({
         </span>
         {someSelected && (
           <button onClick={onDeleteSelected} className="dt-delete-selected ml-2">
-            <Trash2Icon size={13} />
+            <Trash2Icon size={14} />
             Delete {selectedCount} selected
           </button>
         )}

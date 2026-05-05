@@ -132,11 +132,11 @@ const PAIRINGS = [
   { text: '--color-foreground-on-action', bg: BG_ACTION,    label: 'Primary button text (white on blue)' },
   // Danger
   { text: '--color-foreground-danger',    bg: WHITE,        label: 'Delete selected / danger menu items' },
-  // Attribute badges (all use fg-secondary on lightly-tinted bg — bg-alt is worst case)
-  { text: '--color-foreground-secondary', bg: BG_ALT,       label: 'Attribute badges (worst-case bg)' },
-  // Outcome badges
-  { text: APPROVE_TEXT,                   bg: APPROVE_BG,   label: 'Outcome: Approve badge text' },
-  { text: '--color-foreground-danger',    bg: DENY_BG,      label: 'Outcome: Deny badge text' },
+  // Attribute chips (monochrome Pebble — fg-default on white)
+  { text: '--color-foreground-default',   bg: WHITE,        label: 'Attribute chip (monochrome Pebble)' },
+  // Outcome segments (Claude-desktop style — active segment lifts on bg-elevated; semantic color on label/icon)
+  { text: '--color-foreground-success',   bg: WHITE,        label: 'Outcome: Approve segment label (active)' },
+  { text: '--color-foreground-danger',    bg: WHITE,        label: 'Outcome: Deny segment label (active)' },
   // Outcome cell pending hint (italic muted text on default row backgrounds)
   { text: '--color-foreground-muted',     bg: WHITE,        label: 'Outcome: pending hint (parent row)' },
   { text: '--color-foreground-muted',     bg: '--color-background-alt', label: 'Outcome: pending hint (child row)' },

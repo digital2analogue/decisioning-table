@@ -1,30 +1,21 @@
 import { useState, useRef, useEffect, useCallback } from 'react'
 import { createPortal } from 'react-dom'
-import { ChevronDownIcon } from 'lucide-react'
 import type { ConditionalOperator } from '../../types'
 import { dataElements } from '../../data'
 import { cn } from '../../lib/utils'
+import { Picker, type PickerOption } from '../atoms/Picker'
 import '../../index.css'
 
 interface DropdownPos { top: number; left: number; width?: number }
 
-const CONDITIONAL_OPERATORS: ConditionalOperator[] = [
-  'contains',
-  'doesnotContain',
-  '==',
-  '!=',
-  '=null',
-  '!=null',
+const CONDITIONAL_OPERATOR_OPTIONS: PickerOption<ConditionalOperator>[] = [
+  { value: 'contains', label: 'Contains' },
+  { value: 'doesnotContain', label: "Doesn't contain" },
+  { value: '==', label: '==' },
+  { value: '!=', label: '!=' },
+  { value: '=null', label: '=null' },
+  { value: '!=null', label: '!=null' },
 ]
-
-const OPERATOR_DISPLAY: Record<ConditionalOperator, string> = {
-  'contains': 'Contains',
-  'doesnotContain': "Doesn't contain",
-  '==': '==',
-  '!=': '!=',
-  '=null': '=null',
-  '!=null': '!=null',
-}
 
 export interface ConditionalCellProps {
   operator: ConditionalOperator | null
@@ -40,14 +31,11 @@ export function ConditionalCell({
   variable,
   onOperatorChange,
   onVariableChange,
-  variablePlaceholder = 'Select value…',
+  variablePlaceholder = 'Enter value',
 }: ConditionalCellProps) {
-  const [isOperatorOpen, setIsOperatorOpen] = useState(false)
   const [isVariableOpen, setIsVariableOpen] = useState(false)
   const [variableSearch, setVariableSearch] = useState('')
-  const [operatorPos, setOperatorPos] = useState<DropdownPos | null>(null)
   const [variablePos, setVariablePos] = useState<DropdownPos | null>(null)
-  const operatorRef = useRef<HTMLDivElement>(null)
   const variableRef = useRef<HTMLDivElement>(null)
   const variableInputRef = useRef<HTMLInputElement>(null)
 
@@ -58,14 +46,6 @@ export function ConditionalCell({
 
   const selectedVariable = dataElements.find((el) => el.id === variable)
 
-  const openOperator = useCallback(() => {
-    if (operatorRef.current) {
-      const r = operatorRef.current.getBoundingClientRect()
-      setOperatorPos({ top: r.bottom + 4, left: r.left })
-    }
-    setIsOperatorOpen(true)
-  }, [])
-
   const openVariable = useCallback(() => {
     if (variableRef.current) {
       const r = variableRef.current.getBoundingClientRect()
@@ -74,18 +54,15 @@ export function ConditionalCell({
     setIsVariableOpen(true)
   }, [])
 
-  // Close portals on outside click or scroll
+  // Variable combobox close on outside click / scroll. Operator dropdown is
+  // managed by the Picker primitive, so only the variable side needs handling here.
   useEffect(() => {
     function handleClose(e: MouseEvent) {
-      if (operatorRef.current && !operatorRef.current.contains(e.target as Node)) {
-        setIsOperatorOpen(false)
-      }
       if (variableRef.current && !variableRef.current.contains(e.target as Node)) {
         setIsVariableOpen(false)
       }
     }
     function handleScroll() {
-      setIsOperatorOpen(false)
       setIsVariableOpen(false)
     }
     document.addEventListener('mousedown', handleClose)
@@ -98,46 +75,19 @@ export function ConditionalCell({
 
   return (
     <div className="flex flex-row items-center gap-1.5">
-      {/* Operator button */}
-      <div ref={operatorRef} className="flex-shrink-0">
-        <button
-          type="button"
-          onClick={() => isOperatorOpen ? setIsOperatorOpen(false) : openOperator()}
-          className={operator ? 'dt-conditional-operator' : 'dt-conditional-operator dt-conditional-operator-empty'}
-          aria-haspopup="listbox"
-          aria-expanded={isOperatorOpen}
-        >
-          <span>{operator ? OPERATOR_DISPLAY[operator] : 'Select condition'}</span>
-          <ChevronDownIcon size={12} />
-        </button>
+      {/* Operator picker */}
+      <div className="flex-shrink-0">
+        <Picker<ConditionalOperator>
+          value={operator}
+          onChange={onOperatorChange}
+          options={CONDITIONAL_OPERATOR_OPTIONS}
+          placeholder="Select condition"
+          triggerVariant="conditional-op"
+          ariaLabel="Condition operator"
+        />
       </div>
 
-      {isOperatorOpen && operatorPos && createPortal(
-        <div
-          className="dt-conditional-dropdown"
-          style={{ position: 'fixed', top: operatorPos.top, left: operatorPos.left, zIndex: 9999 }}
-        >
-          {CONDITIONAL_OPERATORS.map((op) => (
-            <button
-              key={op}
-              onMouseDown={(e) => {
-                e.preventDefault()
-                onOperatorChange(op)
-                setIsOperatorOpen(false)
-              }}
-              className={cn(
-                'dt-conditional-dropdown-item',
-                operator === op && 'dt-conditional-dropdown-item-active'
-              )}
-            >
-              {OPERATOR_DISPLAY[op]}
-            </button>
-          ))}
-        </div>,
-        document.body
-      )}
-
-      {/* Variable search input */}
+      {/* Variable search combobox — search-as-you-type, not a Picker. */}
       <div ref={variableRef} className="relative min-w-0 flex-1">
         <input
           ref={variableInputRef}

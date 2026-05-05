@@ -1,6 +1,7 @@
-import { Fragment, useState } from 'react'
+import { Fragment, useEffect, useRef, useState } from 'react'
 import { PlusIcon, TableIcon } from 'lucide-react'
 import type { Rule, Ruleset } from '../../types'
+import { isRuleTouched } from '../../types'
 import { Checkbox } from '../atoms/Checkbox'
 import { RuleRow } from '../molecules/RuleRow'
 import { ChildRuleRow } from '../molecules/ChildRuleRow'
@@ -16,6 +17,8 @@ export interface DecisioningTableProps {
   onUpdate: (ruleset: Ruleset) => void
   onAddRule: () => void
   onAddChild: (parentId: string) => void
+  /** Active rule-name search filter. Empty string = no filter. */
+  ruleNameQuery?: string
   /** ID of a rule whose name input should auto-focus on mount (e.g., a freshly-added rule). */
   autoFocusRuleId?: string | null
   /** Called once the autofocus has been consumed so the parent can clear the marker. */
@@ -27,11 +30,38 @@ export function DecisioningTable({
   onUpdate,
   onAddRule,
   onAddChild,
+  ruleNameQuery = '',
   autoFocusRuleId,
   onAutoFocusConsumed,
 }: DecisioningTableProps) {
   const [openMenuId, setOpenMenuId] = useState<string | null>(null)
   const [toast, setToast] = useState<ToastState | null>(null)
+
+  const normalizedQuery = ruleNameQuery.trim().toLowerCase()
+  const filterActive = normalizedQuery.length > 0
+  const visibleCount = filterActive
+    ? ruleset.rules.filter((r) => r.ruleName.toLowerCase().includes(normalizedQuery)).length
+    : ruleset.rules.length
+  const [addRuleMenuOpen, setAddRuleMenuOpen] = useState(false)
+  const addRuleWrapRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    if (!addRuleMenuOpen) return
+    function handleOutside(e: MouseEvent) {
+      if (addRuleWrapRef.current && !addRuleWrapRef.current.contains(e.target as Node)) {
+        setAddRuleMenuOpen(false)
+      }
+    }
+    function handleKey(e: KeyboardEvent) {
+      if (e.key === 'Escape') setAddRuleMenuOpen(false)
+    }
+    document.addEventListener('mousedown', handleOutside)
+    document.addEventListener('keydown', handleKey)
+    return () => {
+      document.removeEventListener('mousedown', handleOutside)
+      document.removeEventListener('keydown', handleKey)
+    }
+  }, [addRuleMenuOpen])
   const [expandedIds, setExpandedIds] = useState<Set<string>>(() => {
     // Default: parents with children start expanded so the feature is discoverable
     const initial = new Set<string>()
@@ -76,6 +106,21 @@ export function DecisioningTable({
     const nextRules = ruleset.rules.filter((r) => r.id !== id)
     onUpdate({ ...ruleset, rules: nextRules })
     setOpenMenuId(null)
+    // Focus follows the deletion — keyboard / screen-reader users land on the
+    // next visible row's name input (or the previous one if the deleted row
+    // was the last). Defers a frame so the new DOM is mounted.
+    const nextFocusRule = nextRules[idx] ?? nextRules[idx - 1]
+    if (nextFocusRule) {
+      window.requestAnimationFrame(() => {
+        const target = document.querySelector<HTMLInputElement>(
+          `tr[data-rule-id="${nextFocusRule.id}"] .dt-rule-name-input`,
+        )
+        target?.focus()
+      })
+    }
+    // Silently drop untouched draft rules — no toast, no undo. The user
+    // never put anything in, so there's nothing to recover.
+    if (!isRuleTouched(removed)) return
     setToast({
       message: `"${removed.ruleName || 'Untitled rule'}" deleted`,
       undo: () => {
@@ -108,15 +153,29 @@ export function DecisioningTable({
     const childIdx = parent.children.findIndex((c) => c.id === childId)
     if (childIdx === -1) return
     const removed = parent.children[childIdx]
+    const nextChildren = parent.children.filter((c) => c.id !== childId)
     onUpdate({
       ...ruleset,
       rules: ruleset.rules.map((r) =>
         r.id === parentId
-          ? { ...r, children: r.children?.filter((c) => c.id !== childId) ?? [] }
+          ? { ...r, children: nextChildren }
           : r,
       ),
     })
     setOpenMenuId(null)
+    // Focus the next visible sibling child (or the parent if no siblings remain).
+    const nextFocusId = nextChildren[childIdx]?.id ?? nextChildren[childIdx - 1]?.id ?? parentId
+    if (nextFocusId) {
+      window.requestAnimationFrame(() => {
+        const target = document.querySelector<HTMLInputElement>(
+          `tr[data-rule-id="${nextFocusId}"] .dt-rule-name-input`,
+        )
+        target?.focus()
+      })
+    }
+    // Same silent-drop policy as deleteRule — untouched draft children
+    // disappear without an undo toast.
+    if (!isRuleTouched(removed)) return
     setToast({
       message: `Sub-condition "${removed.ruleName || 'Untitled'}" deleted`,
       undo: () => {
@@ -157,6 +216,19 @@ export function DecisioningTable({
     onUpdate({ ...ruleset, rules: next })
   }
 
+  function moveChild(parentId: string, fromIdx: number, toIdx: number) {
+    onUpdate({
+      ...ruleset,
+      rules: ruleset.rules.map((r) => {
+        if (r.id !== parentId || !r.children) return r
+        const next = [...r.children]
+        const [removed] = next.splice(fromIdx, 1)
+        next.splice(toIdx, 0, removed)
+        return { ...r, children: next }
+      }),
+    })
+  }
+
   /** Wrapper around onAddChild that ensures the parent is expanded before
       the new draft child renders, so the user immediately sees what they added. */
   function handleAddChild(parentId: string) {
@@ -193,9 +265,9 @@ export function DecisioningTable({
                 onChange={toggleAll}
               />
             </th>
-            <th className="dt-th w-14 px-2 py-2.5 text-center tracking-wider">#</th>
+            <th className="dt-th dt-col-sticky-num-head w-14 px-2 py-2.5 text-center tracking-wider">#</th>
             <th className="dt-th dt-col-sticky-head px-3 py-2.5 text-left tracking-wider min-w-[260px]">Rule name</th>
-            <th className="dt-th px-3 py-2.5 text-left tracking-wider min-w-[140px]">Data attribute</th>
+            <th className="dt-th dt-col-data-attribute px-3 py-2.5 text-left tracking-wider min-w-[140px]">Data attribute</th>
             <th className="dt-th px-3 py-2.5 text-left tracking-wider w-[110px]">Operator</th>
             <th className="dt-th px-3 py-2.5 text-left tracking-wider min-w-[120px]">Amount</th>
             <th className="dt-th px-3 py-2.5 text-left tracking-wider min-w-[160px]">Existing Account</th>
@@ -209,14 +281,29 @@ export function DecisioningTable({
             <tr>
               <td colSpan={11} className="dt-empty-cell">
                 <div className="dt-empty-state">
-                  <TableIcon size={28} className="dt-empty-icon" />
+                  <TableIcon size={24} className="dt-empty-icon" />
                   <p className="dt-empty-title">No rules yet</p>
                   <p className="dt-empty-subtitle">Each rule pairs a data attribute, operator, and threshold with an outcome.</p>
                 </div>
               </td>
             </tr>
+          ) : filterActive && visibleCount === 0 ? (
+            <tr>
+              <td colSpan={11} className="dt-empty-cell">
+                <div className="dt-empty-state">
+                  <p className="dt-empty-title">No rules match "{ruleNameQuery}"</p>
+                  <p className="dt-empty-subtitle">Clear the search to see all rules.</p>
+                </div>
+              </td>
+            </tr>
           ) : (
             ruleset.rules.map((rule, index) => {
+              // Filter by rule name (case-insensitive). Children always render with
+              // their parent — we don't filter children independently because the
+              // parent-child relationship would become incoherent.
+              if (filterActive && !rule.ruleName.toLowerCase().includes(normalizedQuery)) {
+                return null
+              }
               const expanded = expandedIds.has(rule.id)
               const children = rule.children ?? []
               return (
@@ -224,6 +311,8 @@ export function DecisioningTable({
                   <RuleRow
                     rule={rule}
                     index={index}
+                    totalRules={ruleset.rules.length}
+                    dndEnabled={!filterActive}
                     openMenuId={openMenuId}
                     onMenuToggle={(id) => setOpenMenuId(openMenuId === id ? null : id)}
                     onMenuClose={() => setOpenMenuId(null)}
@@ -242,6 +331,8 @@ export function DecisioningTable({
                       key={child.id}
                       rule={child}
                       parentId={rule.id}
+                      childIndex={ci}
+                      totalChildren={children.length}
                       // Tree connector ends at the LAST real child. The inline
                       // add-child row below is a separate quiet affordance
                       // (no tree decoration) — sits in the children group's
@@ -253,6 +344,7 @@ export function DecisioningTable({
                       onUpdate={updateChild}
                       onDelete={deleteChild}
                       onDuplicate={duplicateChild}
+                      onMove={moveChild}
                       autoFocus={autoFocusRuleId === child.id}
                       onAutoFocusConsumed={onAutoFocusConsumed}
                     />
@@ -277,17 +369,44 @@ export function DecisioningTable({
               )
             })
           )}
-          {/* Chromeless add-rule row — Airtable-style affordance at the bottom of the tbody */}
+          {/* Chromeless add-rule row — Airtable-style affordance at the bottom of the tbody.
+              Mirrors the toolbar split-button: clicking opens a small menu with
+              "Add rule" + "Add existing rule" so users can pick either path inline. */}
           <tr className="dt-add-rule-row">
             <td colSpan={11} className="dt-add-rule-row-cell">
-              <button
-                type="button"
-                onClick={onAddRule}
-                className="dt-add-rule-row-btn"
-              >
-                <PlusIcon size={14} />
-                <span>Add rule</span>
-              </button>
+              <div ref={addRuleWrapRef} className="dt-add-rule-row-wrap">
+                <button
+                  type="button"
+                  onClick={() => setAddRuleMenuOpen((o) => !o)}
+                  className="dt-add-rule-row-btn"
+                  aria-haspopup="menu"
+                  aria-expanded={addRuleMenuOpen}
+                >
+                  <PlusIcon size={14} />
+                  <span>Add rule</span>
+                </button>
+                {addRuleMenuOpen && (
+                  <div className="dt-add-rule-row-menu" role="menu">
+                    <button
+                      type="button"
+                      role="menuitem"
+                      className="dt-split-btn-menu-item"
+                      onClick={() => { onAddRule(); setAddRuleMenuOpen(false) }}
+                    >
+                      Add rule
+                    </button>
+                    <hr className="dt-split-btn-menu-divider" />
+                    <button
+                      type="button"
+                      role="menuitem"
+                      className="dt-split-btn-menu-item"
+                      onClick={() => setAddRuleMenuOpen(false)}
+                    >
+                      Add existing rule
+                    </button>
+                  </div>
+                )}
+              </div>
             </td>
           </tr>
         </tbody>

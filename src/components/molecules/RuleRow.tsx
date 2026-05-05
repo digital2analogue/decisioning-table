@@ -27,7 +27,7 @@ function DragGrip() {
   )
 }
 import type { Rule, DragItem } from '../../types'
-import { isRuleValid, isReadyForOutcome, missingFields } from '../../types'
+import { isRuleValid, isRuleTouched, isEmptyDraft, missingFields } from '../../types'
 import { cn } from '../../lib/utils'
 import { Checkbox } from '../atoms/Checkbox'
 import { AttributeSelectBadge, OutcomeBadge } from '../atoms/Badge'
@@ -37,29 +37,12 @@ import { OperatorSelect } from './OperatorSelect'
 import { ActionsMenu } from './ActionsMenu'
 import { ConditionalCell } from './ConditionalCell'
 
-/**
- * True when the rule was just created and the user hasn't touched any field.
- * Used to auto-clean up unfocused empty drafts.
- */
-function isEmptyDraft(rule: Rule): boolean {
-  return (
-    rule.ruleName === '' &&
-    rule.dataAttribute === null &&
-    rule.operator === null &&
-    rule.amount === null &&
-    rule.outcome === null &&
-    rule.existingAccountOperator === null &&
-    rule.existingAccountVariable === '' &&
-    rule.annualIncomeOperator === null &&
-    rule.annualIncomeVariable === ''
-  )
-}
-
 export const DND_TYPE = 'RULE_ROW'
 
 export interface RuleRowProps {
   rule: Rule
   index: number
+  totalRules: number
   openMenuId: string | null
   onMenuToggle: (id: string) => void
   onMenuClose: () => void
@@ -70,6 +53,9 @@ export interface RuleRowProps {
   onMove: (dragIndex: number, hoverIndex: number) => void
   isExpanded: boolean
   onToggleExpand: (id: string) => void
+  /** Drag-and-drop reorder enable flag. Suppressed while a filter is active
+      to avoid the visible-vs-absolute-index mismatch. */
+  dndEnabled?: boolean
   /** When true, focus the rule-name input on mount. */
   autoFocus?: boolean
   /** Called once autofocus has been applied so the parent can clear the marker. */
@@ -79,6 +65,7 @@ export interface RuleRowProps {
 export function RuleRow({
   rule,
   index,
+  totalRules,
   openMenuId,
   onMenuToggle,
   onMenuClose,
@@ -89,6 +76,7 @@ export function RuleRow({
   onMove,
   isExpanded,
   onToggleExpand,
+  dndEnabled = true,
   autoFocus,
   onAutoFocusConsumed,
 }: RuleRowProps) {
@@ -104,8 +92,9 @@ export function RuleRow({
   }, [autoFocus, onAutoFocusConsumed])
   const childCount = rule.children?.length ?? 0
   const hasChildren = childCount > 0
-  const isInvalid = !isRuleValid(rule)
-  const showOutcome = isReadyForOutcome(rule)
+  // Untouched drafts don't surface as invalid — the row warning + tinted
+  // background stay quiet until the user has set at least one field.
+  const isInvalid = isRuleTouched(rule) && !isRuleValid(rule)
   const missing = isInvalid ? missingFields(rule) : []
 
   // Cleanup: when focus leaves the row entirely AND the row is still an
@@ -123,13 +112,16 @@ export function RuleRow({
       onMenuClose()
       return { index, id: rule.id }
     },
+    canDrag: () => dndEnabled,
     collect: (monitor) => ({ isDragging: monitor.isDragging() }),
   })
 
   const [{ isOver }, drop] = useDrop<DragItem, unknown, { isOver: boolean }>({
     accept: DND_TYPE,
+    canDrop: () => dndEnabled,
     collect: (monitor) => ({ isOver: monitor.isOver() }),
     hover(item) {
+      if (!dndEnabled) return
       if (item.index === index) return
       onMove(item.index, index)
       item.index = index
@@ -167,7 +159,7 @@ export function RuleRow({
       </td>
 
       {/* Drag handle + Row # (or warning icon when invalid) */}
-      <td ref={handleRef} className="dt-drag-handle-cell px-2 py-2.5 text-center">
+      <td ref={handleRef} className="dt-drag-handle-cell dt-col-sticky-num px-2 py-2.5 text-center">
         <DragGrip />
         {isInvalid ? (
           <span
@@ -176,7 +168,7 @@ export function RuleRow({
             aria-label={`Incomplete rule: missing ${missing.join(', ')}`}
             title={`Missing: ${missing.join(', ')}`}
           >
-            <AlertTriangleIcon size={14} />
+            <AlertTriangleIcon size={20} fill="currentColor" stroke="var(--color-background-warning-subtle)" />
           </span>
         ) : (
           <span className="dt-row-number">{index + 1}</span>
@@ -205,9 +197,10 @@ export function RuleRow({
             type="text"
             value={rule.ruleName}
             onChange={(e) => onUpdate(rule.id, { ruleName: e.target.value })}
-            className="dt-rule-name-input"
+            className={cn('dt-rule-name-input', missing.includes('rule name') && 'dt-cell-error')}
             placeholder="Rule name..."
             title={rule.ruleName}
+            aria-invalid={missing.includes('rule name') || undefined}
           />
           {hasChildren && (
             <span className="dt-sub-count" title={`${childCount} sub-condition${childCount === 1 ? '' : 's'}`}>
@@ -217,11 +210,12 @@ export function RuleRow({
         </div>
       </td>
 
-      {/* Data Attribute */}
-      <td className="px-3 py-2.5">
+      {/* Data Attribute — hidden via .dt-col-data-attribute (kept in JSX for easy re-enable) */}
+      <td className="dt-col-data-attribute px-3 py-2.5">
         <AttributeSelectBadge
           value={rule.dataAttribute}
           onChange={(v) => onUpdate(rule.id, { dataAttribute: v })}
+          error={missing.includes('data attribute')}
         />
       </td>
 
@@ -230,6 +224,7 @@ export function RuleRow({
         <OperatorSelect
           value={rule.operator}
           onChange={(v) => onUpdate(rule.id, { operator: v })}
+          error={missing.includes('operator')}
         />
       </td>
 
@@ -238,6 +233,7 @@ export function RuleRow({
         <AmountCell
           value={rule.amount}
           onChange={(amount) => onUpdate(rule.id, { amount })}
+          error={missing.includes('amount')}
         />
       </td>
 
@@ -263,22 +259,14 @@ export function RuleRow({
         />
       </td>
 
-      {/* Outcome — hidden until every other required field is filled; placeholder hint until then */}
+      {/* Outcome — always visible. Renders the segmented control regardless of
+          validity so the user can toggle Approve/Deny independently of filling
+          the rest of the row. */}
       <td className="px-3 py-2.5">
-        {showOutcome ? (
-          <OutcomeBadge
-            value={rule.outcome}
-            onChange={(v) => onUpdate(rule.id, { outcome: v })}
-          />
-        ) : (
-          <span
-            className="dt-outcome-pending"
-            aria-disabled="true"
-            title="Complete the other fields first to set the outcome"
-          >
-            Complete other fields first
-          </span>
-        )}
+        <OutcomeBadge
+          value={rule.outcome}
+          onChange={(v) => onUpdate(rule.id, { outcome: v })}
+        />
       </td>
 
       {/* Actions */}
@@ -299,6 +287,8 @@ export function RuleRow({
               onDuplicate={() => onDuplicate(rule.id)}
               onDelete={() => onDelete(rule.id)}
               onClose={onMenuClose}
+              onMoveUp={index > 0 ? () => onMove(index, index - 1) : undefined}
+              onMoveDown={index < totalRules - 1 ? () => onMove(index, index + 1) : undefined}
             />
           )}
         </div>

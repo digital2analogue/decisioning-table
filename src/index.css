@@ -52,7 +52,7 @@ select option { background-color: var(--color-background-elevated); color: var(-
 
 
   /* Table */
-  .dt-table-edge { width: 100%; overflow-x: auto; }
+  .dt-table-edge { width: 100%; overflow-x: auto; border-top: 1px solid var(--color-border-muted); }
   .dt-table-edge table { min-width: max-content; }
   .dt-thead-row { background-color: var(--color-background-accent-blue); border-bottom: 1px solid var(--color-border-default); }
 
@@ -64,11 +64,17 @@ select option { background-color: var(--color-background-elevated); color: var(-
   .dt-table-edge th.dt-col-sticky-head { border-left: none; }
   .dt-th { font-family: var(--font-family-sans); font-size: var(--font-size-xs); font-weight: var(--font-weight-semibold); line-height: var(--font-line-height-snug); color: var(--color-foreground-secondary); text-transform: uppercase; letter-spacing: var(--letter-spacing-all-caps); }
   .dt-tbody-row { border-bottom: 1px solid var(--color-border-muted); background-color: var(--color-background-elevated); transition: background-color var(--duration-fast) var(--easing-default); }
-  .dt-tbody-row:hover td:first-child { box-shadow: inset 3px 0 0 var(--color-foreground-action); }
+  /* Row rail intensities — three semantically distinct states get distinct visual weight:
+     - hover (transient): semi-transparent action, only on rows that aren't selected/expanded
+     - expanded (structural state): medium-blue accent-subtle-border, signals "this group is open"
+     - selected (strongest, user-driven): solid action — wins via source order */
+  .dt-tbody-row:not(.dt-tbody-row-selected):not(.dt-parent-row-expanded):hover td:first-child {
+    box-shadow: inset 3px 0 0 color-mix(in srgb, var(--color-foreground-action) 50%, transparent);
+  }
   .dt-tbody-row-dragging { opacity: 0.4; background-color: var(--color-background-elevated); }
   .dt-tbody-row-over { border-top: 2px solid var(--color-foreground-action); }
+  .dt-parent-row-expanded td:first-child { box-shadow: inset 3px 0 0 var(--color-accent-subtle-border); }
   .dt-tbody-row-selected td:first-child { box-shadow: inset 3px 0 0 var(--color-foreground-action); }
-  .dt-parent-row-expanded td:first-child { box-shadow: inset 3px 0 0 var(--color-foreground-action); }
   .dt-tbody-row-selected { background-color: color-mix(in srgb, var(--color-background-elevated) 94%, var(--color-background-action) 6%); }
   .dt-tbody-row-selected:hover { background-color: color-mix(in srgb, var(--color-background-elevated) 91%, var(--color-background-action) 9%); }
   .dt-row-number { font-family: var(--font-family-mono); font-size: var(--font-size-xs); font-weight: var(--font-weight-regular); color: var(--color-foreground-alt); letter-spacing: 0; font-variant-numeric: tabular-nums; }
@@ -82,7 +88,9 @@ select option { background-color: var(--color-background-elevated); color: var(-
   .dt-toolbar { border-bottom: 1px solid var(--color-border-default); }
   .dt-toolbar-name { font: var(--font-label-medium); letter-spacing: var(--letter-spacing-tight); color: var(--color-foreground-default); margin: 0; }
   .dt-toolbar-name-input { font: var(--font-label-medium); letter-spacing: var(--letter-spacing-tight); color: var(--color-foreground-default); background-color: var(--color-background-elevated); border: 0; outline: none; border-radius: var(--radius-sm); padding: 2px 6px; margin: -2px -6px; box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-background-action) 18%, transparent); }
-  .dt-rule-count { font-family: var(--font-family-mono); font-size: var(--font-size-xs); line-height: var(--font-line-height-snug); color: var(--color-foreground-muted); background-color: var(--color-background-alt); border: 1px solid var(--color-border-default); border-radius: var(--radius-pill); padding: 1px var(--space-sm); }
+  .dt-rule-count { font-family: var(--font-family-mono); font-size: var(--font-size-xs); line-height: var(--font-line-height-snug); color: var(--color-foreground-muted); background-color: var(--color-background-alt); border: 1px solid var(--color-border-default); border-radius: var(--radius-pill); padding: 1px var(--space-sm); font-variant-numeric: tabular-nums; }
+  /* Metric utility — for inline numeric callouts that should read as measurements (mono + tabular figures). */
+  .dt-metric { font-family: var(--font-family-mono); font-variant-numeric: tabular-nums; }
   .dt-delete-selected { display: inline-flex; align-items: center; gap: var(--space-xs); font: var(--font-label-small); letter-spacing: var(--letter-spacing-label); color: var(--color-foreground-danger); background: none; border: none; cursor: pointer; transition: opacity var(--duration-fast) var(--easing-default); padding: 0; opacity: 0.65; }
   .dt-delete-selected:hover { opacity: 1; }
   .dt-add-rule-btn { display: inline-flex; align-items: center; gap: var(--space-6); font: var(--font-label-small); letter-spacing: var(--letter-spacing-label); color: var(--color-foreground-on-action); background-color: var(--color-background-action); border: 1px solid var(--color-background-action); border-radius: var(--radius-md); padding: var(--space-xs) var(--space-sm); cursor: pointer; transition: background-color var(--duration-fast) var(--easing-default), border-color var(--duration-fast) var(--easing-default); }
@@ -203,7 +211,7 @@ select option { background-color: var(--color-background-elevated); color: var(-
   .dt-conditional-operator-empty:hover { color: var(--color-foreground-action); border-color: var(--color-foreground-action); }
 
   /* Validation banner — page-width amber alert summarizing incomplete rules */
-  .dt-validation-banner { display: flex; align-items: center; gap: var(--space-sm); padding: var(--space-sm) var(--space-lg); background-color: var(--color-background-warning-subtle); border-bottom: 1px solid var(--color-foreground-warning-dark); color: var(--color-foreground-warning); }
+  .dt-validation-banner { display: flex; align-items: center; gap: var(--space-sm); padding: var(--space-sm) var(--space-lg); background-color: var(--color-background-warning-subtle); border-left: 4px solid var(--color-foreground-warning-dark); border-bottom: 1px solid var(--color-foreground-warning-dark); color: var(--color-foreground-warning); }
   .dt-validation-banner-icon { display: inline-flex; flex-shrink: 0; color: var(--color-foreground-warning); }
   .dt-validation-banner-text { font: var(--font-body-medium); color: var(--color-foreground-warning); margin: 0; flex: 1; }
   .dt-validation-banner-text strong { font-weight: var(--font-weight-semibold); color: var(--color-foreground-warning-dark); }

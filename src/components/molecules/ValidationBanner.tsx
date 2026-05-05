@@ -56,10 +56,10 @@ export function ValidationBanner({ ruleset }: ValidationBannerProps) {
         <AlertTriangleIcon size={16} />
       </span>
       <p className="dt-validation-banner-text">
-        <strong>{count} incomplete {noun}</strong> must be filled in before this decision model can run.
+        <strong><span className="dt-metric">{count}</span> incomplete {noun}</strong> must be filled in before this decision model can run.
       </p>
       <button type="button" onClick={scrollToFirst} className="dt-validation-banner-cta">
-        Fix the first one
+        Jump to first incomplete
         <ArrowRightIcon size={14} />
       </button>
     </div>

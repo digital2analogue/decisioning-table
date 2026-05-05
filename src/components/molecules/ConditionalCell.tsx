@@ -19,7 +19,7 @@ const CONDITIONAL_OPERATORS: ConditionalOperator[] = [
 
 const OPERATOR_DISPLAY: Record<ConditionalOperator, string> = {
   'contains': 'Contains',
-  'doesnotContain': 'doesnotContain',
+  'doesnotContain': "Doesn't contain",
   '==': '==',
   '!=': '!=',
   '=null': '=null',

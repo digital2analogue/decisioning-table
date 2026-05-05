@@ -68,7 +68,7 @@ export const initialRulesets: Ruleset[] = [
         annualIncomeVariable: '',
         children: [
           { id: 'r-3-c1', selected: false, ruleName: 'No existing account', dataAttribute: 'Liability', operator: '=', amount: 0, outcome: 'Deny', existingAccountOperator: '!=', existingAccountVariable: 'existing-account', annualIncomeOperator: null, annualIncomeVariable: '', logicOperator: 'OR' },
-          { id: 'r-3-c2', selected: false, ruleName: 'Recent inquiries 5+', dataAttribute: 'Liability', operator: '>=', amount: 5, outcome: 'Deny', existingAccountOperator: null, existingAccountVariable: '', annualIncomeOperator: '>=', annualIncomeVariable: 'recent-inquiries', logicOperator: 'OR' },
+          { id: 'r-3-c2', selected: false, ruleName: 'Recent inquiries 5+', dataAttribute: 'Liability', operator: '>=', amount: 5, outcome: 'Deny', existingAccountOperator: null, existingAccountVariable: '', annualIncomeOperator: '!=null', annualIncomeVariable: 'recent-inquiries', logicOperator: 'OR' },
         ],
       },
       { id: 'r-4', selected: false, ruleName: 'Moderate Income Approval', dataAttribute: 'Income', operator: '>=', amount: 40000, outcome: 'Approve', existingAccountOperator: null, existingAccountVariable: '', annualIncomeOperator: null, annualIncomeVariable: '' },

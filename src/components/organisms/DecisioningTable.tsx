@@ -237,15 +237,16 @@ export function DecisioningTable({
                     autoFocus={autoFocusRuleId === rule.id}
                     onAutoFocusConsumed={onAutoFocusConsumed}
                   />
-                  {expanded && children.map((child) => (
+                  {expanded && children.map((child, ci) => (
                     <ChildRuleRow
                       key={child.id}
                       rule={child}
                       parentId={rule.id}
-                      // The inline add-child row (below) is always the structural last
-                      // when children exist — never mark a real child as last so the
-                      // tree connector continues into the add-child row.
-                      isLast={false}
+                      // Tree connector ends at the LAST real child. The inline
+                      // add-child row below is a separate quiet affordance
+                      // (no tree decoration) — sits in the children group's
+                      // visual space but isn't part of the tree.
+                      isLast={ci === children.length - 1}
                       menuOpen={openMenuId === child.id}
                       onMenuToggle={() => setOpenMenuId(openMenuId === child.id ? null : child.id)}
                       onMenuClose={() => setOpenMenuId(null)}
@@ -257,11 +258,9 @@ export function DecisioningTable({
                     />
                   ))}
                   {expanded && children.length > 0 && (
-                    <tr className="dt-tbody-row dt-child-row dt-child-row-last dt-add-child-row">
+                    <tr className="dt-tbody-row dt-child-row dt-add-child-row">
                       <td className="dt-child-cell-bare px-3 py-2.5"></td>
-                      <td className="dt-child-cell-bare dt-child-connector-cell px-2 py-2.5">
-                        <span className="dt-child-tree-line" aria-hidden="true" />
-                      </td>
+                      <td className="dt-child-cell-bare px-2 py-2.5"></td>
                       <td colSpan={9} className="dt-add-child-row-cell">
                         <button
                           type="button"

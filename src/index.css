@@ -134,7 +134,10 @@ select option { background-color: var(--color-background-elevated); color: var(-
   .dt-add-ruleset-btn:focus-visible { outline: none; color: var(--color-foreground-action); background-color: var(--color-background-elevated); box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-background-action) 18%, transparent); }
 
   /* Rule row inputs */
-  .dt-rule-name-input { font: var(--font-body-medium); color: var(--color-foreground-default); background: transparent; border: 0; outline: none; width: 100%; border-radius: var(--radius-sm); padding: var(--space-2xs) var(--space-6); margin-left: calc(-1 * var(--space-6)); transition: background-color var(--duration-fast) var(--easing-default), box-shadow var(--duration-fast) var(--easing-default); }
+  /* min-width: 0 lets the input shrink inside the flex name-wrap; text-overflow: ellipsis
+     truncates long rule names with "…" when the input isn't focused. On focus, the cursor
+     scrolls the text naturally — ellipsis only applies to unfocused state. */
+  .dt-rule-name-input { font: var(--font-body-medium); color: var(--color-foreground-default); background: transparent; border: 0; outline: none; width: 100%; min-width: 0; text-overflow: ellipsis; border-radius: var(--radius-sm); padding: var(--space-2xs) var(--space-6); margin-left: calc(-1 * var(--space-6)); transition: background-color var(--duration-fast) var(--easing-default), box-shadow var(--duration-fast) var(--easing-default); }
   .dt-rule-name-input::placeholder { color: var(--color-foreground-muted); }
   .dt-rule-name-input:hover { background-color: var(--color-background-alt); box-shadow: 0 0 0 1px var(--color-border-default); }
   .dt-rule-name-input:focus { background-color: var(--color-background-elevated); border-color: var(--color-border-focus); box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-background-action) 18%, transparent); }

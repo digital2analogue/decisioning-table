@@ -201,6 +201,7 @@ export function RuleRow({
           variable={rule.existingAccountVariable}
           onOperatorChange={(op) => onUpdate(rule.id, { existingAccountOperator: op })}
           onVariableChange={(v) => onUpdate(rule.id, { existingAccountVariable: v })}
+          variablePlaceholder="Select variable"
         />
       </td>
 
@@ -211,6 +212,7 @@ export function RuleRow({
           variable={rule.annualIncomeVariable}
           onOperatorChange={(op) => onUpdate(rule.id, { annualIncomeOperator: op })}
           onVariableChange={(v) => onUpdate(rule.id, { annualIncomeVariable: v })}
+          variablePlaceholder="Enter value"
         />
       </td>
 

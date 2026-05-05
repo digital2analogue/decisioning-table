@@ -31,6 +31,8 @@ export interface ConditionalCellProps {
   variable: string
   onOperatorChange: (operator: ConditionalOperator) => void
   onVariableChange: (variable: string) => void
+  /** Placeholder text for the variable input when no variable is selected. */
+  variablePlaceholder?: string
 }
 
 export function ConditionalCell({
@@ -38,6 +40,7 @@ export function ConditionalCell({
   variable,
   onOperatorChange,
   onVariableChange,
+  variablePlaceholder = 'Select value…',
 }: ConditionalCellProps) {
   const [isOperatorOpen, setIsOperatorOpen] = useState(false)
   const [isVariableOpen, setIsVariableOpen] = useState(false)
@@ -139,7 +142,7 @@ export function ConditionalCell({
         <input
           ref={variableInputRef}
           type="text"
-          placeholder={variable && selectedVariable ? selectedVariable.label : 'Select value…'}
+          placeholder={variable && selectedVariable ? selectedVariable.label : variablePlaceholder}
           value={variableSearch}
           onChange={(e) => {
             setVariableSearch(e.target.value)

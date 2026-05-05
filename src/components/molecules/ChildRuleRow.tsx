@@ -133,6 +133,7 @@ export function ChildRuleRow({
           variable={rule.existingAccountVariable}
           onOperatorChange={(o) => onUpdate(parentId, rule.id, { existingAccountOperator: o })}
           onVariableChange={(v) => onUpdate(parentId, rule.id, { existingAccountVariable: v })}
+          variablePlaceholder="Select variable"
         />
       </td>
 
@@ -143,6 +144,7 @@ export function ChildRuleRow({
           variable={rule.annualIncomeVariable}
           onOperatorChange={(o) => onUpdate(parentId, rule.id, { annualIncomeOperator: o })}
           onVariableChange={(v) => onUpdate(parentId, rule.id, { annualIncomeVariable: v })}
+          variablePlaceholder="Enter value"
         />
       </td>
 

@@ -181,7 +181,7 @@ select option { background-color: var(--color-background-elevated); color: var(-
   .dt-icon-btn:focus-visible { color: var(--color-foreground-secondary); outline: none; border-radius: var(--radius-sm); box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-background-action) 18%, transparent); }
   .dt-icon-reveal { opacity: 0; transition: opacity var(--duration-fast) var(--easing-default); }
   *:hover > .dt-icon-reveal, *:focus-within > .dt-icon-reveal { opacity: 1; }
-  .dt-edit-cta { display: inline-flex; align-items: center; gap: 4px; line-height: 1; font: var(--font-label-medium); padding: 0; border: none; background: none; color: var(--color-foreground-action); text-decoration: underline; text-underline-offset: 2px; }
+  .dt-edit-cta { display: inline-flex; align-items: center; gap: 4px; line-height: 1; font: var(--font-label-small); letter-spacing: var(--letter-spacing-label); padding: 0; border: none; background: none; color: var(--color-foreground-action); text-decoration: underline; text-underline-offset: 2px; }
   .dt-edit-cta:hover { text-decoration: none; color: var(--color-foreground-action); }
 
   /* Operator trigger — shares font/colors/padding with .dt-conditional-operator but sizes naturally for the narrow Operator column */

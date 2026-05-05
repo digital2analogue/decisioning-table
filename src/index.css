@@ -53,15 +53,6 @@ select option { background-color: var(--color-background-elevated); color: var(-
   .dt-bulk-actions-btn:hover,
   .dt-test-model-btn:hover { color: var(--color-foreground-default); border-color: var(--color-foreground-muted); background-color: var(--color-background-alt); }
 
-  .dt-split-btn { position: relative; display: inline-flex; align-items: stretch; box-shadow: var(--shadow-sm); border-radius: var(--radius-md); }
-  .dt-split-btn-menu { position: absolute; right: 0; top: calc(100% + 4px); z-index: 30; background-color: var(--color-background-elevated); border: 1px solid var(--color-border-default); border-radius: var(--radius-lg); box-shadow: var(--shadow-menu); padding: var(--space-xs) 0; min-width: 168px; }
-  .dt-split-btn-menu-item { display: flex; align-items: center; gap: var(--space-sm); width: 100%; font: var(--font-label-medium); letter-spacing: var(--letter-spacing-label); color: var(--color-foreground-secondary); background: none; border: none; cursor: pointer; padding: var(--space-6) var(--space-sm); transition: background-color var(--duration-fast) var(--easing-default), color var(--duration-fast) var(--easing-default); text-align: left; white-space: nowrap; }
-  .dt-split-btn-menu-item:hover { background-color: var(--color-background-alt); color: var(--color-foreground-default); }
-  .dt-split-btn-menu-divider { border: none; border-top: 1px solid var(--color-border-muted); margin: var(--space-xs) 0; }
-  .dt-split-btn-main { display: inline-flex; align-items: center; gap: var(--space-6); font: var(--font-label-medium); letter-spacing: var(--letter-spacing-label); color: var(--color-foreground-on-action); background-color: var(--color-background-action); border: 1px solid var(--color-background-action); border-right: none; border-radius: var(--radius-md) 0 0 var(--radius-md); padding: var(--space-xs) var(--space-sm); cursor: pointer; transition: background-color var(--duration-fast) var(--easing-default); }
-  .dt-split-btn-main:hover { background-color: var(--color-background-action-hover); border-color: var(--color-background-action-hover); }
-  .dt-split-btn-chevron { display: inline-flex; align-items: center; color: var(--color-foreground-on-action); background-color: var(--color-background-action); border: 1px solid var(--color-background-action); border-left: 1px solid color-mix(in srgb, var(--color-foreground-on-action) 28%, transparent); border-radius: 0 var(--radius-md) var(--radius-md) 0; padding: var(--space-xs) var(--space-sm); cursor: pointer; transition: background-color var(--duration-fast) var(--easing-default); }
-  .dt-split-btn-chevron:hover { background-color: var(--color-background-action-hover); border-color: var(--color-background-action-hover); }
 
   /* Table */
   .dt-table-edge { width: 100%; overflow-x: auto; }
@@ -99,6 +90,7 @@ select option { background-color: var(--color-background-elevated); color: var(-
   .dt-delete-selected:hover { opacity: 1; }
   .dt-add-rule-btn { display: inline-flex; align-items: center; gap: var(--space-6); font: var(--font-label-small); letter-spacing: var(--letter-spacing-label); color: var(--color-foreground-on-action); background-color: var(--color-background-action); border: 1px solid var(--color-background-action); border-radius: var(--radius-md); padding: var(--space-xs) var(--space-sm); cursor: pointer; transition: background-color var(--duration-fast) var(--easing-default), border-color var(--duration-fast) var(--easing-default); }
   .dt-add-rule-btn:hover { background-color: var(--color-background-action-hover); border-color: var(--color-background-action-hover); }
+  .dt-add-rule-btn:focus-visible { outline: none; box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-background-action) 25%, transparent); }
 
   /* Tabs */
   .dt-tab-item { display: inline-flex; align-items: center; gap: var(--space-xs); font: var(--font-label-medium); letter-spacing: var(--letter-spacing-label); color: var(--color-foreground-muted); background: none; border: none; border-top: 2px solid transparent; cursor: pointer; white-space: nowrap; padding: var(--space-sm) var(--space-md); transition: color var(--duration-fast) var(--easing-default), border-top-color var(--duration-fast) var(--easing-default), background-color var(--duration-fast) var(--easing-default); }

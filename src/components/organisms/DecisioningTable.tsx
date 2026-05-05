@@ -237,12 +237,15 @@ export function DecisioningTable({
                     autoFocus={autoFocusRuleId === rule.id}
                     onAutoFocusConsumed={onAutoFocusConsumed}
                   />
-                  {expanded && children.map((child, ci) => (
+                  {expanded && children.map((child) => (
                     <ChildRuleRow
                       key={child.id}
                       rule={child}
                       parentId={rule.id}
-                      isLast={ci === children.length - 1}
+                      // The inline add-child row (below) is always the structural last
+                      // when children exist — never mark a real child as last so the
+                      // tree connector continues into the add-child row.
+                      isLast={false}
                       menuOpen={openMenuId === child.id}
                       onMenuToggle={() => setOpenMenuId(openMenuId === child.id ? null : child.id)}
                       onMenuClose={() => setOpenMenuId(null)}
@@ -253,6 +256,24 @@ export function DecisioningTable({
                       onAutoFocusConsumed={onAutoFocusConsumed}
                     />
                   ))}
+                  {expanded && children.length > 0 && (
+                    <tr className="dt-tbody-row dt-child-row dt-child-row-last dt-add-child-row">
+                      <td className="dt-child-cell-bare px-3 py-2.5"></td>
+                      <td className="dt-child-cell-bare dt-child-connector-cell px-2 py-2.5">
+                        <span className="dt-child-tree-line" aria-hidden="true" />
+                      </td>
+                      <td colSpan={9} className="dt-add-child-row-cell">
+                        <button
+                          type="button"
+                          onClick={() => handleAddChild(rule.id)}
+                          className="dt-add-child-row-btn"
+                        >
+                          <PlusIcon size={14} />
+                          <span>Add sub-condition</span>
+                        </button>
+                      </td>
+                    </tr>
+                  )}
                 </Fragment>
               )
             })

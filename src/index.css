@@ -221,6 +221,17 @@ select option { background-color: var(--color-background-elevated); color: var(-
   .dt-add-rule-row-btn:hover { color: var(--color-foreground-action); background-color: var(--color-background-accent-blue); }
   .dt-add-rule-row-btn:focus-visible { outline: none; color: var(--color-foreground-action); background-color: var(--color-background-accent-blue); box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-background-action) 18%, transparent); }
 
+  /* Inline "+ Add sub-condition" row — sits as the last row inside an expanded
+     parent's children group. Reuses .dt-child-row + .dt-child-row-last so the
+     tree connector continues into it; cell-bare/connector-cell render the
+     vertical+T-stub line just like a real child row. The colspan'd label cell
+     hosts the action button. Animation inherits from .dt-tbody-row entry. */
+  .dt-add-child-row { animation-delay: 30ms; }
+  .dt-add-child-row .dt-add-child-row-cell { padding: var(--space-2xs) var(--space-md); border-bottom: none; }
+  .dt-add-child-row-btn { display: inline-flex; align-items: center; gap: var(--space-xs); font: var(--font-label-small); letter-spacing: var(--letter-spacing-label); color: var(--color-foreground-muted); background: none; border: none; cursor: pointer; padding: var(--space-2xs) var(--space-sm); border-radius: var(--radius-sm); transition: color var(--duration-fast) var(--easing-default), background-color var(--duration-fast) var(--easing-default); }
+  .dt-add-child-row-btn:hover { color: var(--color-foreground-action); background-color: var(--color-background-accent-blue); }
+  .dt-add-child-row-btn:focus-visible { outline: none; color: var(--color-foreground-action); background-color: var(--color-background-accent-blue); box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-background-action) 18%, transparent); }
+
   /* Row-level "incomplete rule" warning — replaces the row number for invalid rules; sits inside the # column */
   .dt-row-warning { display: inline-flex; align-items: center; justify-content: center; color: var(--color-foreground-warning); cursor: help; }
   .dt-child-row-warning { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background-color: var(--color-background-alt); padding: 0 2px; z-index: 1; }

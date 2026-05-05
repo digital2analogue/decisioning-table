@@ -140,6 +140,8 @@ const PAIRINGS = [
   // Outcome cell pending hint (italic muted text on default row backgrounds)
   { text: '--color-foreground-muted',     bg: WHITE,        label: 'Outcome: pending hint (parent row)' },
   { text: '--color-foreground-muted',     bg: '--color-background-alt', label: 'Outcome: pending hint (child row)' },
+  // Toast (dark notification with inverse text + Undo action)
+  { text: '--color-foreground-inverse',   bg: '--color-foreground-default', label: 'Toast: message + Undo action' },
   // Onboarding flow
   { text: '--color-foreground-action',    bg: WHITE,        label: 'Onboarding: nav + CTA links' },
   { text: '--color-foreground-default',   bg: WHITE,        label: 'Onboarding: element labels' },

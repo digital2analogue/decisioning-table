@@ -4,6 +4,12 @@ import type { Rule, Ruleset } from '../../types'
 import { Checkbox } from '../atoms/Checkbox'
 import { RuleRow } from '../molecules/RuleRow'
 import { ChildRuleRow } from '../molecules/ChildRuleRow'
+import { Toast } from '../molecules/Toast'
+
+interface ToastState {
+  message: string
+  undo: () => void
+}
 
 export interface DecisioningTableProps {
   ruleset: Ruleset
@@ -23,6 +29,7 @@ export function DecisioningTable({
   onAutoFocusConsumed,
 }: DecisioningTableProps) {
   const [openMenuId, setOpenMenuId] = useState<string | null>(null)
+  const [toast, setToast] = useState<ToastState | null>(null)
   const [expandedIds, setExpandedIds] = useState<Set<string>>(() => {
     // Default: parents with children start expanded so the feature is discoverable
     const initial = new Set<string>()
@@ -61,8 +68,20 @@ export function DecisioningTable({
   }
 
   function deleteRule(id: string) {
-    onUpdate({ ...ruleset, rules: ruleset.rules.filter((r) => r.id !== id) })
+    const idx = ruleset.rules.findIndex((r) => r.id === id)
+    if (idx === -1) return
+    const removed = ruleset.rules[idx]
+    const nextRules = ruleset.rules.filter((r) => r.id !== id)
+    onUpdate({ ...ruleset, rules: nextRules })
     setOpenMenuId(null)
+    setToast({
+      message: `"${removed.ruleName || 'Untitled rule'}" deleted`,
+      undo: () => {
+        const restored = [...nextRules]
+        restored.splice(idx, 0, removed)
+        onUpdate({ ...ruleset, rules: restored })
+      },
+    })
   }
 
   function duplicateRule(id: string) {
@@ -82,6 +101,11 @@ export function DecisioningTable({
   }
 
   function deleteChild(parentId: string, childId: string) {
+    const parent = ruleset.rules.find((r) => r.id === parentId)
+    if (!parent || !parent.children) return
+    const childIdx = parent.children.findIndex((c) => c.id === childId)
+    if (childIdx === -1) return
+    const removed = parent.children[childIdx]
     onUpdate({
       ...ruleset,
       rules: ruleset.rules.map((r) =>
@@ -91,6 +115,20 @@ export function DecisioningTable({
       ),
     })
     setOpenMenuId(null)
+    setToast({
+      message: `Sub-condition "${removed.ruleName || 'Untitled'}" deleted`,
+      undo: () => {
+        onUpdate({
+          ...ruleset,
+          rules: ruleset.rules.map((r) => {
+            if (r.id !== parentId) return r
+            const next = [...(r.children ?? [])]
+            next.splice(childIdx, 0, removed)
+            return { ...r, children: next }
+          }),
+        })
+      },
+    })
   }
 
   function duplicateChild(parentId: string, childId: string) {
@@ -217,6 +255,14 @@ export function DecisioningTable({
           </tr>
         </tbody>
       </table>
+      {toast && (
+        <Toast
+          message={toast.message}
+          actionLabel="Undo"
+          onAction={toast.undo}
+          onDismiss={() => setToast(null)}
+        />
+      )}
     </div>
   )
 }

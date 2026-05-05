@@ -326,6 +326,31 @@ select option { background-color: var(--color-background-elevated); color: var(-
   }
 
 
+  /* Toast — single-toast notification anchored bottom-center via portal. Used for delete-undo. */
+  @keyframes dt-toast-in {
+    from { opacity: 0; transform: translate(-50%, 8px); }
+    to   { opacity: 1; transform: translate(-50%, 0); }
+  }
+  .dt-toast {
+    position: fixed; bottom: var(--space-lg); left: 50%; transform: translateX(-50%);
+    display: inline-flex; align-items: center; gap: var(--space-md);
+    padding: var(--space-sm) var(--space-sm) var(--space-sm) var(--space-md);
+    background-color: var(--color-foreground-default); color: var(--color-foreground-inverse);
+    border-radius: var(--radius-md); box-shadow: var(--shadow-menu);
+    z-index: 10000; max-width: min(480px, calc(100vw - var(--space-lg) * 2));
+    animation: dt-toast-in var(--duration-normal) var(--easing-out) both;
+  }
+  .dt-toast-message { font: var(--font-label-medium); letter-spacing: var(--letter-spacing-label); }
+  .dt-toast-action { font: var(--font-label-medium); letter-spacing: var(--letter-spacing-label); color: var(--color-foreground-inverse); background: none; border: none; padding: var(--space-2xs) var(--space-sm); border-radius: var(--radius-sm); cursor: pointer; text-decoration: underline; text-underline-offset: 2px; transition: background-color var(--duration-fast) var(--easing-default); }
+  .dt-toast-action:hover { background-color: color-mix(in srgb, transparent 85%, var(--color-foreground-inverse) 15%); text-decoration: none; }
+  .dt-toast-action:focus-visible { outline: none; box-shadow: 0 0 0 2px var(--color-foreground-inverse); }
+  .dt-toast-close { display: inline-flex; align-items: center; justify-content: center; width: 22px; height: 22px; color: var(--color-foreground-inverse); background: none; border: none; cursor: pointer; padding: 0; opacity: 0.7; border-radius: var(--radius-sm); transition: opacity var(--duration-fast) var(--easing-default), background-color var(--duration-fast) var(--easing-default); }
+  .dt-toast-close:hover { opacity: 1; background-color: color-mix(in srgb, transparent 85%, var(--color-foreground-inverse) 15%); }
+  .dt-toast-close:focus-visible { outline: none; opacity: 1; box-shadow: 0 0 0 2px var(--color-foreground-inverse); }
+  @media (prefers-reduced-motion: reduce) {
+    .dt-toast { animation: none; }
+  }
+
   /* ── Onboarding flow (ob-) ──────────────────────────── */
 
   /* Page shell */

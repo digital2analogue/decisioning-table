@@ -137,6 +137,9 @@ const PAIRINGS = [
   // Outcome badges
   { text: APPROVE_TEXT,                   bg: APPROVE_BG,   label: 'Outcome: Approve badge text' },
   { text: '--color-foreground-danger',    bg: DENY_BG,      label: 'Outcome: Deny badge text' },
+  // Outcome cell pending hint (italic muted text on default row backgrounds)
+  { text: '--color-foreground-muted',     bg: WHITE,        label: 'Outcome: pending hint (parent row)' },
+  { text: '--color-foreground-muted',     bg: '--color-background-alt', label: 'Outcome: pending hint (child row)' },
   // Onboarding flow
   { text: '--color-foreground-action',    bg: WHITE,        label: 'Onboarding: nav + CTA links' },
   { text: '--color-foreground-default',   bg: WHITE,        label: 'Onboarding: element labels' },

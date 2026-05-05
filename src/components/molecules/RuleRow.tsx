@@ -214,13 +214,21 @@ export function RuleRow({
         />
       </td>
 
-      {/* Outcome — hidden until every other required field is filled, then revealed for selection */}
+      {/* Outcome — hidden until every other required field is filled; placeholder hint until then */}
       <td className="px-3 py-2.5">
-        {showOutcome && (
+        {showOutcome ? (
           <OutcomeBadge
             value={rule.outcome}
             onChange={(v) => onUpdate(rule.id, { outcome: v })}
           />
+        ) : (
+          <span
+            className="dt-outcome-pending"
+            aria-disabled="true"
+            title="Complete the other fields first to set the outcome"
+          >
+            Complete other fields first
+          </span>
         )}
       </td>
 

@@ -1,6 +1,31 @@
 import { useCallback, useEffect, useRef } from 'react'
 import { useDrag, useDrop } from 'react-dnd'
-import { AlertTriangleIcon, MoreHorizontalIcon, GripVerticalIcon, ChevronRightIcon } from 'lucide-react'
+import { AlertTriangleIcon, MoreHorizontalIcon, ChevronRightIcon } from 'lucide-react'
+
+/**
+ * Custom 6-dot drag handle (3 rows × 2 cols). Hand-rolled SVG instead of
+ * Lucide's GripVerticalIcon — feels native to the table's craft level
+ * and uses currentColor for token-driven theming.
+ */
+function DragGrip() {
+  return (
+    <svg
+      width="10"
+      height="14"
+      viewBox="0 0 10 14"
+      fill="currentColor"
+      aria-hidden="true"
+      className="dt-drag-grip"
+    >
+      <circle cx="2" cy="3" r="1" />
+      <circle cx="8" cy="3" r="1" />
+      <circle cx="2" cy="7" r="1" />
+      <circle cx="8" cy="7" r="1" />
+      <circle cx="2" cy="11" r="1" />
+      <circle cx="8" cy="11" r="1" />
+    </svg>
+  )
+}
 import type { Rule, DragItem } from '../../types'
 import { isRuleValid, isReadyForOutcome, missingFields } from '../../types'
 import { cn } from '../../lib/utils'
@@ -141,7 +166,7 @@ export function RuleRow({
 
       {/* Drag handle + Row # (or warning icon when invalid) */}
       <td ref={handleRef} className="dt-drag-handle-cell px-2 py-2.5 text-center">
-        <GripVerticalIcon size={14} className="dt-drag-grip" />
+        <DragGrip />
         {isInvalid ? (
           <span
             className="dt-row-warning"

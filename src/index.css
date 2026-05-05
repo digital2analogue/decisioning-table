@@ -50,6 +50,23 @@ select option { background-color: var(--color-background-elevated); color: var(-
   .dt-test-model-btn { display: inline-flex; align-items: center; gap: var(--space-xs); font: var(--font-label-medium); letter-spacing: var(--letter-spacing-label); color: var(--color-foreground-secondary); background: none; border: 1px solid var(--color-border-default); border-radius: var(--radius-md); padding: var(--space-xs) var(--space-sm); cursor: pointer; transition: color var(--duration-fast) var(--easing-default), border-color var(--duration-fast) var(--easing-default), background-color var(--duration-fast) var(--easing-default); }
   .dt-test-model-btn:hover { color: var(--color-foreground-default); border-color: var(--color-foreground-muted); background-color: var(--color-background-alt); }
 
+  /* Header divider — vertical hairline between header CTA groups (e.g., between "Test model" and the add-rule split button). */
+  .dt-header-divider { display: inline-block; width: 1px; height: 20px; background-color: var(--color-border-default); flex-shrink: 0; }
+
+  /* Split button — primary action with a chevron-trigger menu of related variants. */
+  .dt-split-btn { position: relative; display: inline-flex; align-items: stretch; box-shadow: var(--shadow-sm); border-radius: var(--radius-md); }
+  .dt-split-btn-main { display: inline-flex; align-items: center; gap: var(--space-6); font: var(--font-label-medium); letter-spacing: var(--letter-spacing-label); color: var(--color-foreground-on-action); background-color: var(--color-background-action); border: 1px solid var(--color-background-action); border-right: none; border-radius: var(--radius-md) 0 0 var(--radius-md); padding: var(--space-xs) var(--space-sm); cursor: pointer; transition: background-color var(--duration-fast) var(--easing-default); }
+  .dt-split-btn-main:hover { background-color: var(--color-background-action-hover); border-color: var(--color-background-action-hover); }
+  .dt-split-btn-main:focus-visible { outline: none; box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-background-action) 25%, transparent); }
+  .dt-split-btn-chevron { display: inline-flex; align-items: center; color: var(--color-foreground-on-action); background-color: var(--color-background-action); border: 1px solid var(--color-background-action); border-left: 1px solid color-mix(in srgb, var(--color-foreground-on-action) 28%, transparent); border-radius: 0 var(--radius-md) var(--radius-md) 0; padding: var(--space-xs) var(--space-sm); cursor: pointer; transition: background-color var(--duration-fast) var(--easing-default); }
+  .dt-split-btn-chevron:hover { background-color: var(--color-background-action-hover); border-color: var(--color-background-action-hover); }
+  .dt-split-btn-chevron:focus-visible { outline: none; box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-background-action) 25%, transparent); }
+  .dt-split-btn-menu { position: absolute; right: 0; top: calc(100% + 4px); z-index: 30; background-color: var(--color-background-elevated); border: 1px solid var(--color-border-default); border-radius: var(--radius-md); box-shadow: var(--shadow-menu); padding: var(--space-xs) 0; min-width: 168px; }
+  .dt-split-btn-menu-item { display: flex; align-items: center; gap: var(--space-sm); width: 100%; font: var(--font-label-medium); letter-spacing: var(--letter-spacing-label); color: var(--color-foreground-secondary); background: none; border: none; cursor: pointer; padding: var(--space-6) var(--space-sm); transition: background-color var(--duration-fast) var(--easing-default), color var(--duration-fast) var(--easing-default); text-align: left; white-space: nowrap; }
+  .dt-split-btn-menu-item:hover { background-color: var(--color-background-alt); color: var(--color-foreground-default); }
+  .dt-split-btn-menu-item:focus-visible { outline: none; background-color: var(--color-background-alt); color: var(--color-foreground-default); box-shadow: inset 0 0 0 2px var(--color-border-focus); }
+  .dt-split-btn-menu-divider { border: none; border-top: 1px solid var(--color-border-muted); margin: var(--space-xs) 0; }
+
 
   /* Table */
   .dt-table-edge { width: 100%; overflow-x: auto; border-top: 1px solid var(--color-border-muted); }
@@ -109,7 +126,7 @@ select option { background-color: var(--color-background-elevated); color: var(-
 
   /* Ruleset tabs bar */
   .dt-tabs-bar { background-color: var(--color-background-alt); border-top: 1px solid var(--color-border-default); }
-  .dt-add-ruleset-btn { display: inline-flex; align-items: center; gap: var(--space-xs); height: 28px; padding: 0 var(--space-sm); font: var(--font-label-small); letter-spacing: var(--letter-spacing-label); color: var(--color-foreground-muted); background: none; border: none; cursor: pointer; border-radius: var(--radius-md); flex-shrink: 0; transition: color var(--duration-fast) var(--easing-default), background-color var(--duration-fast) var(--easing-default); }
+  .dt-add-ruleset-btn { display: inline-flex; align-items: center; gap: var(--space-xs); height: 28px; padding: 0 var(--space-sm); font: var(--font-label-medium); letter-spacing: var(--letter-spacing-label); color: var(--color-foreground-muted); background: none; border: none; cursor: pointer; border-radius: var(--radius-md); flex-shrink: 0; transition: color var(--duration-fast) var(--easing-default), background-color var(--duration-fast) var(--easing-default); }
   .dt-add-ruleset-btn:hover { color: var(--color-foreground-action); background-color: var(--color-background-elevated); }
   .dt-add-ruleset-btn:focus-visible { outline: none; color: var(--color-foreground-action); background-color: var(--color-background-elevated); box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-background-action) 18%, transparent); }
 
@@ -222,7 +239,11 @@ select option { background-color: var(--color-background-elevated); color: var(-
   .dt-validation-banner-cta:focus-visible { outline: none; box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-foreground-warning) 25%, transparent); }
 
   /* Conditional cell — operator button + variable input (matches dt-operator-select sizing) */
-  .dt-conditional-operator { appearance: none; display: inline-flex; align-items: center; justify-content: space-between; gap: var(--space-2xs); width: 148px; background-color: var(--color-background-alt); border: 1px solid var(--color-border-default); color: var(--color-foreground-default); font-family: var(--font-family-mono); font-size: var(--font-size-sm); line-height: 1.4; border-radius: var(--radius-sm); padding: var(--space-2xs) var(--space-sm); white-space: nowrap; cursor: pointer; transition: border-color var(--duration-fast) var(--easing-default), background-color var(--duration-fast) var(--easing-default); }
+  /* Operator trigger uses sans for ALL operator values (words AND symbols)
+     to stay consistent with the dropdown items and the rest of the picker
+     system. Mono is reserved for actual code identifiers (variable names,
+     amount values), not the comparison verbs themselves. */
+  .dt-conditional-operator { appearance: none; display: inline-flex; align-items: center; justify-content: space-between; gap: var(--space-2xs); width: 148px; background-color: var(--color-background-alt); border: 1px solid var(--color-border-default); color: var(--color-foreground-default); font-family: var(--font-family-sans); font-size: var(--font-size-sm); line-height: 1.4; border-radius: var(--radius-sm); padding: var(--space-2xs) var(--space-sm); white-space: nowrap; cursor: pointer; transition: border-color var(--duration-fast) var(--easing-default), background-color var(--duration-fast) var(--easing-default); }
   .dt-conditional-operator:hover { border-color: var(--color-foreground-muted); }
   .dt-conditional-operator:focus { outline: none; box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-background-action) 18%, transparent); border-color: var(--color-border-focus); background-color: var(--color-background-elevated); }
   .dt-conditional-variable { font-family: var(--font-family-mono); font-size: var(--font-size-sm); line-height: 1.4; color: var(--color-foreground-default); background-color: var(--color-background-alt); border: 1px solid var(--color-border-default); border-radius: var(--radius-sm); padding: var(--space-2xs) var(--space-sm); width: 100%; min-width: 0; transition: border-color var(--duration-fast) var(--easing-default), background-color var(--duration-fast) var(--easing-default); }

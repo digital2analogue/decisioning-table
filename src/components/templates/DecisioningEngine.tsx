@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react'
-import { PencilIcon, CheckIcon, PlayIcon, PlusIcon } from 'lucide-react'
+import { ChevronDownIcon, PencilIcon, CheckIcon, PlayIcon, PlusIcon } from 'lucide-react'
 import type { Rule, Ruleset, ModelConfig } from '../../types'
 import { initialRulesets } from '../../data'
 import { DecisioningTable } from '../organisms/DecisioningTable'
@@ -17,6 +17,7 @@ export function DecisioningEngine({ modelConfig }: DecisioningEngineProps) {
   // name input on mount so the user can immediately start typing.
   const [autoFocusRuleId, setAutoFocusRuleId] = useState<string | null>(null)
   const [editingTitle, setEditingTitle] = useState(false)
+  const [chevronOpen, setChevronOpen] = useState(false)
   const defaultTitle = modelConfig?.modelName ?? 'My Decision Model'
   const [titleDraft, setTitleDraft] = useState(defaultTitle)
   const [title, setTitle] = useState(defaultTitle)
@@ -170,10 +171,37 @@ export function DecisioningEngine({ modelConfig }: DecisioningEngineProps) {
             <PlayIcon size={14} />
             Test model
           </button>
-          <button onClick={addRule} className="dt-add-rule-btn" type="button">
-            <PlusIcon size={14} />
-            Add rule
-          </button>
+          <span className="dt-header-divider" aria-hidden="true" />
+          <div className="dt-split-btn">
+            <button onClick={addRule} className="dt-split-btn-main" type="button">
+              <PlusIcon size={14} />
+              Add rule
+            </button>
+            <button
+              type="button"
+              className="dt-split-btn-chevron"
+              onClick={() => setChevronOpen((o) => !o)}
+              aria-haspopup="menu"
+              aria-expanded={chevronOpen}
+              aria-label="More add options"
+            >
+              <ChevronDownIcon size={14} />
+            </button>
+            {chevronOpen && (
+              <>
+                <div className="fixed inset-0 z-20" onClick={() => setChevronOpen(false)} />
+                <div className="dt-split-btn-menu" role="menu">
+                  <button type="button" role="menuitem" className="dt-split-btn-menu-item" onClick={() => { addRule(); setChevronOpen(false) }}>
+                    Add rule
+                  </button>
+                  <hr className="dt-split-btn-menu-divider" />
+                  <button type="button" role="menuitem" className="dt-split-btn-menu-item" onClick={() => setChevronOpen(false)}>
+                    Add existing rule
+                  </button>
+                </div>
+              </>
+            )}
+          </div>
         </div>
       </div>
 

@@ -51,12 +51,12 @@ export function LogicOperatorSelect({ value, onChange }: LogicOperatorSelectProp
           'dt-logic-chip',
           value === 'AND' ? 'dt-logic-chip-and' : 'dt-logic-chip-or',
         )}
-        title={`Logic: ${value}`}
-        aria-label={`Logic operator: ${value}`}
+        title={`Logic: ${value.toLowerCase()}`}
+        aria-label={`Logic operator: ${value.toLowerCase()}`}
         aria-haspopup="listbox"
         aria-expanded={isOpen}
       >
-        <span>{value}</span>
+        <span>{value.toLowerCase()}</span>
         <ChevronDownIcon size={10} className="dt-logic-chip-chevron" aria-hidden="true" />
       </button>
 
@@ -83,7 +83,7 @@ export function LogicOperatorSelect({ value, onChange }: LogicOperatorSelectProp
                 value === op && 'dt-conditional-dropdown-item-active',
               )}
             >
-              {op}
+              {op.toLowerCase()}
             </button>
           ))}
         </div>,

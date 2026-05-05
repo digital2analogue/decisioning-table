@@ -207,8 +207,10 @@ select option { background-color: var(--color-background-elevated); color: var(-
   .dt-badge-empty:hover { color: var(--color-foreground-action); border-color: var(--color-foreground-action); background-color: var(--color-background-accent-blue); filter: none; }
   .dt-select-trigger-empty { color: var(--color-foreground-muted); border-style: dashed; }
   .dt-select-trigger-empty:hover { color: var(--color-foreground-action); border-color: var(--color-foreground-action); }
-  .dt-conditional-operator-empty { font-family: var(--font-family-sans); color: var(--color-foreground-muted); border-style: dashed; }
-  .dt-conditional-operator-empty:hover { color: var(--color-foreground-action); border-color: var(--color-foreground-action); }
+  /* Compound selector (specificity 0,2,0) ensures these win against the base .dt-conditional-operator
+     rule defined later in the file — without depending on source order. */
+  .dt-conditional-operator.dt-conditional-operator-empty { font-family: var(--font-family-sans); color: var(--color-foreground-muted); border-style: dashed; }
+  .dt-conditional-operator.dt-conditional-operator-empty:hover { color: var(--color-foreground-action); border-color: var(--color-foreground-action); }
 
   /* Validation banner — page-width amber alert summarizing incomplete rules */
   .dt-validation-banner { display: flex; align-items: center; gap: var(--space-sm); padding: var(--space-sm) var(--space-lg); background-color: var(--color-background-warning-subtle); border-left: 4px solid var(--color-foreground-warning-dark); border-bottom: 1px solid var(--color-foreground-warning-dark); color: var(--color-foreground-warning); }

@@ -159,13 +159,13 @@ select option { background-color: var(--color-background-elevated); color: var(-
   .dt-attr-dot-asset    { background-color: var(--color-background-warning); }
   .dt-attr-dot-liability { background-color: var(--color-foreground-accent-purple); }
 
-  .dt-outcome-seg { display: inline-flex; border: 1px solid var(--color-border-default); border-radius: var(--radius-sm); overflow: hidden; background-color: var(--color-background-alt); box-shadow: inset 0 2px 5px rgba(15,26,46,0.22), inset 0 0 0 1px rgba(15,26,46,0.04); }
+  .dt-outcome-seg { display: inline-flex; border: 1px solid var(--color-border-default); border-radius: var(--radius-sm); overflow: hidden; background-color: var(--color-background-alt); box-shadow: inset 0 2px 4px rgba(15,26,46,0.14), inset 0 0 0 1px rgba(15,26,46,0.03); }
   /* Inactive segment uses a hardcoded washed-out slate (no token + omitted from contrast manifest): inactive UI components are WCAG-exempt and need to read as recessed against the active states. */
   .dt-outcome-seg-btn { font: var(--font-label-small); letter-spacing: var(--letter-spacing-label); padding: 3px 9px; border: none; background: none; cursor: pointer; color: #A8B0BE; transition: background-color var(--duration-fast) var(--easing-default), color var(--duration-fast) var(--easing-default), box-shadow var(--duration-fast) var(--easing-default); }
   .dt-outcome-seg-btn:first-child { border-right: 1px solid var(--color-border-default); }
   .dt-outcome-seg-btn:hover:not(.dt-outcome-seg-approve):not(.dt-outcome-seg-deny) { background-color: var(--color-background-default); }
-  .dt-outcome-seg-approve { background-color: var(--color-background-success-alt); color: var(--color-foreground-success); box-shadow: 0 3px 6px rgba(15,26,46,0.24), 0 1px 2px rgba(15,26,46,0.10), 0 0 0 0.5px rgba(15,26,46,0.10); }
-  .dt-outcome-seg-deny { background-color: var(--color-background-danger-subtle); color: var(--color-foreground-danger); box-shadow: 0 3px 6px rgba(15,26,46,0.24), 0 1px 2px rgba(15,26,46,0.10), 0 0 0 0.5px rgba(15,26,46,0.10); }
+  .dt-outcome-seg-approve { background-color: var(--color-background-success-alt); color: var(--color-foreground-success); box-shadow: 0 2px 4px rgba(15,26,46,0.16), 0 1px 2px rgba(15,26,46,0.08), 0 0 0 0.5px rgba(15,26,46,0.08); }
+  .dt-outcome-seg-deny { background-color: var(--color-background-danger-subtle); color: var(--color-foreground-danger); box-shadow: 0 2px 4px rgba(15,26,46,0.16), 0 1px 2px rgba(15,26,46,0.08), 0 0 0 0.5px rgba(15,26,46,0.08); }
 
   /* Drag handle */
   .dt-drag-handle-cell { display: flex; align-items: center; justify-content: center; gap: var(--space-xs); cursor: grab; white-space: nowrap; }

@@ -23,8 +23,9 @@ export function RulesetTabs({ rulesets, activeRulesetId, onSelect, onAdd, onRena
           onRename={onRename}
         />
       ))}
-      <button onClick={onAdd} className="dt-add-ruleset-btn" title="Add ruleset">
+      <button onClick={onAdd} className="dt-add-ruleset-btn" title="Add ruleset" aria-label="Add ruleset">
         <PlusIcon size={14} />
+        <span>Add ruleset</span>
       </button>
     </div>
   )

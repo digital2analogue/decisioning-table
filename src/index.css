@@ -112,8 +112,9 @@ select option { background-color: var(--color-background-elevated); color: var(-
 
   /* Ruleset tabs bar */
   .dt-tabs-bar { background-color: var(--color-background-alt); border-top: 1px solid var(--color-border-default); }
-  .dt-add-ruleset-btn { display: inline-flex; align-items: center; justify-content: center; width: 28px; height: 28px; color: var(--color-foreground-muted); background: none; border: none; cursor: pointer; border-radius: var(--radius-md); flex-shrink: 0; transition: color var(--duration-fast) var(--easing-default), background-color var(--duration-fast) var(--easing-default); }
+  .dt-add-ruleset-btn { display: inline-flex; align-items: center; gap: var(--space-xs); height: 28px; padding: 0 var(--space-sm); font: var(--font-label-small); letter-spacing: var(--letter-spacing-label); color: var(--color-foreground-muted); background: none; border: none; cursor: pointer; border-radius: var(--radius-md); flex-shrink: 0; transition: color var(--duration-fast) var(--easing-default), background-color var(--duration-fast) var(--easing-default); }
   .dt-add-ruleset-btn:hover { color: var(--color-foreground-action); background-color: var(--color-background-elevated); }
+  .dt-add-ruleset-btn:focus-visible { outline: none; color: var(--color-foreground-action); background-color: var(--color-background-elevated); box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-background-action) 18%, transparent); }
 
   /* Rule row inputs */
   .dt-rule-name-input { font: var(--font-body-medium); color: var(--color-foreground-default); background: transparent; border: 0; outline: none; width: 100%; border-radius: var(--radius-sm); padding: var(--space-2xs) var(--space-6); margin-left: calc(-1 * var(--space-6)); transition: background-color var(--duration-fast) var(--easing-default), box-shadow var(--duration-fast) var(--easing-default); }
@@ -158,13 +159,13 @@ select option { background-color: var(--color-background-elevated); color: var(-
   .dt-attr-dot-asset    { background-color: var(--color-background-warning); }
   .dt-attr-dot-liability { background-color: var(--color-foreground-accent-purple); }
 
-  .dt-outcome-seg { display: inline-flex; border: 1px solid var(--color-border-default); border-radius: var(--radius-sm); overflow: hidden; background-color: var(--color-background-alt); box-shadow: inset 0 1px 3px rgba(15,26,46,0.10); }
+  .dt-outcome-seg { display: inline-flex; border: 1px solid var(--color-border-default); border-radius: var(--radius-sm); overflow: hidden; background-color: var(--color-background-alt); box-shadow: inset 0 2px 5px rgba(15,26,46,0.22), inset 0 0 0 1px rgba(15,26,46,0.04); }
   /* Inactive segment uses a hardcoded washed-out slate (no token + omitted from contrast manifest): inactive UI components are WCAG-exempt and need to read as recessed against the active states. */
   .dt-outcome-seg-btn { font: var(--font-label-small); letter-spacing: var(--letter-spacing-label); padding: 3px 9px; border: none; background: none; cursor: pointer; color: #A8B0BE; transition: background-color var(--duration-fast) var(--easing-default), color var(--duration-fast) var(--easing-default), box-shadow var(--duration-fast) var(--easing-default); }
   .dt-outcome-seg-btn:first-child { border-right: 1px solid var(--color-border-default); }
   .dt-outcome-seg-btn:hover:not(.dt-outcome-seg-approve):not(.dt-outcome-seg-deny) { background-color: var(--color-background-default); }
-  .dt-outcome-seg-approve { background-color: var(--color-background-success-alt); color: var(--color-foreground-success); box-shadow: 0 1px 2px rgba(15,26,46,0.10), 0 0 0 0.5px rgba(15,26,46,0.06); }
-  .dt-outcome-seg-deny { background-color: var(--color-background-danger-subtle); color: var(--color-foreground-danger); box-shadow: 0 1px 2px rgba(15,26,46,0.10), 0 0 0 0.5px rgba(15,26,46,0.06); }
+  .dt-outcome-seg-approve { background-color: var(--color-background-success-alt); color: var(--color-foreground-success); box-shadow: 0 3px 6px rgba(15,26,46,0.24), 0 1px 2px rgba(15,26,46,0.10), 0 0 0 0.5px rgba(15,26,46,0.10); }
+  .dt-outcome-seg-deny { background-color: var(--color-background-danger-subtle); color: var(--color-foreground-danger); box-shadow: 0 3px 6px rgba(15,26,46,0.24), 0 1px 2px rgba(15,26,46,0.10), 0 0 0 0.5px rgba(15,26,46,0.10); }
 
   /* Drag handle */
   .dt-drag-handle-cell { display: flex; align-items: center; justify-content: center; gap: var(--space-xs); cursor: grab; white-space: nowrap; }
@@ -255,13 +256,6 @@ select option { background-color: var(--color-background-elevated); color: var(-
   .dt-expand-toggle:hover { color: var(--color-foreground-action); background-color: var(--color-background-accent-blue); }
   .dt-expand-toggle:focus-visible { outline: none; color: var(--color-foreground-action); box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-background-action) 18%, transparent); }
   .dt-expand-toggle-spacer { display: inline-block; width: 22px; height: 22px; flex-shrink: 0; }
-  /* IF prefix — pure grammar, no chrome */
-  .dt-if-prefix {
-    flex-shrink: 0;
-    font-family: var(--font-family-mono); font-size: 0.6875rem; font-weight: var(--font-weight-medium);
-    line-height: 1; letter-spacing: var(--letter-spacing-all-caps);
-    color: var(--color-foreground-muted); text-transform: uppercase;
-  }
   /* Sub-count — neutral mono inline counter */
   .dt-sub-count {
     flex-shrink: 0;

@@ -158,7 +158,6 @@ export function RuleRow({
           ) : (
             <span className="dt-expand-toggle-spacer" aria-hidden="true" />
           )}
-          {hasChildren && <span className="dt-if-prefix" aria-hidden="true">IF</span>}
           <input
             type="text"
             value={rule.ruleName}

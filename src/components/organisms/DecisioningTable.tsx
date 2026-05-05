@@ -211,7 +211,7 @@ export function DecisioningTable({
                 <div className="dt-empty-state">
                   <TableIcon size={28} className="dt-empty-icon" />
                   <p className="dt-empty-title">No rules yet</p>
-                  <p className="dt-empty-subtitle">Click <strong>Add rule</strong> to define your first decision rule.</p>
+                  <p className="dt-empty-subtitle">Each rule pairs a data attribute, operator, and threshold with an outcome.</p>
                 </div>
               </td>
             </tr>

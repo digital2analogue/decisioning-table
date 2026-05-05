@@ -93,7 +93,7 @@ select option { background-color: var(--color-background-elevated); color: var(-
   }
   .dt-tbody-row-dragging { opacity: 0.4; background-color: var(--color-background-elevated); }
   .dt-tbody-row-over { border-top: 2px solid var(--color-foreground-action); }
-  .dt-parent-row-expanded td:first-child { box-shadow: inset 3px 0 0 var(--color-accent-subtle-border); }
+  .dt-parent-row-expanded td:first-child { box-shadow: inset 3px 0 0 color-mix(in srgb, var(--color-foreground-action) 70%, transparent); }
   .dt-tbody-row-selected td:first-child { box-shadow: inset 3px 0 0 var(--color-foreground-action); }
   .dt-tbody-row-selected { background-color: color-mix(in srgb, var(--color-background-elevated) 94%, var(--color-background-action) 6%); }
   .dt-tbody-row-selected:hover { background-color: color-mix(in srgb, var(--color-background-elevated) 91%, var(--color-background-action) 9%); }
@@ -225,8 +225,8 @@ select option { background-color: var(--color-background-elevated); color: var(-
      parent's children group. Reuses .dt-child-row + .dt-child-row-last so the
      tree connector continues into it; cell-bare/connector-cell render the
      vertical+T-stub line just like a real child row. The colspan'd label cell
-     hosts the action button. Animation inherits from .dt-tbody-row entry. */
-  .dt-add-child-row { animation-delay: 30ms; }
+     hosts the action button. Inherits the standard .dt-tbody-row entry
+     animation; child stagger delays apply via the existing nth-child rules. */
   .dt-add-child-row .dt-add-child-row-cell { padding: var(--space-2xs) var(--space-md); border-bottom: none; }
   .dt-add-child-row-btn { display: inline-flex; align-items: center; gap: var(--space-xs); font: var(--font-label-small); letter-spacing: var(--letter-spacing-label); color: var(--color-foreground-muted); background: none; border: none; cursor: pointer; padding: var(--space-2xs) var(--space-sm); border-radius: var(--radius-sm); transition: color var(--duration-fast) var(--easing-default), background-color var(--duration-fast) var(--easing-default); }
   .dt-add-child-row-btn:hover { color: var(--color-foreground-action); background-color: var(--color-background-accent-blue); }

@@ -25,10 +25,6 @@ html, body {
 
 /* ── Form resets ────────────────────────────────────── */
 input, select, textarea { color: var(--color-foreground-default); background: transparent; font-family: var(--font-family-sans); }
-/* Placeholders are always sans + muted, regardless of the input's content font.
-   Prevents mono-font inputs (amount, conditional variable) from inheriting
-   mono into prompt strings like "Amount", "Select variable", "Enter value". */
-input::placeholder, textarea::placeholder { font-family: var(--font-family-sans); color: var(--color-foreground-muted); }
 input[type="number"]::-webkit-inner-spin-button,
 input[type="number"]::-webkit-outer-spin-button { opacity: 0.3; }
 input[type="checkbox"] { accent-color: var(--color-foreground-action); }
@@ -37,6 +33,13 @@ select option { background-color: var(--color-background-elevated); color: var(-
 
 /* ── Components ─────────────────────────────────────── */
 @layer components {
+
+  /* Placeholders default to sans + muted regardless of the input's content
+     font. Lives inside @layer components so component-level overrides (like
+     .dt-conditional-variable--filled below) can win via specificity. Outside
+     a layer this rule would beat any layered override regardless of selector
+     weight — the cascade-layer trap that broke the selected-variable color. */
+  input::placeholder, textarea::placeholder { font-family: var(--font-family-sans); color: var(--color-foreground-muted); }
 
   /* Template */
   .dt-page { background-color: var(--color-background-default); color: var(--color-foreground-default); }
@@ -259,7 +262,12 @@ select option { background-color: var(--color-background-elevated); color: var(-
   .dt-conditional-dropdown-item { display: block; width: 100%; padding: var(--space-xs) var(--space-sm); text-align: left; font-family: var(--font-family-sans); font-size: var(--font-size-sm); color: var(--color-foreground-default); background: none; border: none; border-bottom: 1px solid var(--color-border-subtle); cursor: pointer; transition: background-color var(--duration-fast) var(--easing-default); }
   .dt-conditional-dropdown-item:last-child { border-bottom: none; }
   .dt-conditional-dropdown-item:hover { background-color: var(--color-background-alt); }
-  .dt-conditional-dropdown-item-active { background-color: var(--color-background-alt); color: var(--color-foreground-default); font-weight: 400; }
+  /* Active = currently selected. Distinguish from hover (which uses bg-alt) by
+     using the accent-blue tint + action-color text so the user can scan the
+     dropdown and instantly see "this is what's chosen." Used uniformly across
+     every picker dropdown (operator, attribute, variable, logic, conditional). */
+  .dt-conditional-dropdown-item-active,
+  .dt-conditional-dropdown-item-active:hover { background-color: var(--color-background-accent-blue); color: var(--color-foreground-action); }
   .dt-conditional-dropdown-var-name { font-family: var(--font-family-mono); font-weight: var(--font-weight-semibold); font-size: var(--font-size-sm); }
   .dt-conditional-dropdown-desc { font-family: var(--font-family-sans); font-size: var(--font-size-xs); color: var(--color-foreground-tertiary); margin-top: 1px; }
 

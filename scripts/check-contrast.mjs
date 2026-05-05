@@ -142,6 +142,8 @@ const PAIRINGS = [
   { text: '--color-foreground-muted',     bg: '--color-background-alt', label: 'Outcome: pending hint (child row)' },
   // Toast (dark notification with inverse text + Undo action)
   { text: '--color-foreground-inverse',   bg: '--color-foreground-default', label: 'Toast: message + Undo action' },
+  // Dropdown items — active (currently selected) state
+  { text: '--color-foreground-action',    bg: '--color-background-accent-blue', label: 'Dropdown: active item' },
   // Onboarding flow
   { text: '--color-foreground-action',    bg: WHITE,        label: 'Onboarding: nav + CTA links' },
   { text: '--color-foreground-default',   bg: WHITE,        label: 'Onboarding: element labels' },

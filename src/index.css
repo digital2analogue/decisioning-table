@@ -144,7 +144,7 @@ select option { background-color: var(--color-background-elevated); color: var(-
   .dt-menu-item-danger:disabled:hover { background-color: transparent; }
 
   /* Badges */
-  .dt-badge { display: inline-flex; align-items: center; justify-content: center; font: var(--font-label-small); letter-spacing: var(--letter-spacing-label); line-height: 1; border-radius: var(--radius-pill); padding: var(--space-2xs) var(--space-sm); min-height: 22px; border: 1px solid transparent; white-space: nowrap; box-sizing: border-box; }
+  .dt-badge { display: inline-flex; align-items: center; justify-content: center; font: var(--font-label-small); letter-spacing: var(--letter-spacing-label); line-height: 1; border-radius: var(--radius-sm); padding: var(--space-2xs) var(--space-sm); min-height: 22px; border: 1px solid transparent; white-space: nowrap; box-sizing: border-box; }
   .dt-badge-income { background-color: var(--color-background-success-alt); color: var(--color-foreground-success); border-color: color-mix(in srgb, var(--color-background-success-alt) 50%, var(--color-foreground-success) 50%); }
   .dt-badge-expense { background-color: var(--color-background-danger-alt); color: var(--color-foreground-danger); border-color: color-mix(in srgb, var(--color-background-danger-alt) 50%, var(--color-foreground-danger) 50%); }
   .dt-badge-asset { background-color: var(--color-background-warning-alt); color: var(--color-foreground-warning); border-color: color-mix(in srgb, var(--color-background-warning-alt) 50%, var(--color-foreground-warning) 50%); }
@@ -298,6 +298,7 @@ select option { background-color: var(--color-background-elevated); color: var(-
   .dt-child-name-wrap { display: flex; align-items: center; gap: var(--space-sm); min-width: 0; }
 
   /* AND / OR logic chips */
+  /* AND/OR picker — token-aligned with .dt-select-trigger / .dt-conditional-operator for system consistency */
   .dt-logic-chip {
     display: inline-flex; align-items: center; justify-content: center;
     gap: var(--space-2xs);
@@ -305,14 +306,14 @@ select option { background-color: var(--color-background-elevated); color: var(-
     font-family: var(--font-family-sans); font-size: 0.75rem; font-weight: var(--font-weight-semibold);
     line-height: 1; letter-spacing: var(--letter-spacing-normal);
     border-radius: var(--radius-sm); padding: 4px var(--space-sm);
-    background-color: transparent;
+    background-color: var(--color-background-alt);
     color: var(--color-foreground-default);
     border: 1px solid var(--color-border-default);
     cursor: pointer;
-    transition: background-color var(--duration-fast) var(--easing-default), box-shadow var(--duration-fast) var(--easing-default);
+    transition: border-color var(--duration-fast) var(--easing-default), background-color var(--duration-fast) var(--easing-default), box-shadow var(--duration-fast) var(--easing-default);
   }
-  .dt-logic-chip:hover { background-color: color-mix(in srgb, transparent 90%, var(--color-foreground-default) 10%); }
-  .dt-logic-chip:focus-visible { outline: none; box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-background-action) 22%, transparent); }
+  .dt-logic-chip:hover { border-color: var(--color-foreground-muted); }
+  .dt-logic-chip:focus-visible { outline: none; box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-background-action) 18%, transparent); border-color: var(--color-border-focus); background-color: var(--color-background-elevated); }
   .dt-logic-chip-chevron { opacity: 0.7; flex-shrink: 0; }
 
   /* Expand motion — child rows slide in from the top with a tiny stagger */

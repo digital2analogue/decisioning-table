@@ -237,9 +237,13 @@ select option { background-color: var(--color-background-elevated); color: var(-
   .dt-validation-banner-icon { display: inline-flex; flex-shrink: 0; color: var(--color-foreground-warning); }
   .dt-validation-banner-text { font: var(--font-body-medium); color: var(--color-foreground-warning); margin: 0; flex: 1; }
   .dt-validation-banner-text strong { font-weight: var(--font-weight-semibold); color: var(--color-foreground-warning-dark); }
-  .dt-validation-banner-cta { display: inline-flex; align-items: center; gap: var(--space-xs); font: var(--font-label-small); letter-spacing: var(--letter-spacing-label); color: var(--color-foreground-warning-dark); background-color: var(--color-background-elevated); border: 1px solid var(--color-foreground-warning-dark); border-radius: var(--radius-sm); padding: var(--space-2xs) var(--space-sm); cursor: pointer; transition: background-color var(--duration-fast) var(--easing-default); flex-shrink: 0; }
-  .dt-validation-banner-cta:hover { background-color: var(--color-background-warning-alt); }
-  .dt-validation-banner-cta:focus-visible { outline: none; box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-foreground-warning) 25%, transparent); }
+  /* Solid amber CTA — uses --color-background-warning (#d97706) as fill +
+     --color-foreground-accent-on-amber (#0a0d0a near-black) as text. Carries
+     more weight than the previous outlined-on-tint treatment, which read as a
+     secondary action when the banner needs the user to actually act. */
+  .dt-validation-banner-cta { display: inline-flex; align-items: center; gap: var(--space-xs); font: var(--font-label-small); letter-spacing: var(--letter-spacing-label); color: var(--color-foreground-accent-on-amber); background-color: var(--color-background-warning); border: 1px solid var(--color-background-warning); border-radius: var(--radius-sm); padding: var(--space-2xs) var(--space-sm); cursor: pointer; transition: background-color var(--duration-fast) var(--easing-default), border-color var(--duration-fast) var(--easing-default); flex-shrink: 0; }
+  .dt-validation-banner-cta:hover { background-color: color-mix(in srgb, var(--color-background-warning) 86%, var(--color-foreground-warning-dark) 14%); border-color: color-mix(in srgb, var(--color-background-warning) 86%, var(--color-foreground-warning-dark) 14%); }
+  .dt-validation-banner-cta:focus-visible { outline: none; box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-foreground-warning) 35%, transparent); }
 
   /* Conditional cell — operator button + variable input (matches dt-operator-select sizing) */
   /* Operator trigger uses sans for ALL operator values (words AND symbols)

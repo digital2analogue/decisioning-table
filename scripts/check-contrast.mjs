@@ -161,8 +161,7 @@ const PAIRINGS = [
   // Validation banner (page-width amber alert)
   { text: '--color-foreground-warning',       bg: '--color-background-warning-subtle', label: 'Validation banner body text' },
   { text: '--color-foreground-warning-dark',  bg: '--color-background-warning-subtle', label: 'Validation banner emphasized count' },
-  { text: '--color-foreground-warning-dark',  bg: '--color-background-elevated',       label: 'Validation banner CTA (default)' },
-  { text: '--color-foreground-warning-dark',  bg: '--color-background-warning-alt',    label: 'Validation banner CTA (hover)' },
+  { text: '--color-foreground-accent-on-amber',  bg: '--color-background-warning',     label: 'Validation banner CTA (default)' },
 ]
 
 // ─── Run ───────────────────────────────────────────────────────────────────────

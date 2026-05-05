@@ -9,6 +9,7 @@ import { AmountCell } from '../atoms/AmountCell'
 import { OperatorSelect } from './OperatorSelect'
 import { ConditionalCell } from './ConditionalCell'
 import { ActionsMenu } from './ActionsMenu'
+import { LogicOperatorSelect } from './LogicOperatorSelect'
 
 /** Same untouched-draft check used by RuleRow. Inline duplicate kept tight to preserve module scope. */
 function isEmptyDraftChild(rule: Rule): boolean {
@@ -52,10 +53,6 @@ export function ChildRuleRow({
   const isInvalid = !isChildRuleValid(rule)
   const missing = isInvalid ? missingFields(rule, true) : []
 
-  function toggleLogic() {
-    onUpdate(parentId, rule.id, { logicOperator: op === 'AND' ? 'OR' : 'AND' })
-  }
-
   function handleFocusOut(e: React.FocusEvent<HTMLTableRowElement>) {
     if (e.currentTarget.contains(e.relatedTarget as Node | null)) return
     if (isEmptyDraftChild(rule)) onDelete(parentId, rule.id)
@@ -87,21 +84,13 @@ export function ChildRuleRow({
         )}
       </td>
 
-      {/* Rule Name (sticky) — AND/OR chip + name */}
+      {/* Rule Name (sticky) — AND/OR picker + name */}
       <td className="dt-col-sticky dt-child-name-cell px-3 py-2.5">
         <div className="dt-child-name-wrap">
-          <button
-            type="button"
-            onClick={toggleLogic}
-            className={cn(
-              'dt-logic-chip',
-              op === 'AND' ? 'dt-logic-chip-and' : 'dt-logic-chip-or',
-            )}
-            title={`Logic: ${op} — click to toggle`}
-            aria-label={`Logic operator ${op}, click to toggle`}
-          >
-            {op}
-          </button>
+          <LogicOperatorSelect
+            value={op}
+            onChange={(v) => onUpdate(parentId, rule.id, { logicOperator: v })}
+          />
           <input
             type="text"
             value={rule.ruleName}

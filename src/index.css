@@ -300,7 +300,8 @@ select option { background-color: var(--color-background-elevated); color: var(-
   /* AND / OR logic chips */
   .dt-logic-chip {
     display: inline-flex; align-items: center; justify-content: center;
-    flex-shrink: 0; min-width: 36px;
+    gap: var(--space-2xs);
+    flex-shrink: 0; min-width: 48px;
     font-family: var(--font-family-mono); font-size: 0.6875rem; font-weight: var(--font-weight-semibold);
     line-height: 1; letter-spacing: var(--letter-spacing-all-caps);
     border-radius: var(--radius-sm); padding: 4px var(--space-sm);
@@ -308,6 +309,7 @@ select option { background-color: var(--color-background-elevated); color: var(-
     transition: background-color var(--duration-fast) var(--easing-default), box-shadow var(--duration-fast) var(--easing-default);
   }
   .dt-logic-chip:focus-visible { outline: none; box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-background-action) 22%, transparent); }
+  .dt-logic-chip-chevron { opacity: 0.7; flex-shrink: 0; }
   .dt-logic-chip-and { background-color: var(--color-background-accent-subtle); color: var(--color-foreground-accent-blue); }
   .dt-logic-chip-and:hover { background-color: color-mix(in srgb, var(--color-background-accent-subtle) 80%, var(--color-foreground-accent-blue) 20%); }
   .dt-logic-chip-or  { background-color: var(--color-background-warning-subtle); color: var(--color-foreground-warning-dark); }

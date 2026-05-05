@@ -66,6 +66,10 @@ export function RuleRow({
   const isInvalid = !isRuleValid(rule)
   const showOutcome = isReadyForOutcome(rule)
   const missing = isInvalid ? missingFields(rule) : []
+  // Progressive disclosure: hide the picker/input cells until the rule has
+  // a name. Matches Airtable's "blank + row → name first → rest appears"
+  // pattern. Existing seed rules always have names so they always show cells.
+  const isUnnamed = rule.ruleName.trim() === ''
 
   // Cleanup: when focus leaves the row entirely AND the row is still an
   // untouched draft, delete it so the user isn't left with empty rows.
@@ -173,46 +177,56 @@ export function RuleRow({
 
       {/* Data Attribute */}
       <td className="px-3 py-2.5">
-        <AttributeSelectBadge
-          value={rule.dataAttribute}
-          onChange={(v) => onUpdate(rule.id, { dataAttribute: v })}
-        />
+        {!isUnnamed && (
+          <AttributeSelectBadge
+            value={rule.dataAttribute}
+            onChange={(v) => onUpdate(rule.id, { dataAttribute: v })}
+          />
+        )}
       </td>
 
       {/* Operator */}
       <td className="px-3 py-2.5">
-        <OperatorSelect
-          value={rule.operator}
-          onChange={(v) => onUpdate(rule.id, { operator: v })}
-        />
+        {!isUnnamed && (
+          <OperatorSelect
+            value={rule.operator}
+            onChange={(v) => onUpdate(rule.id, { operator: v })}
+          />
+        )}
       </td>
 
       {/* Amount */}
       <td className="px-3 py-2.5">
-        <AmountCell
-          value={rule.amount}
-          onChange={(amount) => onUpdate(rule.id, { amount })}
-        />
+        {!isUnnamed && (
+          <AmountCell
+            value={rule.amount}
+            onChange={(amount) => onUpdate(rule.id, { amount })}
+          />
+        )}
       </td>
 
       {/* Existing Account */}
       <td className="px-3 py-2.5 min-w-[200px]">
-        <ConditionalCell
-          operator={rule.existingAccountOperator}
-          variable={rule.existingAccountVariable}
-          onOperatorChange={(op) => onUpdate(rule.id, { existingAccountOperator: op })}
-          onVariableChange={(v) => onUpdate(rule.id, { existingAccountVariable: v })}
-        />
+        {!isUnnamed && (
+          <ConditionalCell
+            operator={rule.existingAccountOperator}
+            variable={rule.existingAccountVariable}
+            onOperatorChange={(op) => onUpdate(rule.id, { existingAccountOperator: op })}
+            onVariableChange={(v) => onUpdate(rule.id, { existingAccountVariable: v })}
+          />
+        )}
       </td>
 
       {/* Annual Income */}
       <td className="px-3 py-2.5 min-w-[200px]">
-        <ConditionalCell
-          operator={rule.annualIncomeOperator}
-          variable={rule.annualIncomeVariable}
-          onOperatorChange={(op) => onUpdate(rule.id, { annualIncomeOperator: op })}
-          onVariableChange={(v) => onUpdate(rule.id, { annualIncomeVariable: v })}
-        />
+        {!isUnnamed && (
+          <ConditionalCell
+            operator={rule.annualIncomeOperator}
+            variable={rule.annualIncomeVariable}
+            onOperatorChange={(op) => onUpdate(rule.id, { annualIncomeOperator: op })}
+            onVariableChange={(v) => onUpdate(rule.id, { annualIncomeVariable: v })}
+          />
+        )}
       </td>
 
       {/* Outcome — hidden until every other required field is filled, then revealed for selection */}

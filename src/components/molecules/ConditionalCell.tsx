@@ -27,7 +27,7 @@ const OPERATOR_DISPLAY: Record<ConditionalOperator, string> = {
 }
 
 export interface ConditionalCellProps {
-  operator: ConditionalOperator
+  operator: ConditionalOperator | null
   variable: string
   onOperatorChange: (operator: ConditionalOperator) => void
   onVariableChange: (variable: string) => void
@@ -39,8 +39,6 @@ export function ConditionalCell({
   onOperatorChange,
   onVariableChange,
 }: ConditionalCellProps) {
-  const isEmpty = operator === '==' && variable === ''
-  const [expanded, setExpanded] = useState(false)
   const [isOperatorOpen, setIsOperatorOpen] = useState(false)
   const [isVariableOpen, setIsVariableOpen] = useState(false)
   const [variableSearch, setVariableSearch] = useState('')
@@ -49,12 +47,6 @@ export function ConditionalCell({
   const operatorRef = useRef<HTMLDivElement>(null)
   const variableRef = useRef<HTMLDivElement>(null)
   const variableInputRef = useRef<HTMLInputElement>(null)
-
-  useEffect(() => {
-    if (expanded && variableInputRef.current) {
-      variableInputRef.current.focus()
-    }
-  }, [expanded])
 
   const filteredVariables = dataElements.filter((el) =>
     el.label.toLowerCase().includes(variableSearch.toLowerCase()) ||
@@ -101,34 +93,18 @@ export function ConditionalCell({
     }
   }, [])
 
-  if (isEmpty && !expanded) {
-    return (
-      <div className="flex w-full justify-center">
-        <button
-          onClick={() => setExpanded(true)}
-          className="dt-condition-empty"
-          title="Add condition"
-        >
-          —
-        </button>
-      </div>
-    )
-  }
-
   return (
-    <div className="flex flex-row items-center gap-1.5" onBlur={(e) => {
-      // Collapse back to empty state if focus leaves and still default
-      if (!e.currentTarget.contains(e.relatedTarget as Node) && operator === '==' && variable === '') {
-        setExpanded(false)
-      }
-    }}>
+    <div className="flex flex-row items-center gap-1.5">
       {/* Operator button */}
       <div ref={operatorRef} className="flex-shrink-0">
         <button
+          type="button"
           onClick={() => isOperatorOpen ? setIsOperatorOpen(false) : openOperator()}
-          className="dt-conditional-operator"
+          className={operator ? 'dt-conditional-operator' : 'dt-conditional-operator dt-conditional-operator-empty'}
+          aria-haspopup="listbox"
+          aria-expanded={isOperatorOpen}
         >
-          <span>{OPERATOR_DISPLAY[operator]}</span>
+          <span>{operator ? OPERATOR_DISPLAY[operator] : 'Select condition'}</span>
           <ChevronDownIcon size={12} />
         </button>
       </div>

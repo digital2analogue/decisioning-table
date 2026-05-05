@@ -17,7 +17,7 @@ function badgeVariant(value: DataAttribute): string {
 }
 
 export interface AttributeSelectBadgeProps {
-  value: DataAttribute
+  value: DataAttribute | null
   onChange: (v: DataAttribute) => void
 }
 
@@ -54,9 +54,11 @@ export function AttributeSelectBadge({ value, onChange }: AttributeSelectBadgePr
       <button
         ref={triggerRef}
         onClick={() => isOpen ? setIsOpen(false) : open()}
-        className={`dt-badge dt-badge-select ${badgeVariant(value)}`}
+        className={value ? `dt-badge dt-badge-select ${badgeVariant(value)}` : 'dt-badge dt-badge-select dt-badge-empty'}
+        aria-haspopup="listbox"
+        aria-expanded={isOpen}
       >
-        {value}
+        {value ?? 'Select attribute'}
         <ChevronDownIcon size={10} className="dt-select-chevron" style={{ flexShrink: 0 }} />
       </button>
 
@@ -89,20 +91,27 @@ export function AttributeSelectBadge({ value, onChange }: AttributeSelectBadgePr
 // ─── OutcomeBadge ────────────────────────────────────────────────────────────
 
 export interface OutcomeBadgeProps {
-  value: Outcome
+  /** null renders as a no-selection state where neither segment is active. */
+  value: Outcome | null
   onChange: (v: Outcome) => void
 }
 
 export function OutcomeBadge({ value, onChange }: OutcomeBadgeProps) {
   return (
-    <div className="dt-outcome-seg">
+    <div className="dt-outcome-seg" role="radiogroup" aria-label="Outcome">
       <button
+        type="button"
+        role="radio"
+        aria-checked={value === 'Approve'}
         onClick={() => onChange('Approve')}
         className={`dt-outcome-seg-btn ${value === 'Approve' ? 'dt-outcome-seg-approve' : ''}`}
       >
         Approve
       </button>
       <button
+        type="button"
+        role="radio"
+        aria-checked={value === 'Deny'}
         onClick={() => onChange('Deny')}
         className={`dt-outcome-seg-btn ${value === 'Deny' ? 'dt-outcome-seg-deny' : ''}`}
       >

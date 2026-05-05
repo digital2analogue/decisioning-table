@@ -190,15 +190,33 @@ select option { background-color: var(--color-background-elevated); color: var(-
   .dt-select-trigger:focus-visible { outline: none; box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-background-action) 18%, transparent); border-color: var(--color-border-focus); background-color: var(--color-background-elevated); }
   .dt-select-chevron { color: var(--color-foreground-muted); flex-shrink: 0; }
 
-  /* Conditional cell — collapsed empty state */
-  .dt-condition-empty { display: inline-flex; align-items: center; justify-content: center; width: 32px; height: 26px; font: var(--font-label-medium); color: var(--color-foreground-muted); background: none; border: 1px dashed var(--color-border-muted); border-radius: var(--radius-sm); cursor: pointer; transition: border-color var(--duration-fast) var(--easing-default), color var(--duration-fast) var(--easing-default), background-color var(--duration-fast) var(--easing-default); }
-  .dt-condition-empty:hover { border-color: var(--color-foreground-action); color: var(--color-foreground-action); background-color: var(--color-background-accent-blue); }
+  /* Add-rule row — chromeless tbody row at the bottom that triggers a new draft rule (Airtable-style) */
+  .dt-add-rule-row td { border-top: none; }
+  .dt-add-rule-row-cell { padding: var(--space-sm) var(--space-md); background-color: var(--color-background-elevated); border-bottom: none; }
+  .dt-add-rule-row-btn { display: inline-flex; align-items: center; gap: var(--space-xs); font: var(--font-label-small); letter-spacing: var(--letter-spacing-label); color: var(--color-foreground-muted); background: none; border: none; cursor: pointer; padding: var(--space-xs) var(--space-sm); border-radius: var(--radius-sm); transition: color var(--duration-fast) var(--easing-default), background-color var(--duration-fast) var(--easing-default); }
+  .dt-add-rule-row-btn:hover { color: var(--color-foreground-action); background-color: var(--color-background-accent-blue); }
+  .dt-add-rule-row-btn:focus-visible { outline: none; color: var(--color-foreground-action); background-color: var(--color-background-accent-blue); box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-background-action) 18%, transparent); }
 
-  /* Add-row footer — quiet "+" button below the last row, opens new/existing rule popover */
-  .dt-add-row { padding: var(--space-sm) var(--space-md); background-color: var(--color-background-elevated); border-top: 1px solid var(--color-border-muted); }
-  .dt-add-row-btn { display: inline-flex; align-items: center; justify-content: center; width: 36px; height: 28px; color: var(--color-foreground-muted); background-color: var(--color-background-elevated); border: 1px dashed var(--color-border-default); border-radius: var(--radius-sm); cursor: pointer; transition: border-color var(--duration-fast) var(--easing-default), color var(--duration-fast) var(--easing-default), background-color var(--duration-fast) var(--easing-default); }
-  .dt-add-row-btn:hover { color: var(--color-foreground-action); border-color: var(--color-foreground-action); background-color: var(--color-background-accent-blue); }
-  .dt-add-row-btn:focus-visible { outline: none; box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-background-action) 18%, transparent); border-color: var(--color-border-focus); }
+  /* Row-level "incomplete rule" warning — replaces the row number for invalid rules; sits inside the # column */
+  .dt-row-warning { display: inline-flex; align-items: center; justify-content: center; color: var(--color-foreground-warning); cursor: help; }
+  .dt-child-row-warning { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background-color: var(--color-background-alt); padding: 0 2px; z-index: 1; }
+
+  /* Empty / placeholder states for inline pickers (badge, select trigger, conditional operator) */
+  .dt-badge-empty { color: var(--color-foreground-muted); background-color: var(--color-background-elevated); border: 1px dashed var(--color-border-default); }
+  .dt-badge-empty:hover { color: var(--color-foreground-action); border-color: var(--color-foreground-action); background-color: var(--color-background-accent-blue); filter: none; }
+  .dt-select-trigger-empty { color: var(--color-foreground-muted); border-style: dashed; }
+  .dt-select-trigger-empty:hover { color: var(--color-foreground-action); border-color: var(--color-foreground-action); }
+  .dt-conditional-operator-empty { color: var(--color-foreground-muted); border-style: dashed; }
+  .dt-conditional-operator-empty:hover { color: var(--color-foreground-action); border-color: var(--color-foreground-action); }
+
+  /* Validation banner — page-width amber alert summarizing incomplete rules */
+  .dt-validation-banner { display: flex; align-items: center; gap: var(--space-sm); padding: var(--space-sm) var(--space-lg); background-color: var(--color-background-warning-subtle); border-bottom: 1px solid var(--color-foreground-warning-dark); color: var(--color-foreground-warning); }
+  .dt-validation-banner-icon { display: inline-flex; flex-shrink: 0; color: var(--color-foreground-warning); }
+  .dt-validation-banner-text { font: var(--font-body-medium); color: var(--color-foreground-warning); margin: 0; flex: 1; }
+  .dt-validation-banner-text strong { font-weight: var(--font-weight-semibold); color: var(--color-foreground-warning-dark); }
+  .dt-validation-banner-cta { display: inline-flex; align-items: center; gap: var(--space-xs); font: var(--font-label-small); letter-spacing: var(--letter-spacing-label); color: var(--color-foreground-warning-dark); background-color: var(--color-background-elevated); border: 1px solid var(--color-foreground-warning-dark); border-radius: var(--radius-sm); padding: var(--space-2xs) var(--space-sm); cursor: pointer; transition: background-color var(--duration-fast) var(--easing-default); flex-shrink: 0; }
+  .dt-validation-banner-cta:hover { background-color: var(--color-background-warning-alt); }
+  .dt-validation-banner-cta:focus-visible { outline: none; box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-foreground-warning) 25%, transparent); }
 
   /* Conditional cell — operator button + variable input (matches dt-operator-select sizing) */
   .dt-conditional-operator { appearance: none; display: inline-flex; align-items: center; justify-content: space-between; gap: var(--space-2xs); width: 148px; background-color: var(--color-background-alt); border: 1px solid var(--color-border-default); color: var(--color-foreground-default); font-family: var(--font-family-mono); font-size: var(--font-size-sm); line-height: 1.4; border-radius: var(--radius-sm); padding: var(--space-2xs) var(--space-sm); white-space: nowrap; cursor: pointer; transition: border-color var(--duration-fast) var(--easing-default), background-color var(--duration-fast) var(--easing-default); }

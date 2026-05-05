@@ -1,9 +1,10 @@
 import { useState, useRef, useEffect } from 'react'
 import { ChevronDownIcon, PencilIcon, CheckIcon, PlayIcon, PlusIcon } from 'lucide-react'
-import type { Ruleset, ModelConfig } from '../../types'
+import type { Rule, Ruleset, ModelConfig } from '../../types'
 import { initialRulesets } from '../../data'
 import { DecisioningTable } from '../organisms/DecisioningTable'
 import { RulesetTabs } from '../organisms/RulesetTabs'
+import { ValidationBanner } from '../molecules/ValidationBanner'
 
 interface DecisioningEngineProps {
   modelConfig?: ModelConfig | null
@@ -63,22 +64,23 @@ export function DecisioningEngine({ modelConfig }: DecisioningEngineProps) {
 
   function addRule() {
     const rs = rulesets.find(r => r.id === activeRulesetId)
-    if (rs) {
-      const newRule = {
-        id: `rule-${Date.now()}`,
-        selected: false,
-        ruleName: `Line of credit ${rs.rules.length + 1}`,
-        dataAttribute: 'Income' as const,
-        operator: '>' as const,
-        amount: 0,
-        outcome: 'Approve' as const,
-        existingAccountOperator: '==' as const,
-        existingAccountVariable: '',
-        annualIncomeOperator: '==' as const,
-        annualIncomeVariable: '',
-      }
-      updateRuleset({ ...rs, rules: [...rs.rules, newRule] })
+    if (!rs) return
+    // Empty draft rule: every required field starts null/empty.
+    // The user must fill each cell before the rule is considered valid.
+    const newRule: Rule = {
+      id: `rule-${Date.now()}`,
+      selected: false,
+      ruleName: '',
+      dataAttribute: null,
+      operator: null,
+      amount: null,
+      outcome: null,
+      existingAccountOperator: null,
+      existingAccountVariable: '',
+      annualIncomeOperator: null,
+      annualIncomeVariable: '',
     }
+    updateRuleset({ ...rs, rules: [...rs.rules, newRule] })
   }
 
   return (
@@ -195,6 +197,9 @@ export function DecisioningEngine({ modelConfig }: DecisioningEngineProps) {
           </div>
         </div>
       </div>
+
+      {/* Validation banner — surfaces incomplete rules in the active ruleset */}
+      {activeRuleset && <ValidationBanner ruleset={activeRuleset} />}
 
       {/* Table area — edge-to-edge */}
       <div className="flex-1">

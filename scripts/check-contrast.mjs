@@ -149,9 +149,16 @@ const PAIRINGS = [
   // AND / OR logic chips (specific brand-amber + brand-blue tints)
   { text: '--color-foreground-accent-blue',   bg: '--color-background-accent-subtle',  label: 'Nested: AND logic chip' },
   { text: '--color-foreground-warning-dark',  bg: '--color-background-warning-subtle', label: 'Nested: OR logic chip' },
-  // Add-row footer button (default + hover)
-  { text: '--color-foreground-muted',         bg: '--color-background-elevated',       label: 'Add-row + button (default)' },
-  { text: '--color-foreground-action',        bg: '--color-background-accent-blue',    label: 'Add-row + button (hover)' },
+  // Chromeless add-rule row affordance (default + hover)
+  { text: '--color-foreground-muted',         bg: '--color-background-elevated',       label: 'Add-rule row btn (default)' },
+  { text: '--color-foreground-action',        bg: '--color-background-accent-blue',    label: 'Add-rule row btn (hover)' },
+  // Row-level warning indicator (replaces row number)
+  { text: '--color-foreground-warning',       bg: '--color-background-elevated',       label: 'Invalid-row warning icon' },
+  // Validation banner (page-width amber alert)
+  { text: '--color-foreground-warning',       bg: '--color-background-warning-subtle', label: 'Validation banner body text' },
+  { text: '--color-foreground-warning-dark',  bg: '--color-background-warning-subtle', label: 'Validation banner emphasized count' },
+  { text: '--color-foreground-warning-dark',  bg: '--color-background-elevated',       label: 'Validation banner CTA (default)' },
+  { text: '--color-foreground-warning-dark',  bg: '--color-background-warning-alt',    label: 'Validation banner CTA (hover)' },
 ]
 
 // ─── Run ───────────────────────────────────────────────────────────────────────

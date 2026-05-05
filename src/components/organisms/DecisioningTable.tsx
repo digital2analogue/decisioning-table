@@ -1,10 +1,9 @@
 import { Fragment, useState } from 'react'
-import { TableIcon } from 'lucide-react'
+import { PlusIcon, TableIcon } from 'lucide-react'
 import type { Rule, Ruleset } from '../../types'
 import { Checkbox } from '../atoms/Checkbox'
 import { RuleRow } from '../molecules/RuleRow'
 import { ChildRuleRow } from '../molecules/ChildRuleRow'
-import { AddRowButton } from '../molecules/AddRowButton'
 
 export interface DecisioningTableProps {
   ruleset: Ruleset
@@ -191,13 +190,21 @@ export function DecisioningTable({ ruleset, onUpdate, onAddRule }: DecisioningTa
               )
             })
           )}
+          {/* Chromeless add-rule row — Airtable-style affordance at the bottom of the tbody */}
+          <tr className="dt-add-rule-row">
+            <td colSpan={11} className="dt-add-rule-row-cell">
+              <button
+                type="button"
+                onClick={onAddRule}
+                className="dt-add-rule-row-btn"
+              >
+                <PlusIcon size={14} />
+                <span>Add rule</span>
+              </button>
+            </td>
+          </tr>
         </tbody>
       </table>
-      {ruleset.rules.length > 0 && (
-        <div className="dt-add-row">
-          <AddRowButton onAddRule={onAddRule} />
-        </div>
-      )}
     </div>
   )
 }

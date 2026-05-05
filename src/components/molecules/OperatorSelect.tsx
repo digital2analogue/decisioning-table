@@ -5,7 +5,7 @@ import type { Operator } from '../../types'
 import { cn } from '../../lib/utils'
 
 export interface OperatorSelectProps {
-  value: Operator
+  value: Operator | null
   onChange: (v: Operator) => void
 }
 
@@ -54,12 +54,12 @@ export function OperatorSelect({ value, onChange }: OperatorSelectProps) {
       <button
         type="button"
         onClick={() => isOpen ? setIsOpen(false) : open()}
-        className="dt-select-trigger"
-        title={labels[value]}
+        className={value ? 'dt-select-trigger' : 'dt-select-trigger dt-select-trigger-empty'}
+        title={value ? labels[value] : 'Select operator'}
         aria-haspopup="listbox"
         aria-expanded={isOpen}
       >
-        <span>{labels[value]}</span>
+        <span>{value ? labels[value] : 'Select operator'}</span>
         <ChevronDownIcon size={12} className="dt-select-chevron" />
       </button>
 

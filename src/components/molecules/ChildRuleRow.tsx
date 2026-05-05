@@ -1,4 +1,4 @@
-import { useRef } from 'react'
+import { useEffect, useRef } from 'react'
 import { AlertTriangleIcon, MoreHorizontalIcon } from 'lucide-react'
 import type { Rule, LogicOperator } from '../../types'
 import { isChildRuleValid, missingFields } from '../../types'
@@ -35,6 +35,10 @@ export interface ChildRuleRowProps {
   onUpdate: (parentId: string, childId: string, patch: Partial<Rule>) => void
   onDelete: (parentId: string, childId: string) => void
   onDuplicate: (parentId: string, childId: string) => void
+  /** When true, focus the rule-name input on mount. */
+  autoFocus?: boolean
+  /** Called once autofocus has been applied so the parent can clear the marker. */
+  onAutoFocusConsumed?: () => void
 }
 
 export function ChildRuleRow({
@@ -47,8 +51,18 @@ export function ChildRuleRow({
   onUpdate,
   onDelete,
   onDuplicate,
+  autoFocus,
+  onAutoFocusConsumed,
 }: ChildRuleRowProps) {
   const actionsAnchorRef = useRef<HTMLDivElement>(null)
+  const nameInputRef = useRef<HTMLInputElement>(null)
+
+  useEffect(() => {
+    if (autoFocus && nameInputRef.current) {
+      nameInputRef.current.focus()
+      onAutoFocusConsumed?.()
+    }
+  }, [autoFocus, onAutoFocusConsumed])
   const op: LogicOperator = rule.logicOperator ?? 'AND'
   const isInvalid = !isChildRuleValid(rule)
   const missing = isInvalid ? missingFields(rule, true) : []
@@ -92,6 +106,7 @@ export function ChildRuleRow({
             onChange={(v) => onUpdate(parentId, rule.id, { logicOperator: v })}
           />
           <input
+            ref={nameInputRef}
             type="text"
             value={rule.ruleName}
             onChange={(e) => onUpdate(parentId, rule.id, { ruleName: e.target.value })}

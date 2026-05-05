@@ -15,6 +15,7 @@ export interface DecisioningTableProps {
   ruleset: Ruleset
   onUpdate: (ruleset: Ruleset) => void
   onAddRule: () => void
+  onAddChild: (parentId: string) => void
   /** ID of a rule whose name input should auto-focus on mount (e.g., a freshly-added rule). */
   autoFocusRuleId?: string | null
   /** Called once the autofocus has been consumed so the parent can clear the marker. */
@@ -25,6 +26,7 @@ export function DecisioningTable({
   ruleset,
   onUpdate,
   onAddRule,
+  onAddChild,
   autoFocusRuleId,
   onAutoFocusConsumed,
 }: DecisioningTableProps) {
@@ -155,6 +157,18 @@ export function DecisioningTable({
     onUpdate({ ...ruleset, rules: next })
   }
 
+  /** Wrapper around onAddChild that ensures the parent is expanded before
+      the new draft child renders, so the user immediately sees what they added. */
+  function handleAddChild(parentId: string) {
+    setExpandedIds((prev) => {
+      if (prev.has(parentId)) return prev
+      const next = new Set(prev)
+      next.add(parentId)
+      return next
+    })
+    onAddChild(parentId)
+  }
+
   function toggleExpand(id: string) {
     setExpandedIds((prev) => {
       const next = new Set(prev)
@@ -216,6 +230,7 @@ export function DecisioningTable({
                     onUpdate={updateRule}
                     onDelete={deleteRule}
                     onDuplicate={duplicateRule}
+                    onAddChild={handleAddChild}
                     onMove={moveRow}
                     isExpanded={expanded}
                     onToggleExpand={toggleExpand}
@@ -234,6 +249,8 @@ export function DecisioningTable({
                       onUpdate={updateChild}
                       onDelete={deleteChild}
                       onDuplicate={duplicateChild}
+                      autoFocus={autoFocusRuleId === child.id}
+                      onAutoFocusConsumed={onAutoFocusConsumed}
                     />
                   ))}
                 </Fragment>

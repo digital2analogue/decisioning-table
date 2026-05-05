@@ -3,12 +3,14 @@ import { createPortal } from 'react-dom'
 
 export interface ActionsMenuProps {
   anchorRef: RefObject<HTMLElement | null>
+  /** Optional — only render the "Add sub-condition" item when provided (parent rules only). */
+  onAddChild?: () => void
   onDuplicate: () => void
   onDelete: () => void
   onClose: () => void
 }
 
-export function ActionsMenu({ anchorRef, onDuplicate, onDelete, onClose }: ActionsMenuProps) {
+export function ActionsMenu({ anchorRef, onAddChild, onDuplicate, onDelete, onClose }: ActionsMenuProps) {
   const [pos, setPos] = useState<{ top: number; right: number } | null>(null)
 
   useEffect(() => {
@@ -30,13 +32,19 @@ export function ActionsMenu({ anchorRef, onDuplicate, onDelete, onClose }: Actio
       <div className="fixed inset-0 z-[9998]" onClick={onClose} />
       <div
         className="dt-menu"
+        role="menu"
         style={{ position: 'fixed', top: pos.top, right: pos.right, zIndex: 9999 }}
       >
-        <button onClick={onDuplicate} className="dt-menu-item">
+        {onAddChild && (
+          <button type="button" role="menuitem" onClick={() => { onAddChild(); onClose() }} className="dt-menu-item">
+            Add sub-condition
+          </button>
+        )}
+        <button type="button" role="menuitem" onClick={onDuplicate} className="dt-menu-item">
           Duplicate
         </button>
         <hr className="dt-menu-divider" />
-        <button onClick={onDelete} className="dt-menu-item-danger">
+        <button type="button" role="menuitem" onClick={onDelete} className="dt-menu-item-danger">
           Delete rule
         </button>
       </div>

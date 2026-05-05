@@ -66,6 +66,7 @@ export interface RuleRowProps {
   onUpdate: (id: string, patch: Partial<Rule>) => void
   onDelete: (id: string) => void
   onDuplicate: (id: string) => void
+  onAddChild: (id: string) => void
   onMove: (dragIndex: number, hoverIndex: number) => void
   isExpanded: boolean
   onToggleExpand: (id: string) => void
@@ -84,6 +85,7 @@ export function RuleRow({
   onUpdate,
   onDelete,
   onDuplicate,
+  onAddChild,
   onMove,
   isExpanded,
   onToggleExpand,
@@ -293,6 +295,7 @@ export function RuleRow({
           {openMenuId === rule.id && (
             <ActionsMenu
               anchorRef={actionsAnchorRef}
+              onAddChild={() => onAddChild(rule.id)}
               onDuplicate={() => onDuplicate(rule.id)}
               onDelete={() => onDelete(rule.id)}
               onClose={onMenuClose}

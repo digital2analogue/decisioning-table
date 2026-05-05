@@ -87,6 +87,34 @@ export function DecisioningEngine({ modelConfig }: DecisioningEngineProps) {
     setAutoFocusRuleId(newRule.id)
   }
 
+  function addChild(parentId: string) {
+    const rs = rulesets.find(r => r.id === activeRulesetId)
+    if (!rs) return
+    const parent = rs.rules.find(r => r.id === parentId)
+    if (!parent) return
+    // Empty draft sub-condition. logicOperator defaults to AND.
+    const newChild: Rule = {
+      id: `rule-${Date.now()}`,
+      selected: false,
+      ruleName: '',
+      dataAttribute: null,
+      operator: null,
+      amount: null,
+      outcome: null,
+      existingAccountOperator: null,
+      existingAccountVariable: '',
+      annualIncomeOperator: null,
+      annualIncomeVariable: '',
+      logicOperator: 'AND',
+    }
+    const updatedParent: Rule = { ...parent, children: [...(parent.children ?? []), newChild] }
+    updateRuleset({
+      ...rs,
+      rules: rs.rules.map(r => (r.id === parentId ? updatedParent : r)),
+    })
+    setAutoFocusRuleId(newChild.id)
+  }
+
   return (
     <div className="dt-page min-h-screen flex flex-col">
       {/* Header */}
@@ -215,6 +243,7 @@ export function DecisioningEngine({ modelConfig }: DecisioningEngineProps) {
             ruleset={activeRuleset}
             onUpdate={updateRuleset}
             onAddRule={addRule}
+            onAddChild={addChild}
             autoFocusRuleId={autoFocusRuleId}
             onAutoFocusConsumed={() => setAutoFocusRuleId(null)}
           />

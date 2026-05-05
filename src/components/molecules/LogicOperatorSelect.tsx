@@ -47,10 +47,7 @@ export function LogicOperatorSelect({ value, onChange }: LogicOperatorSelectProp
         ref={triggerRef}
         type="button"
         onClick={() => isOpen ? setIsOpen(false) : open()}
-        className={cn(
-          'dt-logic-chip',
-          value === 'AND' ? 'dt-logic-chip-and' : 'dt-logic-chip-or',
-        )}
+        className="dt-logic-chip"
         title={`Logic: ${value.toLowerCase()}`}
         aria-label={`Logic operator: ${value.toLowerCase()}`}
         aria-haspopup="listbox"

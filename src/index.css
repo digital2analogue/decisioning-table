@@ -305,15 +305,15 @@ select option { background-color: var(--color-background-elevated); color: var(-
     font-family: var(--font-family-sans); font-size: 0.75rem; font-weight: var(--font-weight-semibold);
     line-height: 1; letter-spacing: var(--letter-spacing-normal);
     border-radius: var(--radius-sm); padding: 4px var(--space-sm);
-    border: 1px solid transparent; cursor: pointer;
+    background-color: transparent;
+    color: var(--color-foreground-default);
+    border: 1px solid var(--color-border-default);
+    cursor: pointer;
     transition: background-color var(--duration-fast) var(--easing-default), box-shadow var(--duration-fast) var(--easing-default);
   }
+  .dt-logic-chip:hover { background-color: color-mix(in srgb, transparent 90%, var(--color-foreground-default) 10%); }
   .dt-logic-chip:focus-visible { outline: none; box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-background-action) 22%, transparent); }
   .dt-logic-chip-chevron { opacity: 0.7; flex-shrink: 0; }
-  .dt-logic-chip-and { background-color: var(--color-background-accent-subtle); color: var(--color-foreground-accent-blue); }
-  .dt-logic-chip-and:hover { background-color: color-mix(in srgb, var(--color-background-accent-subtle) 80%, var(--color-foreground-accent-blue) 20%); }
-  .dt-logic-chip-or  { background-color: var(--color-background-warning-subtle); color: var(--color-foreground-warning-dark); }
-  .dt-logic-chip-or:hover  { background-color: color-mix(in srgb, var(--color-background-warning-subtle) 80%, var(--color-foreground-warning-dark) 20%); }
 
   /* Expand motion — child rows slide in from the top with a tiny stagger */
   @keyframes dt-child-row-in {

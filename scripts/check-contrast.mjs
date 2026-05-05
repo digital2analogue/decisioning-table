@@ -146,9 +146,6 @@ const PAIRINGS = [
   // Nested rules — child rows (bg-alt is the child row background)
   { text: '--color-foreground-default',   bg: '--color-background-alt', label: 'Nested: child rule name input' },
   { text: '--color-foreground-muted',     bg: '--color-background-alt', label: 'Nested: child amount prefix / connector' },
-  // AND / OR logic chips (specific brand-amber + brand-blue tints)
-  { text: '--color-foreground-accent-blue',   bg: '--color-background-accent-subtle',  label: 'Nested: AND logic chip' },
-  { text: '--color-foreground-warning-dark',  bg: '--color-background-warning-subtle', label: 'Nested: OR logic chip' },
   // Chromeless add-rule row affordance (default + hover)
   { text: '--color-foreground-muted',         bg: '--color-background-elevated',       label: 'Add-rule row btn (default)' },
   { text: '--color-foreground-action',        bg: '--color-background-accent-blue',    label: 'Add-rule row btn (hover)' },

@@ -149,7 +149,14 @@ export function ConditionalCell({
             openVariable()
           }}
           onFocus={openVariable}
-          className="dt-conditional-variable"
+          className={cn(
+            'dt-conditional-variable',
+            // Selected variable label is shown via the ::placeholder slot so
+            // the user can search-filter on focus. The --filled modifier
+            // overrides the muted placeholder color so a SELECTED value
+            // reads like a value, not a placeholder prompt.
+            variable && selectedVariable && 'dt-conditional-variable--filled',
+          )}
         />
       </div>
 

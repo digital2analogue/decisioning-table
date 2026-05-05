@@ -9,9 +9,19 @@ export interface DecisioningTableProps {
   ruleset: Ruleset
   onUpdate: (ruleset: Ruleset) => void
   onAddRule: () => void
+  /** ID of a rule whose name input should auto-focus on mount (e.g., a freshly-added rule). */
+  autoFocusRuleId?: string | null
+  /** Called once the autofocus has been consumed so the parent can clear the marker. */
+  onAutoFocusConsumed?: () => void
 }
 
-export function DecisioningTable({ ruleset, onUpdate, onAddRule }: DecisioningTableProps) {
+export function DecisioningTable({
+  ruleset,
+  onUpdate,
+  onAddRule,
+  autoFocusRuleId,
+  onAutoFocusConsumed,
+}: DecisioningTableProps) {
   const [openMenuId, setOpenMenuId] = useState<string | null>(null)
   const [expandedIds, setExpandedIds] = useState<Set<string>>(() => {
     // Default: parents with children start expanded so the feature is discoverable
@@ -171,6 +181,8 @@ export function DecisioningTable({ ruleset, onUpdate, onAddRule }: DecisioningTa
                     onMove={moveRow}
                     isExpanded={expanded}
                     onToggleExpand={toggleExpand}
+                    autoFocus={autoFocusRuleId === rule.id}
+                    onAutoFocusConsumed={onAutoFocusConsumed}
                   />
                   {expanded && children.map((child, ci) => (
                     <ChildRuleRow

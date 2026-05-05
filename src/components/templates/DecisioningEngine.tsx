@@ -13,6 +13,9 @@ interface DecisioningEngineProps {
 export function DecisioningEngine({ modelConfig }: DecisioningEngineProps) {
   const [rulesets, setRulesets] = useState<Ruleset[]>(initialRulesets)
   const [activeRulesetId, setActiveRulesetId] = useState(initialRulesets[0].id)
+  // ID of the most recently added rule — RuleRow uses this to autofocus its
+  // name input on mount so the user can immediately start typing.
+  const [autoFocusRuleId, setAutoFocusRuleId] = useState<string | null>(null)
   const [editingTitle, setEditingTitle] = useState(false)
   const defaultTitle = modelConfig?.modelName ?? 'My Decision Model'
   const [titleDraft, setTitleDraft] = useState(defaultTitle)
@@ -80,6 +83,7 @@ export function DecisioningEngine({ modelConfig }: DecisioningEngineProps) {
       annualIncomeVariable: '',
     }
     updateRuleset({ ...rs, rules: [...rs.rules, newRule] })
+    setAutoFocusRuleId(newRule.id)
   }
 
   return (
@@ -179,7 +183,13 @@ export function DecisioningEngine({ modelConfig }: DecisioningEngineProps) {
       {/* Table area — edge-to-edge */}
       <div className="flex-1">
         {activeRuleset && (
-          <DecisioningTable ruleset={activeRuleset} onUpdate={updateRuleset} onAddRule={addRule} />
+          <DecisioningTable
+            ruleset={activeRuleset}
+            onUpdate={updateRuleset}
+            onAddRule={addRule}
+            autoFocusRuleId={autoFocusRuleId}
+            onAutoFocusConsumed={() => setAutoFocusRuleId(null)}
+          />
         )}
       </div>
 

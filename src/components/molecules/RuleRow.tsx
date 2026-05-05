@@ -1,4 +1,4 @@
-import { useCallback, useRef } from 'react'
+import { useCallback, useEffect, useRef } from 'react'
 import { useDrag, useDrop } from 'react-dnd'
 import { AlertTriangleIcon, MoreHorizontalIcon, GripVerticalIcon, ChevronDownIcon, ChevronRightIcon } from 'lucide-react'
 import type { Rule, DragItem } from '../../types'
@@ -44,6 +44,10 @@ export interface RuleRowProps {
   onMove: (dragIndex: number, hoverIndex: number) => void
   isExpanded: boolean
   onToggleExpand: (id: string) => void
+  /** When true, focus the rule-name input on mount. */
+  autoFocus?: boolean
+  /** Called once autofocus has been applied so the parent can clear the marker. */
+  onAutoFocusConsumed?: () => void
 }
 
 export function RuleRow({
@@ -58,9 +62,19 @@ export function RuleRow({
   onMove,
   isExpanded,
   onToggleExpand,
+  autoFocus,
+  onAutoFocusConsumed,
 }: RuleRowProps) {
   const rowRef = useRef<HTMLTableRowElement>(null)
   const actionsAnchorRef = useRef<HTMLDivElement>(null)
+  const nameInputRef = useRef<HTMLInputElement>(null)
+
+  useEffect(() => {
+    if (autoFocus && nameInputRef.current) {
+      nameInputRef.current.focus()
+      onAutoFocusConsumed?.()
+    }
+  }, [autoFocus, onAutoFocusConsumed])
   const childCount = rule.children?.length ?? 0
   const hasChildren = childCount > 0
   const isInvalid = !isRuleValid(rule)
@@ -76,7 +90,12 @@ export function RuleRow({
 
   const [{ isDragging }, drag, dragPreview] = useDrag<DragItem, unknown, { isDragging: boolean }>({
     type: DND_TYPE,
-    item: { index, id: rule.id },
+    // item is a function so it runs at drag-start — close any open overflow
+    // menu so the portaled popover doesn't dangle in the old viewport position.
+    item: () => {
+      onMenuClose()
+      return { index, id: rule.id }
+    },
     collect: (monitor) => ({ isDragging: monitor.isDragging() }),
   })
 
@@ -155,6 +174,7 @@ export function RuleRow({
             <span className="dt-expand-toggle-spacer" aria-hidden="true" />
           )}
           <input
+            ref={nameInputRef}
             type="text"
             value={rule.ruleName}
             onChange={(e) => onUpdate(rule.id, { ruleName: e.target.value })}

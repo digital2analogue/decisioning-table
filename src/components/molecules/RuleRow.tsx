@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef } from 'react'
 import { useDrag, useDrop } from 'react-dnd'
-import { AlertTriangleIcon, MoreHorizontalIcon, GripVerticalIcon, ChevronDownIcon, ChevronRightIcon } from 'lucide-react'
+import { AlertTriangleIcon, MoreHorizontalIcon, GripVerticalIcon, ChevronRightIcon } from 'lucide-react'
 import type { Rule, DragItem } from '../../types'
 import { isRuleValid, isReadyForOutcome, missingFields } from '../../types'
 import { cn } from '../../lib/utils'
@@ -168,7 +168,7 @@ export function RuleRow({
               aria-label={isExpanded ? 'Collapse sub-conditions' : 'Expand sub-conditions'}
               title={isExpanded ? 'Collapse sub-conditions' : 'Expand sub-conditions'}
             >
-              {isExpanded ? <ChevronDownIcon size={14} /> : <ChevronRightIcon size={14} />}
+              <ChevronRightIcon size={14} />
             </button>
           ) : (
             <span className="dt-expand-toggle-spacer" aria-hidden="true" />

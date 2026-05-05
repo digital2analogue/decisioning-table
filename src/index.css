@@ -116,6 +116,7 @@ select option { background-color: var(--color-background-elevated); color: var(-
 
   .dt-amount-prefix { font-family: var(--font-family-mono); font-size: var(--font-size-sm); line-height: var(--font-line-height-normal); color: var(--color-foreground-muted); margin-right: 0; }
   .dt-amount-input { font-family: var(--font-family-mono); font-size: var(--font-size-sm); line-height: var(--font-line-height-normal); color: var(--color-foreground-default); background: transparent; border: 0; outline: none; width: 100%; border-radius: var(--radius-sm); padding: var(--space-2xs) var(--space-xs) var(--space-2xs) 2px; font-variant-numeric: tabular-nums; transition: background-color var(--duration-fast) var(--easing-default), box-shadow var(--duration-fast) var(--easing-default); }
+  .dt-amount-input:hover { background-color: var(--color-background-alt); box-shadow: 0 0 0 1px var(--color-border-default); }
   .dt-amount-input:focus { background-color: var(--color-background-elevated); border-color: var(--color-border-focus); box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-background-action) 18%, transparent); }
 
   /* Actions menu */
@@ -249,6 +250,12 @@ select option { background-color: var(--color-background-elevated); color: var(-
   }
   .dt-expand-toggle:hover { color: var(--color-foreground-action); background-color: var(--color-background-accent-blue); }
   .dt-expand-toggle:focus-visible { outline: none; color: var(--color-foreground-action); box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-background-action) 18%, transparent); }
+  /* Single chevron icon that rotates instead of icon-swap — smoother visual transition */
+  .dt-expand-toggle svg { transition: transform var(--duration-fast) var(--easing-default); }
+  .dt-expand-toggle[aria-expanded="true"] svg { transform: rotate(90deg); }
+  @media (prefers-reduced-motion: reduce) {
+    .dt-expand-toggle svg { transition: none; }
+  }
   .dt-expand-toggle-spacer { display: inline-block; width: 22px; height: 22px; flex-shrink: 0; }
   /* Sub-count — neutral mono inline counter */
   .dt-sub-count {

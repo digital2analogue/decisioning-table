@@ -59,17 +59,18 @@ export interface Rule {
  * True when every required field EXCEPT outcome is filled. Shared predicate
  * used both for child-row validity (children inherit parent outcome) and as
  * the gate for revealing the Outcome segmented control on parent rows.
+ *
+ * Conditional fields (existingAccount*, annualIncome*) are intentionally
+ * NOT required — most real rules use the main attribute/operator/amount
+ * triple and don't need both gates. Conditionals are scoping refinements,
+ * not preconditions.
  */
 export function isReadyForOutcome(rule: Rule): boolean {
   return Boolean(
     rule.ruleName.trim() &&
     rule.dataAttribute &&
     rule.operator &&
-    rule.amount !== null &&
-    rule.existingAccountOperator &&
-    rule.existingAccountVariable.trim() &&
-    rule.annualIncomeOperator &&
-    rule.annualIncomeVariable.trim()
+    rule.amount !== null
   )
 }
 
@@ -93,15 +94,11 @@ export function isChildRuleValid(rule: Rule): boolean {
  */
 export function missingFields(rule: Rule, forChild = false): string[] {
   const missing: string[] = []
-  if (!rule.ruleName.trim())                missing.push('rule name')
-  if (!rule.dataAttribute)                  missing.push('data attribute')
-  if (!rule.operator)                       missing.push('operator')
-  if (rule.amount === null)                 missing.push('amount')
-  if (!rule.existingAccountOperator)        missing.push('existing account condition')
-  if (!rule.existingAccountVariable.trim()) missing.push('existing account variable')
-  if (!rule.annualIncomeOperator)           missing.push('annual income condition')
-  if (!rule.annualIncomeVariable.trim())    missing.push('annual income variable')
-  if (!forChild && !rule.outcome)           missing.push('outcome')
+  if (!rule.ruleName.trim())       missing.push('rule name')
+  if (!rule.dataAttribute)         missing.push('data attribute')
+  if (!rule.operator)              missing.push('operator')
+  if (rule.amount === null)        missing.push('amount')
+  if (!forChild && !rule.outcome)  missing.push('outcome')
   return missing
 }
 

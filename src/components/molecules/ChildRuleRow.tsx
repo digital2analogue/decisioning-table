@@ -121,6 +121,9 @@ export function ChildRuleRow({
       {/* Outcome — children inherit the parent outcome implicitly; cell stays empty to keep column alignment */}
       <td className="px-3 py-2.5"></td>
 
+      {/* Spacer */}
+      <td className="dt-col-spacer"></td>
+
       {/* Actions */}
       <td className="px-3 py-2.5 dt-col-actions" data-menu-open={menuOpen || undefined}>
         <div ref={actionsAnchorRef} className="relative inline-block">

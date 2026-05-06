@@ -304,18 +304,16 @@ select option { background-color: var(--color-background-elevated); color: var(-
   .dt-add-rule-row-menu { position: absolute; left: 0; bottom: calc(100% + 4px); z-index: 30; background-color: var(--color-background-elevated); border: 1px solid var(--color-border-default); border-radius: var(--radius-md); box-shadow: var(--shadow-menu); padding: var(--space-xs) 0; min-width: 168px; }
 
   /* Inline "+ Add sub-condition" row — sits as the last row inside an expanded
-     parent's children group. Reuses .dt-child-row + .dt-child-row-last so the
-     tree connector continues into it; cell-bare/connector-cell render the
-     vertical+T-stub line just like a real child row. The colspan'd label cell
-     hosts the action button. Inherits the standard .dt-tbody-row entry
-     animation; child stagger delays apply via the existing nth-child rules. */
+     parent's children group. It mirrors the child-row column structure so the
+     sticky # + rule-name columns keep the same elevation cue during horizontal
+     scroll, but it intentionally omits the tree connector decoration. */
   /* Minimal add-sub-condition row — sits inside the children group but stays
      chromeless. The row itself has NO hover bg (overrides the parent
      .dt-child-row hover tint via compound specificity 0,2,0/0,3,0 so it wins
      against the later .dt-child-row:hover rule); only the inline button
      reacts to interaction using the design-system ghost-button pattern. */
   .dt-child-row.dt-add-child-row,
-  .dt-child-row.dt-add-child-row:hover { background-color: var(--color-background-elevated); }
+  .dt-child-row.dt-add-child-row:hover { background-color: var(--color-background-alt); }
   .dt-add-child-row .dt-add-child-row-cell { padding: var(--space-2xs) var(--space-md); border-bottom: none; }
   .dt-add-child-row-btn { display: inline-flex; align-items: center; gap: var(--space-xs); font: var(--font-label-small); letter-spacing: var(--letter-spacing-label); color: var(--color-foreground-muted); background: none; border: none; cursor: pointer; padding: var(--space-2xs) var(--space-sm); border-radius: var(--radius-sm); transition: color var(--duration-fast) var(--easing-default), background-color var(--duration-fast) var(--easing-default), box-shadow var(--duration-fast) var(--easing-default); }
   .dt-add-child-row-btn:hover { color: var(--color-foreground-default); background-color: var(--color-background-hover); }

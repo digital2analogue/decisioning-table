@@ -352,8 +352,8 @@ export function DecisioningTable({
                   {expanded && children.length > 0 && (
                     <tr className="dt-tbody-row dt-child-row dt-add-child-row">
                       <td className="dt-child-cell-bare px-3 py-2.5"></td>
-                      <td className="dt-child-cell-bare px-2 py-2.5"></td>
-                      <td colSpan={9} className="dt-add-child-row-cell">
+                      <td className="dt-child-cell-bare dt-col-sticky-num px-2 py-2.5"></td>
+                      <td className="dt-col-sticky dt-child-name-cell dt-add-child-row-cell">
                         <button
                           type="button"
                           onClick={() => handleAddChild(rule.id)}
@@ -363,6 +363,7 @@ export function DecisioningTable({
                           <span>Add sub-condition</span>
                         </button>
                       </td>
+                      <td colSpan={8} className="dt-child-cell-bare"></td>
                     </tr>
                   )}
                 </Fragment>

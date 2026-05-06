@@ -394,21 +394,21 @@ select option { background-color: var(--color-background-elevated); color: var(-
      for conditional-operator, "Greater than" for the toolbar select-trigger).
      Selects do NOT resize between values — keeps cells visually stable when
      a user changes the operator from "==" to "Doesn't contain" etc. */
-  .dt-conditional-operator { appearance: none; display: inline-flex; align-items: center; justify-content: space-between; gap: var(--space-2xs); width: 148px; min-height: var(--control-height-md); box-sizing: border-box; background-color: var(--color-border-default); border: 1px solid var(--color-border-default); color: var(--color-foreground-on-inverted); font: var(--font-body-medium); letter-spacing: var(--letter-spacing-label); border-radius: var(--radius-sm); padding: 0 var(--space-sm); white-space: nowrap; cursor: pointer; transition: background-color var(--duration-fast) var(--easing-default), box-shadow var(--duration-fast) var(--easing-default); }
-  .dt-conditional-operator:hover { background-color: var(--color-border-elevated); border-color: var(--color-border-elevated); }
+  .dt-conditional-operator { appearance: none; display: inline-flex; align-items: center; justify-content: space-between; gap: var(--space-2xs); width: 148px; min-height: var(--control-height-md); box-sizing: border-box; background-color: var(--color-background-default); border: 1px solid var(--color-border-default); color: var(--color-foreground-default); font: var(--font-body-medium); letter-spacing: var(--letter-spacing-label); border-radius: var(--radius-sm); padding: 0 var(--space-sm); white-space: nowrap; cursor: pointer; transition: background-color var(--duration-fast) var(--easing-default), box-shadow var(--duration-fast) var(--easing-default); }
+  .dt-conditional-operator:hover { background-color: var(--color-background-hover); border-color: var(--color-foreground-muted); }
   .dt-conditional-operator:focus-visible { outline: none; box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-background-action) 18%, transparent); background-color: var(--color-background-elevated); color: var(--color-foreground-default); }
   /* Fused input group — operator + amount/variable share one seamless border */
   .dt-conditional-cell { display: flex; align-items: center; max-width: 260px; }
-  .dt-conditional-cell .dt-conditional-operator { border-right: none; border-top-right-radius: 0; border-bottom-right-radius: 0; width: auto; min-width: 118px; }
+  .dt-conditional-cell .dt-conditional-operator { border-right: none; border-top-right-radius: 0; border-bottom-right-radius: 0; width: 148px; }
   .dt-conditional-cell .dt-amount-cell { border-top-left-radius: 0; border-bottom-left-radius: 0; background-color: var(--color-background-elevated); border-color: var(--color-border-default); }
   .dt-conditional-cell .dt-conditional-variable { border-top-left-radius: 0; border-bottom-left-radius: 0; }
-  .dt-conditional-variable { font: var(--font-label-medium); letter-spacing: var(--letter-spacing-label); color: var(--color-foreground-on-inverted); background-color: var(--color-border-default); border: 1px solid var(--color-border-default); border-radius: var(--radius-sm); padding: 0 var(--space-sm); width: 100%; min-width: 0; min-height: var(--control-height-md); box-sizing: border-box; transition: background-color var(--duration-fast) var(--easing-default), box-shadow var(--duration-fast) var(--easing-default); }
+  .dt-conditional-variable { font: var(--font-label-medium); letter-spacing: var(--letter-spacing-label); color: var(--color-foreground-default); background-color: var(--color-background-default); border: 1px solid var(--color-border-default); border-radius: var(--radius-sm); padding: 0 var(--space-sm); width: 100%; min-width: 0; min-height: var(--control-height-md); box-sizing: border-box; transition: background-color var(--duration-fast) var(--easing-default), box-shadow var(--duration-fast) var(--easing-default); }
   .dt-conditional-variable::placeholder { font-family: var(--font-family-sans); color: var(--color-foreground-muted); }
   /* When a variable IS selected, its label shows via the ::placeholder slot
      (so the input doubles as a search-filter on focus). Override the muted
      placeholder color so selected values read as values, not as placeholders.
      Specificity 0,1,1 wins over the global input::placeholder rule (0,0,2). */
-  .dt-conditional-variable--filled::placeholder { color: var(--color-foreground-on-inverted); opacity: 1; }
+  .dt-conditional-variable--filled::placeholder { color: var(--color-foreground-default); opacity: 1; }
   .dt-conditional-variable:hover { background-color: color-mix(in srgb, var(--color-background-hover) 80%, var(--color-border-elevated) 20%); }
   .dt-conditional-variable:focus-visible { outline: none; box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-background-action) 18%, transparent); background-color: var(--color-background-elevated); color: var(--color-foreground-default); }
   .dt-conditional-dropdown { background-color: var(--color-background-elevated); border: 1px solid var(--color-border-default); border-radius: var(--radius-sm); box-shadow: var(--shadow-md); z-index: 50; min-width: 160px; overflow: hidden; }

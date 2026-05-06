@@ -101,7 +101,7 @@ select option { background-color: var(--color-background-elevated); color: var(-
   /* Table sub-nav — compact filter strip between the alert banner and the
      column headers. Sits on bg-alt so it reads as scoped table chrome
      (not page surface) and the search input pops as a control on top of it. */
-  .dt-table-subnav { display: flex; align-items: center; gap: var(--space-sm); padding: var(--space-xs) var(--space-md); background-color: var(--color-background-alt); border-bottom: 1px solid var(--color-border-default); }
+  .dt-table-subnav { display: flex; align-items: center; justify-content: flex-end; gap: var(--space-sm); padding: var(--space-sm) var(--space-md); background-color: var(--color-background-alt); border-bottom: 1px solid var(--color-border-default); }
 
   /* Rule search — sub-nav-level filter input. One step smaller than the
      standard 32px control (24px high, label-small font) so it reads as a
@@ -407,7 +407,7 @@ select option { background-color: var(--color-background-elevated); color: var(-
     right: -12px;
     width: 12px;
     pointer-events: none;
-    background: linear-gradient(to right, rgba(15, 26, 46, 0.16), rgba(15, 26, 46, 0));
+    background: linear-gradient(to right, rgba(15, 26, 46, 0.07), rgba(15, 26, 46, 0));
     z-index: 1;
   }
   .dt-tbody-row-selected .dt-col-sticky,
@@ -452,10 +452,12 @@ select option { background-color: var(--color-background-elevated); color: var(-
   .dt-child-row .dt-col-sticky-num { background-color: var(--color-background-alt); }
   .dt-child-row:hover .dt-col-sticky,
   .dt-child-row:hover .dt-col-sticky-num { background-color: color-mix(in srgb, var(--color-background-alt) 88%, var(--color-background-action) 12%); }
-  .dt-child-row-last { border-bottom: 1px solid var(--color-border-default); }
-  /* Last-child sticky col keeps its inset bottom border. The right-edge
-     elevation gradient comes from the ::after rule above (works on every row). */
-  .dt-child-row-last .dt-col-sticky { box-shadow: inset 0 -1px 0 var(--color-border-default); }
+  .dt-child-row-last { border-bottom: none; }
+  /* Closing border lives on the add-sub-condition row (the true last row of the
+     group) so there's no divider between the last child and the "+" affordance. */
+  .dt-child-row.dt-add-child-row { border-bottom: 1px solid var(--color-border-default); }
+  .dt-add-child-row .dt-col-sticky,
+  .dt-add-child-row .dt-col-sticky-num { box-shadow: inset 0 -1px 0 var(--color-border-default); }
   /* Children's leading cells (legacy marker class — kept for semantic clarity in JSX; column-separator borders are excluded at the table-level rule) */
   .dt-child-cell-bare { border-left: none; }
 

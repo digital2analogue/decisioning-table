@@ -4,17 +4,20 @@ import type { ConditionalOperator } from '../../types'
 import { dataElements } from '../../data'
 import { cn } from '../../lib/utils'
 import { Picker, type PickerOption } from '../atoms/Picker'
+import { AmountCell } from '../atoms/AmountCell'
 import '../../index.css'
 
 interface DropdownPos { top: number; left: number; width?: number }
 
 const CONDITIONAL_OPERATOR_OPTIONS: PickerOption<ConditionalOperator>[] = [
-  { value: 'contains', label: 'Contains' },
-  { value: 'doesnotContain', label: "Doesn't contain" },
   { value: '==', label: '==' },
   { value: '!=', label: '!=' },
-  { value: '=null', label: '=null' },
-  { value: '!=null', label: '!=null' },
+  { value: '<', label: '<' },
+  { value: '<=', label: '≤' },
+  { value: '>', label: '>' },
+  { value: '>=', label: '≥' },
+  { value: '=null', label: 'is Null' },
+  { value: '!=null', label: 'is Not Null' },
 ]
 
 export interface ConditionalCellProps {
@@ -24,6 +27,8 @@ export interface ConditionalCellProps {
   onVariableChange: (variable: string) => void
   /** Placeholder text for the variable input when no variable is selected. */
   variablePlaceholder?: string
+  /** 'search' = data-element combobox (default); 'amount' = dollar amount input */
+  variableType?: 'search' | 'amount'
 }
 
 export function ConditionalCell({
@@ -32,6 +37,7 @@ export function ConditionalCell({
   onOperatorChange,
   onVariableChange,
   variablePlaceholder = 'Enter value',
+  variableType = 'search',
 }: ConditionalCellProps) {
   const [isVariableOpen, setIsVariableOpen] = useState(false)
   const [variableSearch, setVariableSearch] = useState('')
@@ -74,43 +80,46 @@ export function ConditionalCell({
   }, [])
 
   return (
-    <div className="flex flex-row items-center gap-1.5">
+    <div className="dt-conditional-cell">
       {/* Operator picker */}
-      <div className="flex-shrink-0">
-        <Picker<ConditionalOperator>
-          value={operator}
-          onChange={onOperatorChange}
-          options={CONDITIONAL_OPERATOR_OPTIONS}
-          placeholder="Select condition"
-          triggerVariant="conditional-op"
-          ariaLabel="Condition operator"
-        />
-      </div>
+      <Picker<ConditionalOperator>
+        value={operator}
+        onChange={onOperatorChange}
+        options={CONDITIONAL_OPERATOR_OPTIONS}
+        placeholder="Select condition"
+        triggerVariant="conditional-op"
+        ariaLabel="Condition operator"
+      />
 
-      {/* Variable search combobox — search-as-you-type, not a Picker. */}
-      <div ref={variableRef} className="relative min-w-0 flex-1">
-        <input
-          ref={variableInputRef}
-          type="text"
-          placeholder={variable && selectedVariable ? selectedVariable.label : variablePlaceholder}
-          value={variableSearch}
-          onChange={(e) => {
-            setVariableSearch(e.target.value)
-            openVariable()
-          }}
-          onFocus={openVariable}
-          className={cn(
-            'dt-conditional-variable',
-            // Selected variable label is shown via the ::placeholder slot so
-            // the user can search-filter on focus. The --filled modifier
-            // overrides the muted placeholder color so a SELECTED value
-            // reads like a value, not a placeholder prompt.
-            variable && selectedVariable && 'dt-conditional-variable--filled',
-          )}
-        />
-      </div>
+      {/* Variable input — amount input or data-element search combobox */}
+      {variableType === 'amount' ? (
+        <div className="min-w-0 flex-1">
+          <AmountCell
+            value={variable ? parseFloat(variable) : null}
+            onChange={(v) => onVariableChange(v !== null ? String(v) : '')}
+          />
+        </div>
+      ) : (
+        <div ref={variableRef} className="relative min-w-0 flex-1">
+          <input
+            ref={variableInputRef}
+            type="text"
+            placeholder={variable && selectedVariable ? selectedVariable.label : variablePlaceholder}
+            value={variableSearch}
+            onChange={(e) => {
+              setVariableSearch(e.target.value)
+              openVariable()
+            }}
+            onFocus={openVariable}
+            className={cn(
+              'dt-conditional-variable',
+              variable && selectedVariable && 'dt-conditional-variable--filled',
+            )}
+          />
+        </div>
+      )}
 
-      {isVariableOpen && variablePos && filteredVariables.length > 0 && createPortal(
+      {variableType === 'search' && isVariableOpen && variablePos && filteredVariables.length > 0 && createPortal(
         <div
           className="dt-conditional-dropdown"
           style={{

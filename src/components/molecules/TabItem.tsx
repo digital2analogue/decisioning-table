@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from 'react'
-import { ChevronDownIcon, CheckIcon } from 'lucide-react'
+import { MoreHorizontalIcon, CheckIcon } from 'lucide-react'
+import { createPortal } from 'react-dom'
 
 export interface TabItemProps {
   id: string
@@ -7,12 +8,18 @@ export interface TabItemProps {
   isActive: boolean
   onClick: (id: string) => void
   onRename: (id: string, name: string) => void
+  onDuplicate: (id: string) => void
+  onDelete: (id: string) => void
+  onExport: (id: string) => void
 }
 
-export function TabItem({ id, name, isActive, onClick, onRename }: TabItemProps) {
+export function TabItem({ id, name, isActive, onClick, onRename, onDuplicate, onDelete, onExport }: TabItemProps) {
   const [editing, setEditing] = useState(false)
   const [draft, setDraft] = useState(name)
+  const [menuOpen, setMenuOpen] = useState(false)
+  const [menuPos, setMenuPos] = useState<{ bottom: number; right: number } | null>(null)
   const inputRef = useRef<HTMLInputElement>(null)
+  const menuBtnRef = useRef<HTMLButtonElement>(null)
 
   useEffect(() => {
     if (editing) {
@@ -26,6 +33,16 @@ export function TabItem({ id, name, isActive, onClick, onRename }: TabItemProps)
     if (trimmed && trimmed !== name) onRename(id, trimmed)
     setEditing(false)
   }
+
+  function openMenu(e: React.MouseEvent) {
+    e.stopPropagation()
+    if (!menuBtnRef.current) return
+    const r = menuBtnRef.current.getBoundingClientRect()
+    setMenuPos({ bottom: window.innerHeight - r.top + 4, right: window.innerWidth - r.right })
+    setMenuOpen(true)
+  }
+
+  function closeMenu() { setMenuOpen(false) }
 
   if (editing) {
     return (
@@ -55,24 +72,56 @@ export function TabItem({ id, name, isActive, onClick, onRename }: TabItemProps)
   }
 
   return (
-    <div
-      className={`dt-tab-item ${isActive ? 'dt-tab-item-active' : ''}`}
-      onClick={() => onClick(id)}
-    >
-      <span>{name}</span>
-      {isActive && (
-        <button
-          onClick={(e) => {
-            e.stopPropagation()
-            setDraft(name)
-            setEditing(true)
-          }}
-          className="dt-tab-edit-btn"
-          title="Rename"
-        >
-          <ChevronDownIcon size={12} />
-        </button>
+    <>
+      <div
+        className={`dt-tab-item ${isActive ? 'dt-tab-item-active' : ''}`}
+        onClick={() => onClick(id)}
+      >
+        <span>{name}</span>
+        {isActive && (
+          <button
+            ref={menuBtnRef}
+            onClick={openMenu}
+            className="dt-tab-edit-btn"
+            title="Tab options"
+            aria-label={`Options for ${name}`}
+            aria-haspopup="menu"
+            aria-expanded={menuOpen}
+          >
+            <MoreHorizontalIcon size={12} />
+          </button>
+        )}
+      </div>
+      {menuOpen && menuPos && createPortal(
+        <>
+          <div className="fixed inset-0 z-[9998]" onClick={closeMenu} />
+          <div
+            className="dt-menu"
+            role="menu"
+            style={{ position: 'fixed', bottom: menuPos.bottom, right: menuPos.right, zIndex: 9999 }}
+          >
+            <button type="button" role="menuitem" className="dt-menu-item"
+              onClick={() => { setDraft(name); setEditing(true); closeMenu() }}>
+              Rename
+            </button>
+            <hr className="dt-menu-divider" />
+            <button type="button" role="menuitem" className="dt-menu-item"
+              onClick={() => { onDuplicate(id); closeMenu() }}>
+              Duplicate ruleset
+            </button>
+            <button type="button" role="menuitem" className="dt-menu-item"
+              onClick={() => { onExport(id); closeMenu() }}>
+              Export ruleset
+            </button>
+            <hr className="dt-menu-divider" />
+            <button type="button" role="menuitem" className="dt-menu-item-danger"
+              onClick={() => { onDelete(id); closeMenu() }}>
+              Delete ruleset
+            </button>
+          </div>
+        </>,
+        document.body,
       )}
-    </div>
+    </>
   )
 }

@@ -77,6 +77,9 @@
   --color-background-disabled: #E8EAED;
   --color-foreground-disabled: #D8DCE0;
   --color-foreground-inactive: #A8B0BE; /* TODO: move to brand-tokens — washed-out slate for WCAG-exempt inactive UI elements (segmented controls, etc.) */
+  /* Chip surface — light cool-gray badge for AND/OR chips; distinct from white form inputs without being heavy */
+  --color-background-inverted: #E2E7F0;     /* TODO: move to brand-tokens — light slate; contrast ~7:1 with chip text */
+  --color-foreground-on-inverted: #2C3A55;  /* TODO: move to brand-tokens — dark navy text on light chip */
   /* Accent tints */
   --color-accent-subtle: #E0E7FB;
   --color-accent-subtle-border: #92AAF2;

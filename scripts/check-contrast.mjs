@@ -111,6 +111,9 @@ const DENY_BG      = resolveColorMix(`color-mix(in srgb, ${WHITE} 92%, ${ERROR})
 // Approve text is color-mix(in srgb, success 75%, black 25%)
 const APPROVE_TEXT = resolveColorMix(`color-mix(in srgb, ${SUCCESS} 75%, #000000)`)
 
+// AND/OR logic chip bg matches the tree connector: foreground-action 40% + border-elevated 60%
+const LOGIC_CHIP_BG = resolveColorMix(`color-mix(in srgb, ${tok('--color-foreground-action')} 30%, ${tok('--color-border-elevated')})`)
+
 // ─── Pairings manifest ─────────────────────────────────────────────────────────
 //
 // Add a new entry here whenever you introduce a new text/background combination
@@ -155,16 +158,15 @@ const PAIRINGS = [
   { text: '--color-foreground-muted',     bg: '--color-background-alt', label: 'Nested: child amount prefix / connector' },
   // Chromeless add-rule row affordance (default + hover)
   { text: '--color-foreground-muted',         bg: '--color-background-elevated',       label: 'Add-rule row btn (default)' },
-  { text: '--color-foreground-action',        bg: '--color-background-accent-blue',    label: 'Add-rule row btn (hover)' },
-  // Row-level warning indicator (replaces row number) — sits on the tinted invalid row bg
-  { text: '--color-foreground-warning',       bg: '--color-background-warning-subtle', label: 'Invalid-row warning icon' },
-  // Default text inside invalid (tinted) rows — rule name, etc. — foreground-default on warning-subtle
-  { text: '--color-foreground-default',       bg: '--color-background-warning-subtle', label: 'Invalid-row body text' },
-  { text: '--color-foreground-muted',         bg: '--color-background-warning-subtle', label: 'Invalid-row placeholder text' },
-  // Validation banner (page-width amber alert)
-  { text: '--color-foreground-warning',       bg: '--color-background-warning-subtle', label: 'Validation banner body text' },
-  { text: '--color-foreground-warning-dark',  bg: '--color-background-warning-subtle', label: 'Validation banner emphasized count' },
-  { text: '--color-foreground-accent-on-amber',  bg: '--color-background-warning',     label: 'Validation banner CTA (default)' },
+  { text: '--color-foreground-default',        bg: '--color-background-hover',          label: 'Add-rule row btn (hover)' },
+  // Row-level warning indicator — icon + number sit on normal row background (no tint)
+  { text: '--color-foreground-warning',       bg: WHITE,                               label: 'Invalid-row warning icon + number' },
+  // Validation banner — light amber strip (Polaris notice style)
+  { text: '--color-foreground-warning-dark',  bg: '--color-background-warning-alt',    label: 'Validation banner text + CTA on light amber' },
+  // AND/OR logic chip — dark navy text on blue-tinted bg (matches tree connector line color)
+  { text: '--color-foreground-on-inverted', bg: LOGIC_CHIP_BG,                         label: 'AND/OR logic chip text' },
+  // Conditional operator chip — dark navy text on very light gray bg
+  { text: '--color-foreground-on-inverted', bg: '--color-background-hover',             label: 'Conditional operator chip text' },
 ]
 
 // ─── Run ───────────────────────────────────────────────────────────────────────

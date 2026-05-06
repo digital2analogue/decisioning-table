@@ -56,7 +56,7 @@ export function ValidationBanner({ ruleset }: ValidationBannerProps) {
   return (
     <div role="alert" className="dt-validation-banner">
       <span className="dt-validation-banner-icon" aria-hidden="true">
-        <AlertTriangleIcon size={16} fill="currentColor" stroke="var(--color-background-warning-subtle)" />
+        <AlertTriangleIcon size={14} strokeWidth={2} />
       </span>
       <p className="dt-validation-banner-text">
         <strong><span className="dt-metric">{count}</span> incomplete {noun}</strong> must be filled in before this decision model can run.{' '}

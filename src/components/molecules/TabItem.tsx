@@ -78,19 +78,19 @@ export function TabItem({ id, name, isActive, onClick, onRename, onDuplicate, on
         onClick={() => onClick(id)}
       >
         <span>{name}</span>
-        {isActive && (
-          <button
-            ref={menuBtnRef}
-            onClick={openMenu}
-            className="dt-tab-edit-btn"
-            title="Tab options"
-            aria-label={`Options for ${name}`}
-            aria-haspopup="menu"
-            aria-expanded={menuOpen}
-          >
-            <MoreHorizontalIcon size={12} />
-          </button>
-        )}
+        <button
+          ref={menuBtnRef}
+          onClick={isActive ? openMenu : undefined}
+          className="dt-tab-edit-btn"
+          title={isActive ? 'Tab options' : undefined}
+          aria-label={isActive ? `Options for ${name}` : undefined}
+          aria-haspopup={isActive ? 'menu' : undefined}
+          aria-expanded={isActive ? menuOpen : undefined}
+          tabIndex={isActive ? undefined : -1}
+          style={{ visibility: isActive ? 'visible' : 'hidden' }}
+        >
+          <MoreHorizontalIcon size={12} />
+        </button>
       </div>
       {menuOpen && menuPos && createPortal(
         <>

@@ -85,6 +85,12 @@ select option { background-color: var(--color-background-elevated); color: var(-
   .dt-outline-btn { display: inline-flex; align-items: center; gap: var(--space-xs); font: var(--font-label-medium); letter-spacing: var(--letter-spacing-label); color: var(--color-foreground-default); background-color: var(--color-background-elevated); border: 1px solid var(--color-border-default); border-radius: var(--radius-md); padding: var(--space-sm) var(--space-md); cursor: pointer; box-shadow: var(--shadow-sm); transition: background-color var(--duration-fast) var(--easing-default), border-color var(--duration-fast) var(--easing-default); }
   .dt-outline-btn:hover { background-color: var(--color-background-alt); border-color: var(--color-foreground-muted); }
   .dt-outline-btn:focus-visible { outline: none; box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-background-action) 18%, transparent); border-color: var(--color-border-focus); }
+  /* Avatar stack — overlapping circular avatars with +N overflow count */
+  .dt-avatar-stack { display: flex; align-items: center; flex-direction: row-reverse; }
+  .dt-avatar { display: inline-flex; align-items: center; justify-content: center; width: 28px; height: 28px; border-radius: 50%; font-size: 10px; font-weight: 600; letter-spacing: 0.02em; border: 2px solid var(--color-background-elevated); box-sizing: border-box; margin-left: -6px; position: relative; flex-shrink: 0; }
+  .dt-avatar-stack .dt-avatar:last-child { margin-left: 0; }
+  .dt-avatar-overflow { background-color: var(--color-foreground-default); color: var(--color-background-elevated); font-size: 9px; }
+
   .dt-split-btn { position: relative; display: inline-flex; align-items: stretch; box-shadow: var(--shadow-sm); border-radius: var(--radius-md); }
   .dt-split-btn-main { display: inline-flex; align-items: center; gap: var(--space-6); font: var(--font-label-medium); letter-spacing: var(--letter-spacing-label); color: var(--color-foreground-on-action); background-color: var(--color-background-action); border: 1px solid var(--color-background-action); border-right: none; border-radius: var(--radius-md) 0 0 var(--radius-md); padding: var(--space-sm) var(--space-md); cursor: pointer; transition: background-color var(--duration-fast) var(--easing-default); }
   .dt-split-btn-main:hover { background-color: var(--color-background-action-hover); border-color: var(--color-background-action-hover); }
@@ -122,8 +128,6 @@ select option { background-color: var(--color-background-elevated); color: var(-
   .dt-table-edge tr:not(.dt-child-row) td.dt-col-actions,
   .dt-table-edge th.dt-col-actions-head { border-left: none; }
   /* Spacer column — absorbs remaining viewport width, no chrome */
-  .dt-table-edge th.dt-col-spacer,
-  .dt-table-edge td.dt-col-spacer { border-left: none; padding: 0; }
 
   /* Data Attribute column — hidden but JSX/state kept intact for easy re-enable */
   .dt-col-data-attribute { display: none; }
@@ -345,7 +349,7 @@ select option { background-color: var(--color-background-elevated); color: var(-
      and the same fixed-to-longest-label width so picker chrome doesn't reflow
      when the user changes the selected option. */
   .dt-select-trigger { appearance: none; display: inline-flex; align-items: center; justify-content: space-between; gap: var(--space-2xs); width: 148px; min-height: var(--control-height-md); box-sizing: border-box; background-color: var(--color-background-default); border: 1px solid var(--color-border-default); color: var(--color-foreground-default); font: var(--font-body-medium); letter-spacing: var(--letter-spacing-label); border-radius: var(--radius-sm); padding: 0 var(--space-sm); white-space: nowrap; cursor: pointer; transition: border-color var(--duration-fast) var(--easing-default), background-color var(--duration-fast) var(--easing-default); }
-  .dt-select-trigger:hover { border-color: var(--color-foreground-muted); }
+  .dt-select-trigger:hover { border-color: var(--color-foreground-muted); background-color: var(--color-background-hover); }
   .dt-select-trigger:focus-visible { outline: none; box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-background-action) 18%, transparent); border-color: var(--color-border-focus); background-color: var(--color-background-elevated); }
   .dt-select-chevron { color: var(--color-foreground-muted); flex-shrink: 0; }
 
@@ -489,7 +493,7 @@ select option { background-color: var(--color-background-elevated); color: var(-
      below in .dt-child-row-last) to separate the group from the next parent. */
   .dt-child-row { background-color: var(--color-background-hover); border-bottom: none; }
   .dt-child-row:hover { background-color: color-mix(in srgb, var(--color-background-hover) 88%, var(--color-background-action) 12%); }
-  .dt-child-row .dt-col-sticky { background-color: var(--color-background-hover); z-index: 4; }
+  .dt-child-row .dt-col-sticky,
   .dt-child-row .dt-col-sticky-num { background-color: var(--color-background-hover); }
   .dt-child-row:hover .dt-col-sticky,
   .dt-child-row:hover .dt-col-sticky-num { background-color: color-mix(in srgb, var(--color-background-hover) 88%, var(--color-background-action) 12%); }
@@ -503,15 +507,12 @@ select option { background-color: var(--color-background-elevated); color: var(-
      sticky as part of the # column, so layer the sticky-num behavior with
      the relative positioning trick by promoting the sticky position itself
      to be the containing block (sticky already establishes one). */
-  .dt-child-connector-cell { padding: 0 !important; }
-  /* z-index: 3 so the tree-line can overflow into the rule-name cell without
-     being painted over by that cell's background (both sticky, same z-index
-     means later DOM order wins — bumping the connector cell above that). */
-  .dt-child-connector-cell.dt-col-sticky-num { position: sticky; left: 0; z-index: 3; background-color: var(--color-background-hover); }
+  /* Tree line lives in the name cell now so chip and line share the same stacking context */
+  .dt-child-connector-cell.dt-col-sticky-num { position: sticky; left: 0; z-index: 2; background-color: var(--color-background-hover); }
   .dt-child-tree-line {
-    /* Vertical segment — full row height; cropped to 50% on the last child */
+    /* Vertical segment — runs the full row height; cropped on last child */
     position: absolute; top: 0; bottom: 0;
-    left: calc(100% + 12px); /* aligns with the rule-name input's left edge */
+    left: 0; /* left edge of the name cell (sticky boundary) */
     width: 2px;
     background-color: color-mix(in srgb, var(--color-foreground-action) 40%, var(--color-border-elevated));
   }
@@ -529,7 +530,8 @@ select option { background-color: var(--color-background-elevated); color: var(-
   .dt-child-row-last .dt-child-tree-line { bottom: 30%; }
 
   /* Child rule name layout: AND/OR chip inline-left of name input; left edge aligns with parent name input */
-  .dt-child-name-wrap { display: flex; align-items: center; gap: var(--space-sm); min-width: 0; }
+  /* position: relative + z-index: 1 ensures chip renders above the absolutely-positioned tree line */
+  .dt-child-name-wrap { display: flex; align-items: center; gap: var(--space-sm); min-width: 0; position: relative; z-index: 1; }
 
   /* Column header label + reveal overflow icon */
   .dt-th-label-wrap { display: flex; align-items: center; justify-content: space-between; gap: var(--space-xs); }

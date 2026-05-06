@@ -244,9 +244,6 @@ export function RuleRow({
         />
       </td>
 
-      {/* Spacer — absorbs remaining viewport width so Outcome stays compact */}
-      <td className="dt-col-spacer"></td>
-
       {/* Actions */}
       <td className="px-3 py-2.5 dt-col-actions" data-menu-open={openMenuId === rule.id || undefined}>
         <div ref={actionsAnchorRef} className="relative inline-block">

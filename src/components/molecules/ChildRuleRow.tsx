@@ -64,9 +64,8 @@ export function ChildRuleRow({
       {/* Checkbox column — empty for children */}
       <td className="dt-child-cell-bare px-3 py-2.5"></td>
 
-      {/* Drag handle / # column — CSS-drawn tree connector + warning marker when invalid */}
+      {/* Drag handle / # column — warning marker when invalid */}
       <td className="dt-child-cell-bare dt-child-connector-cell dt-col-sticky-num px-2 py-2.5">
-        <span className="dt-child-tree-line" aria-hidden="true" />
         {isInvalid && (
           <span
             className="dt-row-warning dt-child-row-warning"
@@ -79,8 +78,9 @@ export function ChildRuleRow({
         )}
       </td>
 
-      {/* Rule Name (sticky) — AND/OR chip only; no name input for child rows */}
+      {/* Rule Name (sticky) — AND/OR chip only; tree line lives here so chip stacks above it */}
       <td className="dt-col-sticky dt-child-name-cell pl-3 pr-3 py-2.5">
+        <span className="dt-child-tree-line" aria-hidden="true" />
         <div className="dt-child-name-wrap">
           <LogicOperatorSelect
             value={op}
@@ -120,9 +120,6 @@ export function ChildRuleRow({
 
       {/* Outcome — children inherit the parent outcome implicitly; cell stays empty to keep column alignment */}
       <td className="px-3 py-2.5"></td>
-
-      {/* Spacer */}
-      <td className="dt-col-spacer"></td>
 
       {/* Actions */}
       <td className="px-3 py-2.5 dt-col-actions" data-menu-open={menuOpen || undefined}>

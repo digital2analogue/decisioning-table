@@ -305,13 +305,14 @@ export function DecisioningTable({
               </div>
             </th>
             <th className="dt-th px-3 py-2.5 text-left tracking-wider w-[190px]">Outcome</th>
+            <th className="dt-col-spacer"></th>
             <th className="dt-col-actions-head w-10 px-3 py-2.5"></th>
           </tr>
         </thead>
         <tbody>
           {ruleset.rules.length === 0 ? (
             <tr>
-              <td colSpan={8} className="dt-empty-cell">
+              <td colSpan={9} className="dt-empty-cell">
                 <div className="dt-empty-state">
                   <TableIcon size={24} className="dt-empty-icon" />
                   <p className="dt-empty-title">No rules yet</p>
@@ -321,7 +322,7 @@ export function DecisioningTable({
             </tr>
           ) : filterActive && visibleCount === 0 ? (
             <tr>
-              <td colSpan={8} className="dt-empty-cell">
+              <td colSpan={9} className="dt-empty-cell">
                 <div className="dt-empty-state">
                   <p className="dt-empty-title">No rules match "{ruleNameQuery}"</p>
                   <p className="dt-empty-subtitle">Clear the search to see all rules.</p>
@@ -383,7 +384,7 @@ export function DecisioningTable({
               Mirrors the toolbar split-button: clicking opens a small menu with
               "Add rule" + "Add existing rule" so users can pick either path inline. */}
           <tr className="dt-add-rule-row">
-            <td colSpan={8} className="dt-add-rule-row-cell">
+            <td colSpan={9} className="dt-add-rule-row-cell">
               <div ref={addRuleWrapRef} className="dt-add-rule-row-wrap">
                 <button
                   type="button"

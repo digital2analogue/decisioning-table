@@ -121,6 +121,9 @@ select option { background-color: var(--color-background-elevated); color: var(-
      Must use tr:not(.dt-child-row) to beat the specificity of the adding rule above. */
   .dt-table-edge tr:not(.dt-child-row) td.dt-col-actions,
   .dt-table-edge th.dt-col-actions-head { border-left: none; }
+  /* Spacer column — absorbs remaining viewport width, no chrome */
+  .dt-table-edge th.dt-col-spacer,
+  .dt-table-edge td.dt-col-spacer { border-left: none; padding: 0; }
 
   /* Data Attribute column — hidden but JSX/state kept intact for easy re-enable */
   .dt-col-data-attribute { display: none; }

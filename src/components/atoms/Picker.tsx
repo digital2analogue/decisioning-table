@@ -29,8 +29,8 @@ export interface PickerProps<T extends string> {
   options: PickerOption<T>[]
   placeholder?: string
   triggerVariant: PickerTriggerVariant
-  /** Pixel width for the trigger. Pass `'auto'` for natural sizing. */
-  width?: number | 'auto'
+  /** Pixel width for the trigger. Pass `'full'` to fill the parent container. */
+  width?: number | 'full'
   ariaLabel: string
   title?: string
   /** Marks the trigger in error state — consumed by Phase 3 per-cell error styling. */
@@ -82,6 +82,9 @@ export function Picker<T extends string>({
   const [isOpen, setIsOpen] = useState(false)
   const [pos, setPos] = useState<DropdownPos | null>(null)
   const [focusedIdx, setFocusedIdx] = useState<number>(-1)
+  // True only when focus movement came from keyboard — prevents mouse-hover
+  // from painting the inset focus ring (CSS :hover already handles background).
+  const focusFromKeyboard = useRef(false)
   const typeaheadBuffer = useRef<{ str: string; timer: number | null }>({
     str: '',
     timer: null,
@@ -106,6 +109,7 @@ export function Picker<T extends string>({
         focusFirst === 'selected' && selectedOption
           ? options.findIndex((o) => o.value === selectedOption.value)
           : 0
+      focusFromKeyboard.current = focusFirst !== undefined
       setFocusedIdx(focusFirst ? Math.max(0, startIdx) : -1)
     },
     [options, selectedOption],
@@ -194,6 +198,7 @@ export function Picker<T extends string>({
 
   function cycleFocus(dir: 1 | -1) {
     if (options.length === 0) return
+    focusFromKeyboard.current = true
     setFocusedIdx((idx) => {
       const next = idx === -1 ? (dir === 1 ? 0 : options.length - 1) : idx + dir
       if (next < 0) return options.length - 1
@@ -216,6 +221,7 @@ export function Picker<T extends string>({
   )
 
   const triggerStyle: React.CSSProperties =
+    width === 'full' ? { width: '100%' } :
     typeof width === 'number' ? { width } : {}
 
   return (
@@ -276,7 +282,7 @@ export function Picker<T extends string>({
                 aria-selected={isActive}
                 tabIndex={-1}
                 data-focused={isFocused || undefined}
-                onMouseEnter={() => setFocusedIdx(idx)}
+                onMouseEnter={() => { focusFromKeyboard.current = false; setFocusedIdx(idx) }}
                 onMouseDown={(e) => {
                   e.preventDefault()
                   select(opt.value)
@@ -284,7 +290,7 @@ export function Picker<T extends string>({
                 className={cn(
                   'dt-conditional-dropdown-item',
                   isActive && 'dt-conditional-dropdown-item-active',
-                  isFocused && 'dt-conditional-dropdown-item-focused',
+                  isFocused && focusFromKeyboard.current && 'dt-conditional-dropdown-item-focused',
                 )}
               >
                 {renderOption ? (

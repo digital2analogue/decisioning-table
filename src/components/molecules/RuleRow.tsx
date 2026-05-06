@@ -32,10 +32,9 @@ import { cn } from '../../lib/utils'
 import { Checkbox } from '../atoms/Checkbox'
 import { AttributeSelectBadge, OutcomeBadge } from '../atoms/Badge'
 import { IconButton } from '../atoms/IconButton'
-import { AmountCell } from '../atoms/AmountCell'
-import { OperatorSelect } from './OperatorSelect'
 import { ActionsMenu } from './ActionsMenu'
 import { ConditionalCell } from './ConditionalCell'
+import { AccountTypeCell } from './AccountTypeCell'
 
 export const DND_TYPE = 'RULE_ROW'
 
@@ -158,40 +157,41 @@ export function RuleRow({
         />
       </td>
 
-      {/* Drag handle + Row # (or warning icon when invalid) */}
-      <td ref={handleRef} className="dt-drag-handle-cell dt-col-sticky-num px-2 py-2.5 text-center">
-        <DragGrip />
-        {isInvalid ? (
-          <span
-            className="dt-row-warning"
-            role="img"
-            aria-label={`Incomplete rule: missing ${missing.join(', ')}`}
-            title={`Missing: ${missing.join(', ')}`}
-          >
-            <AlertTriangleIcon size={20} fill="currentColor" stroke="var(--color-background-warning-subtle)" />
-          </span>
-        ) : (
-          <span className="dt-row-number">{index + 1}</span>
-        )}
-      </td>
-
-      {/* Rule Name */}
-      <td className="dt-col-sticky px-3 py-2.5 max-w-[260px]">
-        <div className="dt-parent-name-wrap">
+      {/* Drag grip + expand toggle + Row # — grip at left edge, adjacent to checkbox */}
+      <td ref={handleRef} className="dt-drag-handle-cell dt-col-sticky-num px-2 py-2.5">
+        <div className="dt-drag-handle-inner">
+          <DragGrip />
           {hasChildren ? (
             <button
               type="button"
               onClick={() => onToggleExpand(rule.id)}
               className="dt-expand-toggle"
               aria-expanded={isExpanded}
-              aria-label={isExpanded ? 'Collapse sub-conditions' : 'Expand sub-conditions'}
-              title={isExpanded ? 'Collapse sub-conditions' : 'Expand sub-conditions'}
+              aria-label={isExpanded ? 'Collapse child rules' : 'Expand child rules'}
+              title={isExpanded ? 'Collapse child rules' : 'Expand child rules'}
             >
               <ChevronRightIcon size={14} />
             </button>
           ) : (
             <span className="dt-expand-toggle-spacer" aria-hidden="true" />
           )}
+          {isInvalid && (
+            <span
+              className="dt-row-warning"
+              role="img"
+              aria-label={`Incomplete rule: missing ${missing.join(', ')}`}
+              title={`Missing: ${missing.join(', ')}`}
+            >
+              <AlertTriangleIcon size={16} fill="currentColor" stroke="white" strokeWidth={1.5} />
+            </span>
+          )}
+          <span className="dt-row-number">{index + 1}</span>
+        </div>
+      </td>
+
+      {/* Rule Name */}
+      <td className="dt-col-sticky px-3 py-2.5">
+        <div className="dt-parent-name-wrap">
           <input
             ref={nameInputRef}
             type="text"
@@ -202,11 +202,6 @@ export function RuleRow({
             title={rule.ruleName}
             aria-invalid={missing.includes('rule name') || undefined}
           />
-          {hasChildren && (
-            <span className="dt-sub-count" title={`${childCount} sub-condition${childCount === 1 ? '' : 's'}`}>
-              ({childCount})
-            </span>
-          )}
         </div>
       </td>
 
@@ -215,47 +210,27 @@ export function RuleRow({
         <AttributeSelectBadge
           value={rule.dataAttribute}
           onChange={(v) => onUpdate(rule.id, { dataAttribute: v })}
-          error={missing.includes('data attribute')}
+          error={false}
         />
       </td>
 
-      {/* Operator */}
-      <td className="px-3 py-2.5">
-        <OperatorSelect
-          value={rule.operator}
-          onChange={(v) => onUpdate(rule.id, { operator: v })}
-          error={missing.includes('operator')}
-        />
-      </td>
-
-      {/* Amount */}
-      <td className="px-3 py-2.5">
-        <AmountCell
-          value={rule.amount}
-          onChange={(amount) => onUpdate(rule.id, { amount })}
-          error={missing.includes('amount')}
-        />
-      </td>
-
-      {/* Existing Account */}
+      {/* Existing Account — account type picker, no operator */}
       <td className="px-3 py-2.5 min-w-[200px]">
-        <ConditionalCell
-          operator={rule.existingAccountOperator}
-          variable={rule.existingAccountVariable}
-          onOperatorChange={(op) => onUpdate(rule.id, { existingAccountOperator: op })}
-          onVariableChange={(v) => onUpdate(rule.id, { existingAccountVariable: v })}
-          variablePlaceholder="Select variable"
+        <AccountTypeCell
+          value={rule.existingAccountVariable}
+          onChange={(v) => onUpdate(rule.id, { existingAccountVariable: v })}
         />
       </td>
 
-      {/* Annual Income */}
-      <td className="px-3 py-2.5 min-w-[200px]">
+      {/* Annual Income — operator + dollar amount */}
+      <td className="px-3 py-2.5 min-w-[220px]">
         <ConditionalCell
           operator={rule.annualIncomeOperator}
           variable={rule.annualIncomeVariable}
           onOperatorChange={(op) => onUpdate(rule.id, { annualIncomeOperator: op })}
           onVariableChange={(v) => onUpdate(rule.id, { annualIncomeVariable: v })}
-          variablePlaceholder="Enter value"
+          variablePlaceholder="Amount"
+          variableType="amount"
         />
       </td>
 
@@ -270,15 +245,16 @@ export function RuleRow({
       </td>
 
       {/* Actions */}
-      <td className="px-3 py-2.5">
+      <td className="px-3 py-2.5 dt-col-actions" data-menu-open={openMenuId === rule.id || undefined}>
         <div ref={actionsAnchorRef} className="relative inline-block">
           <IconButton
             onClick={() => onMenuToggle(rule.id)}
+            className="dt-toolbar-btn"
             ariaLabel={`Row actions for ${rule.ruleName || `rule ${index + 1}`}`}
             ariaHasPopup="menu"
             ariaExpanded={openMenuId === rule.id}
           >
-            <MoreHorizontalIcon size={16} />
+            <MoreHorizontalIcon size={18} />
           </IconButton>
           {openMenuId === rule.id && (
             <ActionsMenu

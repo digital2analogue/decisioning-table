@@ -3,7 +3,7 @@ import { createPortal } from 'react-dom'
 
 export interface ActionsMenuProps {
   anchorRef: RefObject<HTMLElement | null>
-  /** Optional — only render the "Add sub-condition" item when provided (parent rules only). */
+  /** Optional — only render the "Add child rule" item when provided (parent rules only). */
   onAddChild?: () => void
   onDuplicate: () => void
   onDelete: () => void
@@ -11,6 +11,8 @@ export interface ActionsMenuProps {
   /** Reorder handlers — disabled when undefined (top/bottom of list). */
   onMoveUp?: () => void
   onMoveDown?: () => void
+  /** When true, delete label reads "Delete child rule" instead of "Delete rule". */
+  isChild?: boolean
 }
 
 export function ActionsMenu({
@@ -21,6 +23,7 @@ export function ActionsMenu({
   onClose,
   onMoveUp,
   onMoveDown,
+  isChild,
 }: ActionsMenuProps) {
   const [pos, setPos] = useState<{ top: number; right: number } | null>(null)
 
@@ -67,7 +70,7 @@ export function ActionsMenu({
         <hr className="dt-menu-divider" />
         {onAddChild && (
           <button type="button" role="menuitem" onClick={() => { onAddChild(); onClose() }} className="dt-menu-item">
-            Add sub-condition
+            Add child rule
           </button>
         )}
         <button type="button" role="menuitem" onClick={onDuplicate} className="dt-menu-item">
@@ -75,7 +78,7 @@ export function ActionsMenu({
         </button>
         <hr className="dt-menu-divider" />
         <button type="button" role="menuitem" onClick={onDelete} className="dt-menu-item-danger">
-          Delete rule
+          {isChild ? 'Delete child rule' : 'Delete rule'}
         </button>
       </div>
     </>,

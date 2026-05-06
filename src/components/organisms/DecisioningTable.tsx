@@ -1,11 +1,12 @@
 import { Fragment, useEffect, useRef, useState } from 'react'
-import { PlusIcon, TableIcon } from 'lucide-react'
+import { MoreHorizontalIcon, PlusIcon, TableIcon } from 'lucide-react'
 import type { Rule, Ruleset } from '../../types'
 import { isRuleTouched } from '../../types'
 import { Checkbox } from '../atoms/Checkbox'
 import { RuleRow } from '../molecules/RuleRow'
 import { ChildRuleRow } from '../molecules/ChildRuleRow'
 import { Toast } from '../molecules/Toast'
+import { ColumnHeaderMenu } from '../molecules/ColumnHeaderMenu'
 
 interface ToastState {
   message: string
@@ -35,6 +36,9 @@ export function DecisioningTable({
   onAutoFocusConsumed,
 }: DecisioningTableProps) {
   const [openMenuId, setOpenMenuId] = useState<string | null>(null)
+  const [openColumnMenuId, setOpenColumnMenuId] = useState<string | null>(null)
+  const existingAccountBtnRef = useRef<HTMLButtonElement>(null)
+  const annualIncomeBtnRef = useRef<HTMLButtonElement>(null)
   const [toast, setToast] = useState<ToastState | null>(null)
 
   const normalizedQuery = ruleNameQuery.trim().toLowerCase()
@@ -265,21 +269,49 @@ export function DecisioningTable({
                 onChange={toggleAll}
               />
             </th>
-            <th className="dt-th dt-col-sticky-num-head w-14 px-2 py-2.5 text-center tracking-wider">#</th>
-            <th className="dt-th dt-col-sticky-head px-3 py-2.5 text-left tracking-wider min-w-[260px]">Rule name</th>
+            <th className="dt-th dt-col-sticky-num-head w-14 px-2 py-2.5 text-right tracking-wider">#</th>
+            <th className="dt-th dt-col-sticky-head px-3 py-2.5 text-left tracking-wider w-[220px] max-w-[220px]">Rule name</th>
             <th className="dt-th dt-col-data-attribute px-3 py-2.5 text-left tracking-wider min-w-[140px]">Data attribute</th>
-            <th className="dt-th px-3 py-2.5 text-left tracking-wider w-[110px]">Operator</th>
-            <th className="dt-th px-3 py-2.5 text-left tracking-wider min-w-[120px]">Amount</th>
-            <th className="dt-th px-3 py-2.5 text-left tracking-wider min-w-[160px]">Existing Account</th>
-            <th className="dt-th px-3 py-2.5 text-left tracking-wider min-w-[160px]">Annual Income</th>
-            <th className="dt-th px-3 py-2.5 text-left tracking-wider w-[110px]">Outcome</th>
-            <th className="w-10 px-3 py-2.5"></th>
+            <th className="dt-th px-3 py-2.5 text-left tracking-wider w-[260px] max-w-[260px]">
+              <div className="dt-th-label-wrap">
+                <span>Existing Account</span>
+                <button
+                  ref={existingAccountBtnRef}
+                  type="button"
+                  className="dt-icon-btn dt-icon-reveal dt-th-menu-btn"
+                  aria-label="Existing Account column options"
+                  aria-haspopup="menu"
+                  aria-expanded={openColumnMenuId === 'existing-account'}
+                  onClick={() => setOpenColumnMenuId(openColumnMenuId === 'existing-account' ? null : 'existing-account')}
+                >
+                  <MoreHorizontalIcon size={14} />
+                </button>
+              </div>
+            </th>
+            <th className="dt-th px-3 py-2.5 text-left tracking-wider w-[280px] max-w-[280px]">
+              <div className="dt-th-label-wrap">
+                <span>Annual Income</span>
+                <button
+                  ref={annualIncomeBtnRef}
+                  type="button"
+                  className="dt-icon-btn dt-icon-reveal dt-th-menu-btn"
+                  aria-label="Annual Income column options"
+                  aria-haspopup="menu"
+                  aria-expanded={openColumnMenuId === 'annual-income'}
+                  onClick={() => setOpenColumnMenuId(openColumnMenuId === 'annual-income' ? null : 'annual-income')}
+                >
+                  <MoreHorizontalIcon size={14} />
+                </button>
+              </div>
+            </th>
+            <th className="dt-th px-3 py-2.5 text-left tracking-wider w-[190px]">Outcome</th>
+            <th className="dt-col-actions-head w-10 px-3 py-2.5"></th>
           </tr>
         </thead>
         <tbody>
           {ruleset.rules.length === 0 ? (
             <tr>
-              <td colSpan={11} className="dt-empty-cell">
+              <td colSpan={8} className="dt-empty-cell">
                 <div className="dt-empty-state">
                   <TableIcon size={24} className="dt-empty-icon" />
                   <p className="dt-empty-title">No rules yet</p>
@@ -289,7 +321,7 @@ export function DecisioningTable({
             </tr>
           ) : filterActive && visibleCount === 0 ? (
             <tr>
-              <td colSpan={11} className="dt-empty-cell">
+              <td colSpan={8} className="dt-empty-cell">
                 <div className="dt-empty-state">
                   <p className="dt-empty-title">No rules match "{ruleNameQuery}"</p>
                   <p className="dt-empty-subtitle">Clear the search to see all rules.</p>
@@ -333,10 +365,6 @@ export function DecisioningTable({
                       parentId={rule.id}
                       childIndex={ci}
                       totalChildren={children.length}
-                      // Tree connector ends at the LAST real child. The inline
-                      // add-child row below is a separate quiet affordance
-                      // (no tree decoration) — sits in the children group's
-                      // visual space but isn't part of the tree.
                       isLast={ci === children.length - 1}
                       menuOpen={openMenuId === child.id}
                       onMenuToggle={() => setOpenMenuId(openMenuId === child.id ? null : child.id)}
@@ -345,27 +373,8 @@ export function DecisioningTable({
                       onDelete={deleteChild}
                       onDuplicate={duplicateChild}
                       onMove={moveChild}
-                      autoFocus={autoFocusRuleId === child.id}
-                      onAutoFocusConsumed={onAutoFocusConsumed}
                     />
                   ))}
-                  {expanded && children.length > 0 && (
-                    <tr className="dt-tbody-row dt-child-row dt-add-child-row">
-                      <td className="dt-child-cell-bare px-3 py-2.5"></td>
-                      <td className="dt-child-cell-bare dt-col-sticky-num px-2 py-2.5"></td>
-                      <td className="dt-col-sticky dt-child-name-cell dt-add-child-row-cell">
-                        <button
-                          type="button"
-                          onClick={() => handleAddChild(rule.id)}
-                          className="dt-add-child-row-btn"
-                        >
-                          <PlusIcon size={14} />
-                          <span>Add sub-condition</span>
-                        </button>
-                      </td>
-                      <td colSpan={8} className="dt-child-cell-bare"></td>
-                    </tr>
-                  )}
                 </Fragment>
               )
             })
@@ -374,7 +383,7 @@ export function DecisioningTable({
               Mirrors the toolbar split-button: clicking opens a small menu with
               "Add rule" + "Add existing rule" so users can pick either path inline. */}
           <tr className="dt-add-rule-row">
-            <td colSpan={11} className="dt-add-rule-row-cell">
+            <td colSpan={8} className="dt-add-rule-row-cell">
               <div ref={addRuleWrapRef} className="dt-add-rule-row-wrap">
                 <button
                   type="button"
@@ -418,6 +427,22 @@ export function DecisioningTable({
           actionLabel="Undo"
           onAction={toast.undo}
           onDismiss={() => setToast(null)}
+        />
+      )}
+      {openColumnMenuId === 'existing-account' && (
+        <ColumnHeaderMenu
+          anchorRef={existingAccountBtnRef}
+          onChangeDataElement={() => console.log('Change Data Element: Existing Account')}
+          onDelete={() => console.log('Delete column: Existing Account')}
+          onClose={() => setOpenColumnMenuId(null)}
+        />
+      )}
+      {openColumnMenuId === 'annual-income' && (
+        <ColumnHeaderMenu
+          anchorRef={annualIncomeBtnRef}
+          onChangeDataElement={() => console.log('Change Data Element: Annual Income')}
+          onDelete={() => console.log('Delete column: Annual Income')}
+          onClose={() => setOpenColumnMenuId(null)}
         />
       )}
     </div>

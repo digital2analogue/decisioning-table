@@ -1,7 +1,8 @@
 import { useState, useRef, useEffect } from 'react'
-import { ChevronDownIcon, PencilIcon, CheckIcon, PlayIcon, PlusIcon } from 'lucide-react'
+import { ChevronDownIcon, PlusIcon } from 'lucide-react'
+import { AppIcon } from '../atoms/AppIcon'
 import type { Rule, Ruleset, ModelConfig } from '../../types'
-import { initialRulesets } from '../../data'
+import { initialRulesets as defaultRulesets } from '../../data'
 import { DecisioningTable } from '../organisms/DecisioningTable'
 import { RulesetTabs } from '../organisms/RulesetTabs'
 import { ValidationBanner } from '../molecules/ValidationBanner'
@@ -9,11 +10,13 @@ import { RuleSearch } from '../molecules/RuleSearch'
 
 interface DecisioningEngineProps {
   modelConfig?: ModelConfig | null
+  initialRulesets?: Ruleset[]
 }
 
-export function DecisioningEngine({ modelConfig }: DecisioningEngineProps) {
-  const [rulesets, setRulesets] = useState<Ruleset[]>(initialRulesets)
-  const [activeRulesetId, setActiveRulesetId] = useState(initialRulesets[0].id)
+export function DecisioningEngine({ modelConfig, initialRulesets }: DecisioningEngineProps) {
+  const rulesetSeed = initialRulesets ?? defaultRulesets
+  const [rulesets, setRulesets] = useState<Ruleset[]>(rulesetSeed)
+  const [activeRulesetId, setActiveRulesetId] = useState(rulesetSeed[0].id)
   // ID of the most recently added rule — RuleRow uses this to autofocus its
   // name input on mount so the user can immediately start typing.
   const [autoFocusRuleId, setAutoFocusRuleId] = useState<string | null>(null)
@@ -23,28 +26,13 @@ export function DecisioningEngine({ modelConfig }: DecisioningEngineProps) {
   const defaultTitle = modelConfig?.modelName ?? 'My Decision Model'
   const [titleDraft, setTitleDraft] = useState(defaultTitle)
   const [title, setTitle] = useState(defaultTitle)
-  const [editingDesc, setEditingDesc] = useState(false)
-  const defaultDesc = modelConfig?.modelDescription ?? ''
-  const [descDraft, setDescDraft] = useState(defaultDesc)
-  const [desc, setDesc] = useState(defaultDesc)
   const titleInputRef = useRef<HTMLInputElement>(null)
-  const descInputRef = useRef<HTMLInputElement>(null)
 
   const activeRuleset = rulesets.find((rs) => rs.id === activeRulesetId)!
 
   useEffect(() => {
     if (editingTitle) titleInputRef.current?.focus()
   }, [editingTitle])
-
-  useEffect(() => {
-    if (editingDesc) descInputRef.current?.focus()
-  }, [editingDesc])
-
-  function commitDesc() {
-    const trimmed = descDraft.trim()
-    setDesc(trimmed)
-    setEditingDesc(false)
-  }
 
   function commitTitle() {
     const trimmed = titleDraft.trim()
@@ -65,6 +53,38 @@ export function DecisioningEngine({ modelConfig }: DecisioningEngineProps) {
     }
     setRulesets((prev) => [...prev, newRuleset])
     setActiveRulesetId(id)
+  }
+
+  function duplicateRuleset(id: string) {
+    const source = rulesets.find((rs) => rs.id === id)
+    if (!source) return
+    const newId = `rs-${Date.now()}`
+    const dup: Ruleset = {
+      id: newId,
+      name: `${source.name} (copy)`,
+      rules: source.rules.map((r) => ({
+        ...r,
+        id: `${r.id}-d${Date.now()}`,
+        children: r.children?.map((c, i) => ({ ...c, id: `${c.id}-d${i}` })),
+      })),
+    }
+    const idx = rulesets.findIndex((rs) => rs.id === id)
+    setRulesets((prev) => {
+      const next = [...prev]
+      next.splice(idx + 1, 0, dup)
+      return next
+    })
+    setActiveRulesetId(newId)
+  }
+
+  function deleteRuleset(id: string) {
+    const idx = rulesets.findIndex((rs) => rs.id === id)
+    if (idx === -1 || rulesets.length <= 1) return
+    const next = rulesets.filter((rs) => rs.id !== id)
+    setRulesets(next)
+    if (activeRulesetId === id) {
+      setActiveRulesetId(next[Math.min(idx, next.length - 1)].id)
+    }
   }
 
   function addRule() {
@@ -94,7 +114,7 @@ export function DecisioningEngine({ modelConfig }: DecisioningEngineProps) {
     if (!rs) return
     const parent = rs.rules.find(r => r.id === parentId)
     if (!parent) return
-    // Empty draft sub-condition. logicOperator defaults to AND.
+    // Empty draft child rule. logicOperator defaults to AND.
     const newChild: Rule = {
       id: `rule-${Date.now()}`,
       selected: false,
@@ -118,90 +138,57 @@ export function DecisioningEngine({ modelConfig }: DecisioningEngineProps) {
   }
 
   return (
-    <div className="dt-page min-h-screen flex flex-col">
+    <div className="dt-page h-screen flex flex-col">
       {/* Header */}
-      <div className="dt-page-header px-6 py-4 flex items-center justify-between">
+      <div className="dt-page-header pl-4 pr-6 py-3 flex items-start justify-between">
         <div>
-          <div className="flex items-center gap-2 group/title">
-            {editingTitle ? (
-              <div className="flex items-center gap-2">
-                <input
-                  ref={titleInputRef}
-                  type="text"
-                  value={titleDraft}
-                  onChange={(e) => setTitleDraft(e.target.value)}
-                  onBlur={commitTitle}
-                  onKeyDown={(e) => {
-                    if (e.key === 'Enter') commitTitle()
-                    if (e.key === 'Escape') { setTitleDraft(title); setEditingTitle(false) }
-                  }}
-                  className="dt-toolbar-name-input"
-                  style={{ font: 'var(--font-title-small)' }}
-                />
-                <button onMouseDown={(e) => e.preventDefault()} onClick={commitTitle} className="dt-confirm-btn" title="Save">
-                  <CheckIcon size={14} />
-                </button>
+          <nav aria-label="Breadcrumb" className="dt-breadcrumb">
+            <span className="dt-breadcrumb-item dt-breadcrumb-inactive">Risk Engine</span>
+            <span className="dt-breadcrumb-sep" aria-hidden="true">/</span>
+            <span className="dt-breadcrumb-item dt-breadcrumb-inactive">Credit Policies</span>
+            <span className="dt-breadcrumb-sep" aria-hidden="true">/</span>
+            <span className="dt-breadcrumb-item">{title}</span>
+          </nav>
+          <div className="flex items-center gap-2 mt-1">
+            <AppIcon size={28} />
+            <div>
+              <div className="dt-page-title-row">
+                {editingTitle ? (
+                  <input
+                    ref={titleInputRef}
+                    type="text"
+                    value={titleDraft}
+                    onChange={(e) => setTitleDraft(e.target.value)}
+                    onBlur={commitTitle}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter') commitTitle()
+                      if (e.key === 'Escape') { setTitleDraft(title); setEditingTitle(false) }
+                    }}
+                    className="dt-toolbar-name-input"
+                  />
+                ) : (
+                  <div
+                    className="dt-editable-label"
+                    onClick={() => { setTitleDraft(title); setEditingTitle(true) }}
+                    tabIndex={0}
+                    onKeyDown={(e) => { if (e.key === 'Enter') { setTitleDraft(title); setEditingTitle(true) } }}
+                    title="Click to rename"
+                  >
+                    <h1 className="dt-page-title">{title}</h1>
+                  </div>
+                )}
+                <span className="dt-status-pill dt-status-active">Active</span>
               </div>
-            ) : (
-              <>
-                <h1 className="dt-page-title">{title}</h1>
-                <button
-                  onClick={() => { setTitleDraft(title); setEditingTitle(true) }}
-                  className="dt-icon-btn dt-icon-reveal dt-edit-cta"
-                  title="Rename"
-                >
-                  <PencilIcon size={12} />
-                  Edit
-                </button>
-              </>
-            )}
-          </div>
-          <div className="flex items-center gap-1.5 group/desc">
-            {editingDesc ? (
-              <div className="flex items-center gap-2">
-                <input
-                  ref={descInputRef}
-                  type="text"
-                  value={descDraft}
-                  onChange={(e) => setDescDraft(e.target.value)}
-                  onBlur={commitDesc}
-                  onKeyDown={(e) => {
-                    if (e.key === 'Enter') commitDesc()
-                    if (e.key === 'Escape') { setDescDraft(desc); setEditingDesc(false) }
-                  }}
-                  className="dt-page-subtitle-input"
-                  placeholder="Add a description…"
-                />
-                <button onMouseDown={(e) => e.preventDefault()} onClick={commitDesc} className="dt-confirm-btn" title="Save">
-                  <CheckIcon size={14} />
-                </button>
-              </div>
-            ) : (
-              <>
-                <p
-                  className={`dt-page-subtitle${!desc ? ' dt-page-subtitle--empty' : ''}`}
-                  onClick={() => { setDescDraft(desc); setEditingDesc(true) }}
-                >
-                  {desc || 'Add a description…'}
-                </p>
-                <button
-                  onClick={() => { setDescDraft(desc); setEditingDesc(true) }}
-                  className="dt-icon-btn dt-icon-reveal dt-edit-cta"
-                  title="Edit description"
-                >
-                  <PencilIcon size={12} />
-                  Edit
-                </button>
-              </>
-            )}
+              <p className="dt-page-meta">
+                Last updated <button type="button" className="dt-meta-link">2 hours ago</button> · {rulesets.reduce((n, rs) => n + rs.rules.length, 0)} rules across {rulesets.length} rulesets
+              </p>
+            </div>
           </div>
         </div>
-        <div className="flex items-center gap-3">
-          <button className="dt-test-model-btn">
-            <PlayIcon size={14} fill="currentColor" />
+        <div className="flex items-center gap-3 self-center">
+          <button type="button" className="dt-outline-btn">
             Test model
           </button>
-          <span className="dt-header-divider" aria-hidden="true" />
           <div className="dt-split-btn">
             <button onClick={addRule} className="dt-split-btn-main" type="button">
               <PlusIcon size={14} />
@@ -228,6 +215,10 @@ export function DecisioningEngine({ modelConfig }: DecisioningEngineProps) {
                   <button type="button" role="menuitem" className="dt-split-btn-menu-item" onClick={() => setChevronOpen(false)}>
                     Add existing rule
                   </button>
+                  <hr className="dt-split-btn-menu-divider" />
+                  <button type="button" role="menuitem" className="dt-split-btn-menu-item" onClick={() => setChevronOpen(false)}>
+                    Test and publish
+                  </button>
                 </div>
               </>
             )}
@@ -245,8 +236,8 @@ export function DecisioningEngine({ modelConfig }: DecisioningEngineProps) {
         <RuleSearch value={ruleNameQuery} onChange={setRuleNameQuery} />
       </div>
 
-      {/* Table area — edge-to-edge */}
-      <div className="flex-1">
+      {/* Table area — fills remaining viewport height; overflow handled inside dt-table-edge */}
+      <div className="flex-1 min-h-0 overflow-hidden">
         {activeRuleset && (
           <DecisioningTable
             ruleset={activeRuleset}
@@ -269,6 +260,9 @@ export function DecisioningEngine({ modelConfig }: DecisioningEngineProps) {
         onRename={(id, name) => {
           setRulesets((prev) => prev.map((rs) => rs.id === id ? { ...rs, name } : rs))
         }}
+        onDuplicate={duplicateRuleset}
+        onDelete={deleteRuleset}
+        onExport={(id) => console.log('Export ruleset', id)}
       />
     </div>
   )

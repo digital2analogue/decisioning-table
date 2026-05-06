@@ -1,6 +1,6 @@
 export type DataAttribute = 'Income' | 'Expense' | 'Asset' | 'Liability'
 export type Operator = '>' | '>=' | '<' | '<=' | '='
-export type ConditionalOperator = 'contains' | 'doesnotContain' | '==' | '!=' | '=null' | '!=null'
+export type ConditionalOperator = '==' | '!=' | '<' | '<=' | '>' | '>=' | '=null' | '!=null'
 export type Outcome = 'Approve' | 'Deny'
 
 // Onboarding types
@@ -66,12 +66,7 @@ export interface Rule {
  * not preconditions.
  */
 export function isReadyForOutcome(rule: Rule): boolean {
-  return Boolean(
-    rule.ruleName.trim() &&
-    rule.dataAttribute &&
-    rule.operator &&
-    rule.amount !== null
-  )
+  return Boolean(rule.ruleName.trim())
 }
 
 /**
@@ -117,9 +112,6 @@ export function isRuleTouched(rule: Rule): boolean {
 export function isEmptyDraft(rule: Rule): boolean {
   return (
     rule.ruleName === '' &&
-    rule.dataAttribute === null &&
-    rule.operator === null &&
-    rule.amount === null &&
     rule.existingAccountOperator === null &&
     rule.existingAccountVariable === '' &&
     rule.annualIncomeOperator === null &&
@@ -134,11 +126,8 @@ export function isEmptyDraft(rule: Rule): boolean {
  */
 export function missingFields(rule: Rule, forChild = false): string[] {
   const missing: string[] = []
-  if (!rule.ruleName.trim())       missing.push('rule name')
-  if (!rule.dataAttribute)         missing.push('data attribute')
-  if (!rule.operator)              missing.push('operator')
-  if (rule.amount === null)        missing.push('amount')
-  if (!forChild && !rule.outcome)  missing.push('outcome')
+  if (!rule.ruleName.trim())      missing.push('rule name')
+  if (!forChild && !rule.outcome) missing.push('outcome')
   return missing
 }
 

@@ -1,13 +1,12 @@
-import { useEffect, useRef } from 'react'
+import { useRef } from 'react'
 import { AlertTriangleIcon, MoreHorizontalIcon } from 'lucide-react'
 import type { Rule, LogicOperator } from '../../types'
 import { isChildRuleValid, isRuleTouched, isEmptyDraft, missingFields } from '../../types'
 import { cn } from '../../lib/utils'
 import { AttributeSelectBadge } from '../atoms/Badge'
 import { IconButton } from '../atoms/IconButton'
-import { AmountCell } from '../atoms/AmountCell'
-import { OperatorSelect } from './OperatorSelect'
 import { ConditionalCell } from './ConditionalCell'
+import { AccountTypeCell } from './AccountTypeCell'
 import { ActionsMenu } from './ActionsMenu'
 import { LogicOperatorSelect } from './LogicOperatorSelect'
 
@@ -25,10 +24,6 @@ export interface ChildRuleRowProps {
   onDelete: (parentId: string, childId: string) => void
   onDuplicate: (parentId: string, childId: string) => void
   onMove: (parentId: string, fromIdx: number, toIdx: number) => void
-  /** When true, focus the rule-name input on mount. */
-  autoFocus?: boolean
-  /** Called once autofocus has been applied so the parent can clear the marker. */
-  onAutoFocusConsumed?: () => void
 }
 
 export function ChildRuleRow({
@@ -44,18 +39,9 @@ export function ChildRuleRow({
   onDelete,
   onDuplicate,
   onMove,
-  autoFocus,
-  onAutoFocusConsumed,
 }: ChildRuleRowProps) {
   const actionsAnchorRef = useRef<HTMLDivElement>(null)
-  const nameInputRef = useRef<HTMLInputElement>(null)
 
-  useEffect(() => {
-    if (autoFocus && nameInputRef.current) {
-      nameInputRef.current.focus()
-      onAutoFocusConsumed?.()
-    }
-  }, [autoFocus, onAutoFocusConsumed])
   const op: LogicOperator = rule.logicOperator ?? 'AND'
   // Untouched drafts stay quiet — no warning icon, no tinted row bg —
   // until the user has set at least one field.
@@ -85,30 +71,20 @@ export function ChildRuleRow({
           <span
             className="dt-row-warning dt-child-row-warning"
             role="img"
-            aria-label={`Incomplete sub-condition: missing ${missing.join(', ')}`}
+            aria-label={`Incomplete child rule: missing ${missing.join(', ')}`}
             title={`Missing: ${missing.join(', ')}`}
           >
-            <AlertTriangleIcon size={16} fill="currentColor" stroke="var(--color-background-warning-subtle)" />
+            <AlertTriangleIcon size={16} fill="currentColor" stroke="white" strokeWidth={1.5} />
           </span>
         )}
       </td>
 
-      {/* Rule Name (sticky) — AND/OR picker + name input */}
-      <td className="dt-col-sticky dt-child-name-cell px-3 py-2.5">
+      {/* Rule Name (sticky) — AND/OR chip only; no name input for child rows */}
+      <td className="dt-col-sticky dt-child-name-cell pl-3 pr-3 py-2.5">
         <div className="dt-child-name-wrap">
           <LogicOperatorSelect
             value={op}
             onChange={(v) => onUpdate(parentId, rule.id, { logicOperator: v })}
-          />
-          <input
-            ref={nameInputRef}
-            type="text"
-            value={rule.ruleName}
-            onChange={(e) => onUpdate(parentId, rule.id, { ruleName: e.target.value })}
-            className={cn('dt-rule-name-input', missing.includes('rule name') && 'dt-cell-error')}
-            placeholder="Sub-condition…"
-            title={rule.ruleName}
-            aria-invalid={missing.includes('rule name') || undefined}
           />
         </div>
       </td>
@@ -118,47 +94,27 @@ export function ChildRuleRow({
         <AttributeSelectBadge
           value={rule.dataAttribute}
           onChange={(v) => onUpdate(parentId, rule.id, { dataAttribute: v })}
-          error={missing.includes('data attribute')}
+          error={false}
         />
       </td>
 
-      {/* Operator */}
-      <td className="px-3 py-2.5">
-        <OperatorSelect
-          value={rule.operator}
-          onChange={(v) => onUpdate(parentId, rule.id, { operator: v })}
-          error={missing.includes('operator')}
-        />
-      </td>
-
-      {/* Amount */}
-      <td className="px-3 py-2.5">
-        <AmountCell
-          value={rule.amount}
-          onChange={(amount) => onUpdate(parentId, rule.id, { amount })}
-          error={missing.includes('amount')}
-        />
-      </td>
-
-      {/* Existing Account */}
+      {/* Existing Account — account type picker, no operator */}
       <td className="px-3 py-2.5 min-w-[200px]">
-        <ConditionalCell
-          operator={rule.existingAccountOperator}
-          variable={rule.existingAccountVariable}
-          onOperatorChange={(o) => onUpdate(parentId, rule.id, { existingAccountOperator: o })}
-          onVariableChange={(v) => onUpdate(parentId, rule.id, { existingAccountVariable: v })}
-          variablePlaceholder="Select variable"
+        <AccountTypeCell
+          value={rule.existingAccountVariable}
+          onChange={(v) => onUpdate(parentId, rule.id, { existingAccountVariable: v })}
         />
       </td>
 
-      {/* Annual Income */}
-      <td className="px-3 py-2.5 min-w-[200px]">
+      {/* Annual Income — operator + dollar amount */}
+      <td className="px-3 py-2.5 min-w-[220px]">
         <ConditionalCell
           operator={rule.annualIncomeOperator}
           variable={rule.annualIncomeVariable}
           onOperatorChange={(o) => onUpdate(parentId, rule.id, { annualIncomeOperator: o })}
           onVariableChange={(v) => onUpdate(parentId, rule.id, { annualIncomeVariable: v })}
-          variablePlaceholder="Enter value"
+          variablePlaceholder="Amount"
+          variableType="amount"
         />
       </td>
 
@@ -166,15 +122,16 @@ export function ChildRuleRow({
       <td className="px-3 py-2.5"></td>
 
       {/* Actions */}
-      <td className="px-3 py-2.5">
+      <td className="px-3 py-2.5 dt-col-actions" data-menu-open={menuOpen || undefined}>
         <div ref={actionsAnchorRef} className="relative inline-block">
           <IconButton
             onClick={onMenuToggle}
-            ariaLabel={`Sub-condition actions for ${rule.ruleName || 'unnamed sub-condition'}`}
+            className="dt-toolbar-btn"
+            ariaLabel={`Child rule actions for ${rule.ruleName || 'unnamed child rule'}`}
             ariaHasPopup="menu"
             ariaExpanded={menuOpen}
           >
-            <MoreHorizontalIcon size={16} />
+            <MoreHorizontalIcon size={18} />
           </IconButton>
           {menuOpen && (
             <ActionsMenu
@@ -184,6 +141,7 @@ export function ChildRuleRow({
               onClose={onMenuClose}
               onMoveUp={childIndex > 0 ? () => onMove(parentId, childIndex, childIndex - 1) : undefined}
               onMoveDown={childIndex < totalChildren - 1 ? () => onMove(parentId, childIndex, childIndex + 1) : undefined}
+              isChild
             />
           )}
         </div>

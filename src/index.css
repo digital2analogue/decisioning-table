@@ -489,7 +489,7 @@ select option { background-color: var(--color-background-elevated); color: var(-
      below in .dt-child-row-last) to separate the group from the next parent. */
   .dt-child-row { background-color: var(--color-background-hover); border-bottom: none; }
   .dt-child-row:hover { background-color: color-mix(in srgb, var(--color-background-hover) 88%, var(--color-background-action) 12%); }
-  .dt-child-row .dt-col-sticky,
+  .dt-child-row .dt-col-sticky { background-color: var(--color-background-hover); z-index: 4; }
   .dt-child-row .dt-col-sticky-num { background-color: var(--color-background-hover); }
   .dt-child-row:hover .dt-col-sticky,
   .dt-child-row:hover .dt-col-sticky-num { background-color: color-mix(in srgb, var(--color-background-hover) 88%, var(--color-background-action) 12%); }

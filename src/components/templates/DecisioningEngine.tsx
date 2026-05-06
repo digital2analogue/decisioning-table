@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from 'react'
 import { ChevronDownIcon, PlusIcon } from 'lucide-react'
 import { AppIcon } from '../atoms/AppIcon'
+import { AvatarStack } from '../atoms/AvatarStack'
 import type { Rule, Ruleset, ModelConfig } from '../../types'
 import { initialRulesets as defaultRulesets } from '../../data'
 import { DecisioningTable } from '../organisms/DecisioningTable'
@@ -150,7 +151,7 @@ export function DecisioningEngine({ modelConfig, initialRulesets }: DecisioningE
             <span className="dt-breadcrumb-item">{title}</span>
           </nav>
           <div className="flex items-start gap-2 mt-1">
-            <AppIcon size={28} />
+            <AppIcon size={44} />
             <div>
               <div className="dt-page-title-row">
                 {editingTitle ? (
@@ -186,6 +187,7 @@ export function DecisioningEngine({ modelConfig, initialRulesets }: DecisioningE
           </div>
         </div>
         <div className="flex items-center gap-3 self-center">
+          <AvatarStack />
           <button type="button" className="dt-outline-btn">
             Test model
           </button>
@@ -214,10 +216,6 @@ export function DecisioningEngine({ modelConfig, initialRulesets }: DecisioningE
                   <hr className="dt-split-btn-menu-divider" />
                   <button type="button" role="menuitem" className="dt-split-btn-menu-item" onClick={() => setChevronOpen(false)}>
                     Add existing rule
-                  </button>
-                  <hr className="dt-split-btn-menu-divider" />
-                  <button type="button" role="menuitem" className="dt-split-btn-menu-item" onClick={() => setChevronOpen(false)}>
-                    Test and publish
                   </button>
                 </div>
               </>

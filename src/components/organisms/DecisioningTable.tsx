@@ -259,7 +259,7 @@ export function DecisioningTable({
 
   return (
     <div className="dt-table-edge">
-      <table className="w-full">
+      <table>
         <thead>
           <tr className="dt-thead-row">
             <th className="w-10 px-3 py-2.5 text-center">

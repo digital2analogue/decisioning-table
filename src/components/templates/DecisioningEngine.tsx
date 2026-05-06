@@ -149,7 +149,7 @@ export function DecisioningEngine({ modelConfig, initialRulesets }: DecisioningE
             <span className="dt-breadcrumb-sep" aria-hidden="true">/</span>
             <span className="dt-breadcrumb-item">{title}</span>
           </nav>
-          <div className="flex items-center gap-2 mt-1">
+          <div className="flex items-start gap-2 mt-1">
             <AppIcon size={28} />
             <div>
               <div className="dt-page-title-row">

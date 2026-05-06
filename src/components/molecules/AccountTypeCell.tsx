@@ -20,6 +20,7 @@ export function AccountTypeCell({
       options={PICKER_OPTIONS}
       placeholder="Select account type"
       triggerVariant="select-trigger"
+      width="full"
       ariaLabel="Account type"
       renderOption={(opt) => {
         const acct = accountTypes.find((a) => a.id === opt.value)

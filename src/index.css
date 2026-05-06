@@ -398,7 +398,7 @@ select option { background-color: var(--color-background-elevated); color: var(-
   .dt-conditional-operator:hover { background-color: var(--color-background-hover); border-color: var(--color-foreground-muted); }
   .dt-conditional-operator:focus-visible { outline: none; box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-background-action) 18%, transparent); background-color: var(--color-background-elevated); color: var(--color-foreground-default); }
   /* Fused input group — operator + amount/variable share one seamless border */
-  .dt-conditional-cell { display: flex; align-items: center; max-width: 260px; }
+  .dt-conditional-cell { display: flex; align-items: center; }
   .dt-conditional-cell .dt-conditional-operator { border-right: none; border-top-right-radius: 0; border-bottom-right-radius: 0; width: 148px; }
   .dt-conditional-cell .dt-amount-cell { border-top-left-radius: 0; border-bottom-left-radius: 0; background-color: var(--color-background-elevated); border-color: var(--color-border-default); }
   .dt-conditional-cell .dt-conditional-variable { border-top-left-radius: 0; border-bottom-left-radius: 0; }

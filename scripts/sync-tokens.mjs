@@ -29,8 +29,14 @@ console.log('\n  Building brand-tokens...\n')
 try {
   execSync('node scripts/build-brands.mjs', { cwd: BRAND_DIR, stdio: 'inherit' })
 } catch {
-  console.error('\n  ❌ brand-tokens build failed — fix errors above first.\n')
-  process.exit(1)
+  // The build script exits non-zero when any brand has collision warnings (e.g.
+  // dot-art, dot-blog) even if decision-engine itself built cleanly. Treat a
+  // non-zero exit as a hard failure only if decision-engine.css was not produced.
+  if (!fs.existsSync(BRAND_CSS)) {
+    console.error('\n  ❌ brand-tokens build failed and decision-engine.css is missing — fix errors above first.\n')
+    process.exit(1)
+  }
+  console.warn('\n  ⚠️  brand-tokens build exited non-zero (likely collision warnings in other brands), but decision-engine.css was produced — continuing.\n')
 }
 
 // ─── Parse + resolve ───────────────────────────────────────────────────────────

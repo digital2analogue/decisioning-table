@@ -84,7 +84,7 @@ export function ConditionalCell({
         value={operator}
         onChange={onOperatorChange}
         options={CONDITIONAL_OPERATOR_OPTIONS}
-        placeholder="Select condition"
+        placeholder="Condition"
         triggerVariant="conditional-op"
         ariaLabel="Condition operator"
       />

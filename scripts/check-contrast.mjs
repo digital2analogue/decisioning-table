@@ -160,9 +160,10 @@ const PAIRINGS = [
   { text: '--color-foreground-muted',         bg: '--color-background-elevated',       label: 'Add-rule row btn (default)' },
   { text: '--color-foreground-default',        bg: '--color-background-hover',          label: 'Add-rule row btn (hover)' },
   // Row-level warning indicator — icon + number sit on normal row background (no tint)
-  { text: '--color-foreground-warning',       bg: WHITE,                               label: 'Invalid-row warning icon + number' },
-  // Validation banner — bright yellow strip
-  { text: '--color-foreground-warning-dark',  bg: '--color-background-warning-alt',    label: 'Validation banner text + CTA on amber-100' },
+  { text: '--color-foreground-warning-icon',  bg: WHITE,                               label: 'Invalid-row warning icon (amber-700)' },
+  { text: '--color-foreground-warning',       bg: WHITE,                               label: 'Invalid-row warning number' },
+  // Validation banner — vivid amber strip (#1A1A2E on #FCD34D ≈ 9.5:1)
+  { text: '--color-foreground-default',       bg: '--color-background-warning-vivid',  label: 'Validation banner text + CTA on amber-300' },
   // AND/OR logic chip — dark navy text on light slate (--color-background-inverted)
   { text: '--color-foreground-on-inverted', bg: '--color-background-inverted',          label: 'AND/OR logic chip text' },
   // Conditional operator chip — dark navy text on very light gray bg

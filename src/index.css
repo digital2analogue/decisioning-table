@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap');
 @import "./tokens/variables.css";
 @import "tailwindcss";
 
@@ -29,6 +29,14 @@ html, body {
    silently overrode .dt-conditional-variable's bg-default and made the
    input go transparent. Each input class defines its own background. */
 input, select, textarea { color: var(--color-foreground-default); font-family: var(--font-family-sans); }
+/* Mono numeric register — unlayered so it beats the input reset above (cascade-layer trap).
+   Layered rules in @layer components cannot override unlayered rules regardless of specificity. */
+.dt-amount-input,
+.dt-conditional-variable {
+  font-family: var(--font-family-mono);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0;
+}
 input[type="number"]::-webkit-inner-spin-button,
 input[type="number"]::-webkit-outer-spin-button { opacity: 0.3; }
 input[type="checkbox"] { accent-color: var(--color-foreground-action); }
@@ -133,7 +141,7 @@ select option { background-color: var(--color-background-elevated); color: var(-
   .dt-split-btn-chevron { display: inline-flex; align-items: center; color: var(--color-foreground-on-action); background-color: var(--color-background-action); border: 1px solid var(--color-background-action); border-left: 1px solid color-mix(in srgb, var(--color-foreground-on-action) 28%, transparent); border-radius: 0 var(--radius-md) var(--radius-md) 0; padding: var(--space-xs) var(--space-sm); cursor: pointer; transition: background-color var(--duration-fast) var(--easing-default); }
   .dt-split-btn-chevron:hover { background-color: var(--color-background-action-hover); border-color: var(--color-background-action-hover); }
   .dt-split-btn-chevron:focus-visible { outline: none; box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-background-action) 25%, transparent); }
-  .dt-split-btn-menu { position: absolute; right: 0; top: calc(100% + 4px); z-index: 30; background-color: var(--color-background-elevated); border: 1px solid var(--color-border-default); border-radius: var(--radius-md); box-shadow: var(--shadow-menu); padding: var(--space-xs) 0; min-width: 168px; }
+  .dt-split-btn-menu { position: absolute; right: 0; top: calc(100% + 4px); z-index: var(--z-menu-local); background-color: var(--color-background-elevated); border: 1px solid var(--color-border-default); border-radius: var(--radius-md); box-shadow: var(--shadow-menu); padding: var(--space-xs) 0; min-width: 168px; }
   .dt-split-btn-menu-item { display: flex; align-items: center; gap: var(--space-sm); width: 100%; font: var(--font-label-medium); letter-spacing: var(--letter-spacing-label); color: var(--color-foreground-secondary); background: none; border: none; cursor: pointer; padding: var(--space-6) var(--space-sm); transition: background-color var(--duration-fast) var(--easing-default), color var(--duration-fast) var(--easing-default); text-align: left; white-space: nowrap; }
   .dt-split-btn-menu-item:hover { background-color: var(--color-background-alt); color: var(--color-foreground-default); }
   .dt-split-btn-menu-item:focus-visible { outline: none; background-color: var(--color-background-alt); color: var(--color-foreground-default); box-shadow: inset 0 0 0 2px var(--color-border-focus); }
@@ -144,7 +152,7 @@ select option { background-color: var(--color-background-elevated); color: var(-
   .dt-table-edge { width: 100%; height: 100%; overflow: auto; border-top: 1px solid var(--color-border-muted); }
   .dt-table-edge table { min-width: max-content; }
   /* Sticky column headers — glass / frosted effect as rows scroll beneath */
-  .dt-table-edge thead { position: sticky; top: 0; z-index: 4; backdrop-filter: blur(10px) saturate(160%); }
+  .dt-table-edge thead { position: sticky; top: 0; z-index: var(--z-child); backdrop-filter: blur(10px) saturate(160%); }
   .dt-thead-row {
     background-color: color-mix(in srgb, var(--color-background-alt) 85%, transparent);
     box-shadow: 0 1px 0 var(--color-border-default), 0 4px 16px rgba(20, 30, 50, 0.07);
@@ -209,8 +217,8 @@ select option { background-color: var(--color-background-elevated); color: var(-
   .dt-tbody-row-over { border-top: 2px solid var(--color-foreground-action); }
   .dt-parent-row-expanded td:first-child { box-shadow: inset 3px 0 0 color-mix(in srgb, var(--color-foreground-action) 70%, transparent); }
   .dt-tbody-row-selected td:first-child { box-shadow: inset 3px 0 0 var(--color-foreground-action); }
-  .dt-tbody-row-selected { background-color: color-mix(in srgb, var(--color-background-elevated) 94%, var(--color-background-action) 6%); }
-  .dt-tbody-row-selected:hover { background-color: color-mix(in srgb, var(--color-background-elevated) 91%, var(--color-background-action) 9%); }
+  .dt-tbody-row-selected { background-color: color-mix(in srgb, var(--color-background-elevated) 82%, var(--color-background-action)); }
+  .dt-tbody-row-selected:hover { background-color: color-mix(in srgb, var(--color-background-elevated) 74%, var(--color-background-action)); }
   /* Row numbers and warning indicators in the # column */
   .dt-row-number { font-size: var(--font-size-xs); font-weight: var(--font-weight-regular); color: var(--color-foreground-alt); letter-spacing: 0; font-variant-numeric: tabular-nums; font-family: var(--font-family-mono); }
   .dt-empty-cell { font: var(--font-body-medium); color: var(--color-foreground-muted); }
@@ -281,7 +289,11 @@ select option { background-color: var(--color-background-elevated); color: var(-
   .dt-number-input::placeholder { color: var(--color-foreground-muted); }
 
   /* Actions menu */
-  .dt-menu { background-color: var(--color-background-elevated); border: 1px solid var(--color-border-default); border-radius: var(--radius-md); box-shadow: var(--shadow-brand-tint); padding: var(--space-xs) 0; min-width: 160px; }
+  @keyframes dt-menu-in {
+    from { opacity: 0; transform: scale(0.95); }
+    to   { opacity: 1; transform: scale(1); }
+  }
+  .dt-menu { background-color: var(--color-background-elevated); border: 1px solid var(--color-border-default); border-radius: var(--radius-md); box-shadow: var(--shadow-brand-tint); padding: var(--space-xs) 0; min-width: 160px; transform-origin: top right; animation: dt-menu-in var(--duration-fast) var(--easing-out) both; }
   .dt-menu-item { display: flex; align-items: center; gap: var(--space-xs); width: 100%; font: var(--font-label-medium); letter-spacing: var(--letter-spacing-label); color: var(--color-foreground-default); background: none; border: none; cursor: pointer; padding: 7px var(--space-md); transition: background-color var(--duration-fast) var(--easing-default); text-align: left; }
   .dt-menu-item:hover,
   .dt-menu-item[data-highlighted] { background-color: var(--color-background-alt); }
@@ -411,11 +423,11 @@ select option { background-color: var(--color-background-elevated); color: var(-
   .dt-add-rule-row-btn:hover { color: var(--color-foreground-default); background-color: var(--color-background-hover); }
   .dt-add-rule-row-btn[aria-expanded="true"] { color: var(--color-foreground-default); background-color: var(--color-background-hover); }
   .dt-add-rule-row-btn:focus-visible { outline: none; color: var(--color-foreground-default); background-color: var(--color-background-hover); box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-background-action) 18%, transparent); }
-  .dt-add-rule-row-menu { position: absolute; left: 0; bottom: calc(100% + 4px); z-index: 30; background-color: var(--color-background-elevated); border: 1px solid var(--color-border-default); border-radius: var(--radius-md); box-shadow: var(--shadow-menu); padding: var(--space-xs) 0; min-width: 168px; }
+  .dt-add-rule-row-menu { position: absolute; left: 0; bottom: calc(100% + 4px); z-index: var(--z-menu-local); background-color: var(--color-background-elevated); border: 1px solid var(--color-border-default); border-radius: var(--radius-md); box-shadow: var(--shadow-menu); padding: var(--space-xs) 0; min-width: 168px; }
 
 
   /* Row-level "incomplete rule" warning — replaces the row number for invalid rules; sits inside the # column */
-  .dt-row-warning { display: inline-flex; align-items: center; justify-content: center; color: var(--color-foreground-warning); cursor: help; }
+  .dt-row-warning { display: inline-flex; align-items: center; justify-content: center; color: var(--color-foreground-warning-icon); cursor: help; margin-right: var(--space-xs); }
   .dt-child-row-warning { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background-color: var(--color-background-alt); padding: 0 2px; z-index: 1; }
 
   /* Empty / placeholder states for inline pickers (badge, select trigger, conditional operator).
@@ -433,14 +445,18 @@ select option { background-color: var(--color-background-elevated); color: var(-
   .dt-conditional-operator.dt-conditional-operator-empty:hover { color: var(--color-foreground-action); border-color: var(--color-foreground-action); background-color: var(--color-background-accent-blue); }
   .dt-conditional-operator.dt-conditional-operator-empty:focus-visible { outline: none; box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-background-action) 18%, transparent); border-color: var(--color-border-focus); }
 
-  /* Validation banner — light amber strip (Polaris notice style), icon + inline text + underlined CTA */
-  .dt-validation-banner { display: flex; align-items: center; gap: var(--space-sm); padding: var(--space-sm) var(--space-lg); background-color: var(--color-background-warning-alt); border-bottom: 1px solid color-mix(in srgb, var(--color-foreground-warning-dark) 20%, transparent); color: var(--color-foreground-warning-dark); }
+  /* Validation banner — vivid amber strip (reference screenshot), icon + inline text + underlined CTA */
+  @keyframes dt-banner-in {
+    from { opacity: 0; transform: translateY(-6px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  .dt-validation-banner { display: flex; align-items: center; gap: var(--space-sm); padding: var(--space-sm) var(--space-lg); background-color: var(--color-background-warning-vivid); border-bottom: 1px solid color-mix(in srgb, var(--color-foreground-default) 15%, transparent); color: var(--color-foreground-default); animation: dt-banner-in var(--duration-normal) var(--easing-out) both; }
   .dt-validation-banner-icon { display: inline-flex; flex-shrink: 0; }
-  .dt-validation-banner-text { font: var(--font-body-medium); color: var(--color-foreground-warning-dark); margin: 0; }
+  .dt-validation-banner-text { font: var(--font-body-medium); color: var(--color-foreground-default); margin: 0; }
   .dt-validation-banner-text strong { font-weight: var(--font-weight-semibold); }
-  .dt-validation-banner-cta { display: inline; font: inherit; color: var(--color-foreground-warning-dark); background: none; border: none; padding: 0; margin: 0; cursor: pointer; text-decoration: underline; text-underline-offset: 2px; border-radius: var(--radius-sm); transition: opacity var(--duration-fast) var(--easing-default), box-shadow var(--duration-fast) var(--easing-default); }
+  .dt-validation-banner-cta { display: inline; font: inherit; color: var(--color-foreground-default); background: none; border: none; padding: 0; margin: 0; cursor: pointer; text-decoration: underline; text-underline-offset: 2px; border-radius: var(--radius-sm); transition: opacity var(--duration-fast) var(--easing-default), box-shadow var(--duration-fast) var(--easing-default); }
   .dt-validation-banner-cta:hover { opacity: 0.75; }
-  .dt-validation-banner-cta:focus-visible { outline: none; box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-foreground-warning-dark) 30%, transparent); }
+  .dt-validation-banner-cta:focus-visible { outline: none; box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-foreground-default) 25%, transparent); }
 
   /* Conditional cell — operator button + variable input (matches dt-operator-select sizing) */
   /* Operator trigger uses sans for ALL operator values (words AND symbols)
@@ -456,10 +472,10 @@ select option { background-color: var(--color-background-elevated); color: var(-
   .dt-conditional-operator:focus-visible { outline: none; box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-background-action) 18%, transparent); background-color: var(--color-background-elevated); color: var(--color-foreground-default); }
   /* Fused input group — operator + amount/variable share one seamless border */
   .dt-conditional-cell { display: flex; align-items: center; }
-  .dt-conditional-cell .dt-conditional-operator { border-right: none; border-top-right-radius: 0; border-bottom-right-radius: 0; width: 148px; }
+  .dt-conditional-cell .dt-conditional-operator { border-right: none; border-top-right-radius: 0; border-bottom-right-radius: 0; width: 100px; }
   .dt-conditional-cell .dt-amount-cell { border-top-left-radius: 0; border-bottom-left-radius: 0; background-color: var(--color-background-elevated); border-color: var(--color-border-default); }
   .dt-conditional-cell .dt-conditional-variable { border-top-left-radius: 0; border-bottom-left-radius: 0; }
-  .dt-conditional-variable { font: var(--font-label-medium); letter-spacing: var(--letter-spacing-label); color: var(--color-foreground-default); background-color: var(--color-background-default); border: 1px solid var(--color-border-default); border-radius: var(--radius-sm); padding: 0 var(--space-sm); width: 100%; min-width: 0; min-height: var(--control-height-md); box-sizing: border-box; transition: background-color var(--duration-fast) var(--easing-default), box-shadow var(--duration-fast) var(--easing-default); }
+  .dt-conditional-variable { font: var(--font-label-medium); font-family: var(--font-family-mono); font-variant-numeric: tabular-nums; letter-spacing: 0; color: var(--color-foreground-default); background-color: var(--color-background-default); border: 1px solid var(--color-border-default); border-radius: var(--radius-sm); padding: 0 var(--space-sm); width: 100%; min-width: 0; min-height: var(--control-height-md); box-sizing: border-box; transition: background-color var(--duration-fast) var(--easing-default), box-shadow var(--duration-fast) var(--easing-default); }
   .dt-conditional-variable::placeholder { font-family: var(--font-family-sans); color: var(--color-foreground-muted); }
   /* When a variable IS selected, its label shows via the ::placeholder slot
      (so the input doubles as a search-filter on focus). Override the muted
@@ -493,11 +509,11 @@ select option { background-color: var(--color-background-elevated); color: var(-
      column (rule name) carries the elevation cue via a ::after gradient strip;
      direct box-shadow on table cells is unreliable across browsers because
      the sibling cell's row background can paint over the shadow's blur. */
-  .dt-col-sticky-num { position: sticky; left: 0; z-index: 2; background-color: var(--color-background-elevated); }
-  .dt-col-sticky-num-head { position: sticky; left: 0; z-index: 3; background-color: color-mix(in srgb, var(--color-background-alt) 85%, transparent); }
+  .dt-col-sticky-num { position: sticky; left: 0; z-index: var(--z-sticky); background-color: var(--color-background-elevated); }
+  .dt-col-sticky-num-head { position: sticky; left: 0; z-index: var(--z-sticky-head); background-color: color-mix(in srgb, var(--color-background-alt) 85%, transparent); }
   /* Rule name sticks immediately to the right of the # column (w-14 = 56px). Fixed width so it doesn't grow on wide viewports. */
-  .dt-col-sticky { position: sticky; left: 56px; z-index: 2; background-color: var(--color-background-elevated); width: 260px; max-width: 260px; }
-  .dt-col-sticky-head { position: sticky; left: 56px; z-index: 3; background-color: color-mix(in srgb, var(--color-background-alt) 85%, transparent); }
+  .dt-col-sticky { position: sticky; left: 56px; z-index: var(--z-sticky); background-color: var(--color-background-elevated); width: 260px; max-width: 260px; }
+  .dt-col-sticky-head { position: sticky; left: 56px; z-index: var(--z-sticky-head); background-color: color-mix(in srgb, var(--color-background-alt) 85%, transparent); }
   .dt-col-sticky::after,
   .dt-col-sticky-head::after {
     content: '';
@@ -511,9 +527,9 @@ select option { background-color: var(--color-background-elevated); color: var(-
     z-index: 1;
   }
   .dt-tbody-row-selected .dt-col-sticky,
-  .dt-tbody-row-selected .dt-col-sticky-num { background-color: color-mix(in srgb, var(--color-background-elevated) 94%, var(--color-background-action) 6%); }
+  .dt-tbody-row-selected .dt-col-sticky-num { background-color: color-mix(in srgb, var(--color-background-elevated) 82%, var(--color-background-action)); }
   .dt-tbody-row-selected:hover .dt-col-sticky,
-  .dt-tbody-row-selected:hover .dt-col-sticky-num { background-color: color-mix(in srgb, var(--color-background-elevated) 91%, var(--color-background-action) 9%); }
+  .dt-tbody-row-selected:hover .dt-col-sticky-num { background-color: color-mix(in srgb, var(--color-background-elevated) 74%, var(--color-background-action)); }
 
   /* ── Nested rule rows (parent + child) ──────────────── */
 
@@ -543,7 +559,7 @@ select option { background-color: var(--color-background-elevated); color: var(-
      below in .dt-child-row-last) to separate the group from the next parent. */
   .dt-child-row { background-color: var(--color-background-hover); border-bottom: none; }
   .dt-child-row:hover { background-color: color-mix(in srgb, var(--color-background-hover) 88%, var(--color-background-action) 12%); }
-  .dt-child-row .dt-col-sticky { background-color: var(--color-background-hover); z-index: 4; }
+  .dt-child-row .dt-col-sticky { background-color: var(--color-background-hover); z-index: var(--z-child); }
   .dt-child-row .dt-col-sticky-num { background-color: var(--color-background-hover); }
   .dt-child-row:hover .dt-col-sticky,
   .dt-child-row:hover .dt-col-sticky-num { background-color: color-mix(in srgb, var(--color-background-hover) 88%, var(--color-background-action) 12%); }
@@ -558,7 +574,7 @@ select option { background-color: var(--color-background-elevated); color: var(-
      the relative positioning trick by promoting the sticky position itself
      to be the containing block (sticky already establishes one). */
   /* Tree line lives in the name cell now so chip and line share the same stacking context */
-  .dt-child-connector-cell.dt-col-sticky-num { position: sticky; left: 0; z-index: 2; background-color: var(--color-background-hover); }
+  .dt-child-connector-cell.dt-col-sticky-num { position: sticky; left: 0; z-index: var(--z-sticky); background-color: var(--color-background-hover); }
   .dt-child-tree-line {
     /* Vertical segment — runs the full row height; cropped on last child */
     position: absolute; top: 0; bottom: 0;
@@ -614,13 +630,32 @@ select option { background-color: var(--color-background-elevated); color: var(-
     from { opacity: 0; transform: translateY(-4px); }
     to   { opacity: 1; transform: translateY(0); }
   }
+  @keyframes dt-row-out {
+    from { opacity: 1; }
+    to   { opacity: 0; }
+  }
+  /* Tab content crossfade — re-keyed wrapper fades in on ruleset switch */
+  @keyframes dt-tab-in {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+  }
+  .dt-tab-content { animation: dt-tab-in var(--duration-fast) var(--easing-out) both; }
   .dt-tbody-row { animation: dt-row-in var(--duration-normal) var(--easing-out) both; }
+  .dt-child-row-collapsing { animation: dt-row-out 150ms var(--easing-in) both; }
   .dt-child-row:nth-child(2) { animation-delay: 30ms; }
   .dt-child-row:nth-child(3) { animation-delay: 60ms; }
   .dt-child-row:nth-child(4) { animation-delay: 90ms; }
   .dt-child-row:nth-child(5) { animation-delay: 120ms; }
   @media (prefers-reduced-motion: reduce) {
-    .dt-tbody-row { animation: none; }
+    .dt-tbody-row,
+    .dt-child-row-collapsing,
+    .dt-tab-content,
+    .dt-validation-banner,
+    .dt-menu,
+    .dt-selection-bar,
+    .dt-toast { animation: none; }
+    .dt-outcome-seg-indicator,
+    .dt-expand-toggle { transition: none; }
   }
 
 
@@ -638,9 +673,6 @@ select option { background-color: var(--color-background-elevated); color: var(-
   .dt-selection-bar-action { font: var(--font-label-medium); letter-spacing: var(--letter-spacing-label); color: var(--color-foreground-inverse); background: none; border: none; padding: var(--space-2xs) var(--space-sm); border-radius: var(--radius-sm); cursor: pointer; text-decoration: underline; text-underline-offset: 2px; transition: background-color var(--duration-fast) var(--easing-default); }
   .dt-selection-bar-action:hover { background-color: color-mix(in srgb, transparent 85%, var(--color-foreground-inverse) 15%); text-decoration: none; }
   .dt-selection-bar-action:focus-visible { outline: none; box-shadow: 0 0 0 2px var(--color-foreground-inverse); }
-  @media (prefers-reduced-motion: reduce) {
-    .dt-selection-bar { animation: none; }
-  }
 
   /* Toast — single-toast notification anchored bottom-center via portal. Used for delete-undo. */
   @keyframes dt-toast-in {
@@ -663,9 +695,6 @@ select option { background-color: var(--color-background-elevated); color: var(-
   .dt-toast-close { display: inline-flex; align-items: center; justify-content: center; width: 22px; height: 22px; color: var(--color-foreground-inverse); background: none; border: none; cursor: pointer; padding: 0; opacity: 0.7; border-radius: var(--radius-sm); transition: opacity var(--duration-fast) var(--easing-default), background-color var(--duration-fast) var(--easing-default); }
   .dt-toast-close:hover { opacity: 1; background-color: color-mix(in srgb, transparent 85%, var(--color-foreground-inverse) 15%); }
   .dt-toast-close:focus-visible { outline: none; opacity: 1; box-shadow: 0 0 0 2px var(--color-foreground-inverse); }
-  @media (prefers-reduced-motion: reduce) {
-    .dt-toast { animation: none; }
-  }
 
   /* ── Onboarding flow (ob-) ──────────────────────────── */
 

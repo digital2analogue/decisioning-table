@@ -1,4 +1,4 @@
-export function AppIcon({ size = 40 }: { size?: number }) {
+export function AppIcon({ size = 44 }: { size?: number }) {
   return (
     <svg
       width={size}

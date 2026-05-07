@@ -4,6 +4,7 @@ import { isRuleValid, isChildRuleValid, isRuleTouched } from '../../types'
 
 export interface ValidationBannerProps {
   ruleset: Ruleset
+  onSelectInvalid: () => void
 }
 
 interface InvalidRef {
@@ -31,27 +32,12 @@ function collectInvalid(ruleset: Ruleset): InvalidRef[] {
  * ruleset. CTA scrolls to the first problematic row and focuses its first
  * empty cell. Hidden when every rule is valid.
  */
-export function ValidationBanner({ ruleset }: ValidationBannerProps) {
+export function ValidationBanner({ ruleset, onSelectInvalid }: ValidationBannerProps) {
   const invalid = collectInvalid(ruleset)
   if (invalid.length === 0) return null
 
-  const first = invalid[0]
   const count = invalid.length
   const noun = count === 1 ? 'rule' : 'rules'
-
-  function scrollToFirst() {
-    const row = document.querySelector<HTMLTableRowElement>(`[data-rule-id="${first.ruleId}"]`)
-    if (!row) return
-    row.scrollIntoView({ behavior: 'smooth', block: 'center' })
-    // Focus the first empty input/button inside the row so the user can start typing.
-    // We retry after the smooth scroll has had time to settle.
-    window.setTimeout(() => {
-      const target = row.querySelector<HTMLElement>(
-        'input:placeholder-shown, [class*="-empty"], [aria-expanded="false"]',
-      )
-      target?.focus()
-    }, 350)
-  }
 
   return (
     <div role="alert" className="dt-validation-banner">
@@ -60,8 +46,8 @@ export function ValidationBanner({ ruleset }: ValidationBannerProps) {
       </span>
       <p className="dt-validation-banner-text">
         <strong><span className="dt-metric">{count}</span> incomplete {noun}</strong> must be filled in before this decision model can run.{' '}
-        <button type="button" onClick={scrollToFirst} className="dt-validation-banner-cta">
-          Fix incomplete rules
+        <button type="button" onClick={onSelectInvalid} className="dt-validation-banner-cta">
+          Select incomplete rules
         </button>
       </p>
     </div>

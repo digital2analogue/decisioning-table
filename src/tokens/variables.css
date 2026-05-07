@@ -57,6 +57,7 @@
   --color-background-success: #15803d;
   --color-background-success-alt: #dcfce7;
   --color-background-warning: #d97706;
+  --color-background-warning-vivid: #FCD34D;   /* TODO: move to brand-tokens — amber-300, vivid banner bg (matches screenshot reference) */
   --color-background-warning-alt: #fef3c7;     /* amber-100 — soft cream banner bg (Arctic theme; was #fde047 yellow-300, too vivid) */
   --color-background-warning-subtle: #fef3c7;  /* amber-100 — invalid-row tint; strong enough to scan without hovering */
   --color-background-info: #2456e4;
@@ -64,6 +65,7 @@
   --color-foreground-success: #15803d;
   --color-foreground-on-success: #ffffff;
   --color-foreground-warning: #92400e;
+  --color-foreground-warning-icon: #b45309; /* TODO: move to brand-tokens — amber-700, 4.75:1 on light rows */
   --color-foreground-warning-dark: #78350f; /* TODO: move to brand-tokens — OR logic chip foreground (deeper amber for chip-on-tint contrast) */
   --color-foreground-on-warning: #1A1A2E; /* DE light-mode override; brand-tokens ships #fff for dark theme */
   --color-foreground-info: #2456e4;
@@ -90,7 +92,7 @@
   /* Spacing */
   --space-2xs: 2px;
   --space-xs: 4px;
-  --space-6: 6px;
+  --space-6: 6px;  /* component-specific gap-fill (avatar overlap, menu item padding); no t-shirt step at 6px */
   --space-sm: 8px;
   --space-md: 16px;
   --space-lg: 24px;
@@ -102,12 +104,17 @@
   --control-height-md: 32px;
   --control-height-lg: 40px;   /* large standalone inputs */
   /* z-index — stacking context values (TODO: move to brand-tokens) */
-  --z-backdrop: 9998;  /* fixed backdrop overlay behind portal menus */
-  --z-dropdown: 9999;  /* portal-positioned menus, pickers, dropdowns */
+  --z-backdrop: 9998;    /* fixed backdrop overlay behind portal menus */
+  --z-dropdown: 9999;    /* portal-positioned menus, pickers, dropdowns */
+  /* Table stacking layers — sticky columns, thead, child rows */
+  --z-sticky: 2;         /* sticky # and name columns in body rows */
+  --z-sticky-head: 3;    /* sticky # and name columns in thead */
+  --z-child: 4;          /* sticky name column in child rows (above parent sticky) + thead */
+  --z-menu-local: 30;    /* non-portal local menus (split-btn, add-rule row) */
   /* Dropdown constraints */
   --dropdown-max-height: 192px;  /* portal listboxes and pickers */
   /* Fonts */
-  --font-family-sans: 'Plus Jakarta Sans', sans-serif;
+  --font-family-sans: 'Geist', sans-serif;
   --font-family-mono: 'DM Mono', 'JetBrains Mono', monospace;
   --font-family-display: var(--font-family-sans);
   --font-family-body: var(--font-family-sans);

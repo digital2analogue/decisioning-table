@@ -92,11 +92,11 @@ export function TabItem({ id, name, isActive, onClick, onRename, onDuplicate, on
       </div>
       {menuOpen && menuPos && createPortal(
         <>
-          <div className="fixed inset-0 z-[9998]" onClick={closeMenu} />
+          <div className="fixed inset-0" style={{ zIndex: 'var(--z-backdrop)' }} onClick={closeMenu} />
           <div
             className="dt-menu"
             role="menu"
-            style={{ position: 'fixed', bottom: menuPos.bottom, right: menuPos.right, zIndex: 9999 }}
+            style={{ position: 'fixed', bottom: menuPos.bottom, right: menuPos.right, zIndex: 'var(--z-dropdown)' }}
           >
             <button type="button" role="menuitem" className="dt-menu-item"
               onClick={() => { setDraft(name); setEditing(true); closeMenu() }}>

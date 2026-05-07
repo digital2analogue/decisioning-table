@@ -1,35 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<svg width="512" height="512" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
+<svg width="128" height="128" viewBox="0 0 128 128" fill="none" xmlns="http://www.w3.org/2000/svg">
   <defs>
-    <linearGradient id="blueGradient" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0%" stop-color="#4D9BFF"/>
+    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#5AA8FF"/>
       <stop offset="100%" stop-color="#1565F9"/>
     </linearGradient>
   </defs>
 
-  <!-- Document shape -->
-  <path d="M120 70C120 58.954 128.954 50 140 50H300L392 142V372C392 383.046 383.046 392 372 392H140C128.954 392 120 383.046 120 372V70Z" fill="url(#blueGradient)"/>
+  <!-- document -->
+  <path d="M22 12C22 8.7 24.7 6 28 6H76L106 36V100C106 103.3 103.3 106 100 106H28C24.7 106 22 103.3 22 100V12Z" fill="url(#g)"/>
 
-  <!-- Folded corner -->
-  <path d="M300 50L392 142H320C308.954 142 300 133.046 300 122V50Z" fill="#0E56E8"/>
+  <!-- folded corner -->
+  <path d="M76 6L106 36H82C78.7 36 76 33.3 76 30V6Z" fill="#0C56E8"/>
 
-  <!-- Grid -->
-  <rect x="170" y="165" width="55" height="55" rx="6" fill="#BFE0FF"/>
-  <rect x="170" y="225" width="55" height="55" rx="6" fill="#BFE0FF"/>
-  <rect x="170" y="285" width="55" height="55" rx="6" fill="#BFE0FF"/>
+  <!-- stems -->
+  <path d="M46 68H82" stroke="white" stroke-width="6" stroke-linecap="round"/>
+  <path d="M64 68V50" stroke="white" stroke-width="6" stroke-linecap="round"/>
 
-  <rect x="230" y="165" width="120" height="55" rx="6" fill="#D8ECFF"/>
-  <rect x="230" y="225" width="120" height="55" rx="6" fill="#D8ECFF"/>
-  <rect x="230" y="285" width="120" height="55" rx="6" fill="#D8ECFF"/>
-
-  <!-- Decision node line -->
-  <path d="M255 252H330" stroke="#1565F9" stroke-width="10" stroke-linecap="round"/>
-
-  <!-- Nodes -->
-  <circle cx="255" cy="252" r="14" fill="#1565F9"/>
-  <circle cx="292" cy="215" r="14" fill="#1565F9"/>
-  <circle cx="330" cy="252" r="14" fill="#1565F9"/>
-
-  <!-- Connector -->
-  <path d="M292 215V240C292 247 286 252 279 252H255" stroke="#1565F9" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- nodes -->
+  <circle cx="46" cy="68" r="9" fill="white"/>
+  <circle cx="82" cy="68" r="9" fill="white"/>
+  <circle cx="64" cy="50" r="9" fill="white"/>
 </svg>

@@ -118,6 +118,18 @@ export function ChildRuleRow({
         />
       </td>
 
+      {/* Credit Score — operator + plain number */}
+      <td className="dt-td min-w-[200px]">
+        <ConditionalCell
+          operator={rule.creditScoreOperator ?? null}
+          variable={rule.creditScoreVariable ?? ''}
+          onOperatorChange={(o) => onUpdate(parentId, rule.id, { creditScoreOperator: o })}
+          onVariableChange={(v) => onUpdate(parentId, rule.id, { creditScoreVariable: v })}
+          variablePlaceholder="Score"
+          variableType="number"
+        />
+      </td>
+
       {/* Outcome — children inherit the parent outcome implicitly; cell stays empty to keep column alignment */}
       <td className="dt-td"></td>
 

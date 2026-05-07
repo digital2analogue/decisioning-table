@@ -1,4 +1,5 @@
 import { Fragment, useEffect, useRef, useState } from 'react'
+import { createPortal } from 'react-dom'
 import { MoreHorizontalIcon, PlusIcon, TableIcon } from 'lucide-react'
 import type { Rule, Ruleset } from '../../types'
 import { isRuleTouched } from '../../types'
@@ -39,6 +40,7 @@ export function DecisioningTable({
   const [openColumnMenuId, setOpenColumnMenuId] = useState<string | null>(null)
   const existingAccountBtnRef = useRef<HTMLButtonElement>(null)
   const annualIncomeBtnRef = useRef<HTMLButtonElement>(null)
+  const creditScoreBtnRef = useRef<HTMLButtonElement>(null)
   const [toast, setToast] = useState<ToastState | null>(null)
 
   const normalizedQuery = ruleNameQuery.trim().toLowerCase()
@@ -270,7 +272,7 @@ export function DecisioningTable({
               />
             </th>
             <th className="dt-th dt-col-sticky-num-head w-14 px-2 py-2.5 text-right tracking-wider">#</th>
-            <th className="dt-th dt-col-sticky-head dt-td text-left tracking-wider w-[220px] max-w-[220px]">Rule name</th>
+            <th className="dt-th dt-col-sticky-head dt-td text-left tracking-wider w-[260px] max-w-[260px]">Rule name</th>
             <th className="dt-th dt-col-data-attribute dt-td text-left tracking-wider min-w-[140px]">Data attribute</th>
             <th className="dt-th dt-td text-left tracking-wider">
               <div className="dt-th-label-wrap">
@@ -304,6 +306,22 @@ export function DecisioningTable({
                 </button>
               </div>
             </th>
+            <th className="dt-th dt-td text-left tracking-wider">
+              <div className="dt-th-label-wrap">
+                <span>Credit Score</span>
+                <button
+                  ref={creditScoreBtnRef}
+                  type="button"
+                  className="dt-icon-btn dt-icon-reveal dt-th-menu-btn"
+                  aria-label="Credit Score column options"
+                  aria-haspopup="menu"
+                  aria-expanded={openColumnMenuId === 'credit-score'}
+                  onClick={() => setOpenColumnMenuId(openColumnMenuId === 'credit-score' ? null : 'credit-score')}
+                >
+                  <MoreHorizontalIcon size={14} />
+                </button>
+              </div>
+            </th>
             <th className="dt-th dt-td text-left tracking-wider w-[190px]">Outcome</th>
             <th className="dt-col-actions-head w-10 dt-td"></th>
           </tr>
@@ -311,7 +329,7 @@ export function DecisioningTable({
         <tbody>
           {ruleset.rules.length === 0 ? (
             <tr>
-              <td colSpan={8} className="dt-empty-cell">
+              <td colSpan={9} className="dt-empty-cell">
                 <div className="dt-empty-state">
                   <TableIcon size={24} className="dt-empty-icon" />
                   <p className="dt-empty-title">No rules yet</p>
@@ -321,7 +339,7 @@ export function DecisioningTable({
             </tr>
           ) : filterActive && visibleCount === 0 ? (
             <tr>
-              <td colSpan={8} className="dt-empty-cell">
+              <td colSpan={9} className="dt-empty-cell">
                 <div className="dt-empty-state">
                   <p className="dt-empty-title">No rules match "{ruleNameQuery}"</p>
                   <p className="dt-empty-subtitle">Clear the search to see all rules.</p>
@@ -383,7 +401,7 @@ export function DecisioningTable({
               Mirrors the toolbar split-button: clicking opens a small menu with
               "Add rule" + "Add existing rule" so users can pick either path inline. */}
           <tr className="dt-add-rule-row">
-            <td colSpan={8} className="dt-add-rule-row-cell">
+            <td colSpan={9} className="dt-add-rule-row-cell">
               <div ref={addRuleWrapRef} className="dt-add-rule-row-wrap">
                 <button
                   type="button"
@@ -444,6 +462,32 @@ export function DecisioningTable({
           onDelete={() => console.log('Delete column: Annual Income')}
           onClose={() => setOpenColumnMenuId(null)}
         />
+      )}
+      {openColumnMenuId === 'credit-score' && (
+        <ColumnHeaderMenu
+          anchorRef={creditScoreBtnRef}
+          onChangeDataElement={() => console.log('Change Data Element: Credit Score')}
+          onDelete={() => console.log('Delete column: Credit Score')}
+          onClose={() => setOpenColumnMenuId(null)}
+        />
+      )}
+      {/* Selection bar — persistent bottom-center bar while rows are selected */}
+      {someSelected && createPortal(
+        <div className="dt-selection-bar" role="status" aria-live="polite">
+          <span className="dt-selection-bar-count">
+            {ruleset.rules.filter((r) => r.selected).length}
+            {' '}
+            {ruleset.rules.filter((r) => r.selected).length === 1 ? 'row' : 'rows'} selected
+          </span>
+          <button
+            type="button"
+            className="dt-selection-bar-action"
+            onClick={() => toggleAll(false)}
+          >
+            Unselect all
+          </button>
+        </div>,
+        document.body,
       )}
     </div>
   )

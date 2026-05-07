@@ -1,11 +1,10 @@
 :root {
-  /* Backgrounds */
-  --color-background-default: #FFFFFF;
-  --color-background-alt: #F6F8FA;
-  --color-background-elevated: #FBFCFD;
-  /* Ghost-button hover bg — sits between bg-alt and border-muted so hover
-     reads against the (now near-white) page bg. */
-  --color-background-hover: #ECEEF2;
+  /* Backgrounds — Arctic theme (cool blue tint on all neutrals) */
+  --color-background-default: #F5F8FC;
+  --color-background-alt: #EBF0F8;
+  --color-background-elevated: #F0F4FA;
+  /* Ghost-button hover bg */
+  --color-background-hover: #E2EAF5;
   --color-background-action: #2456E4;
   --color-background-accent: #4ade6e;
   --color-background-accent-subtle: #E5EBFC;
@@ -47,9 +46,9 @@
   --color-foreground-on-danger: #ffffff;
   --color-foreground-inverse: #FFFFFF;
   /* Borders */
-  --color-border-default: #E1E4E8;
-  --color-border-elevated: #C6CAD1;
-  --color-border-muted: #EAECEF;
+  --color-border-default: #C8D6EA;
+  --color-border-elevated: #B0C4D8;
+  --color-border-muted: #D8E4F0;
   --color-border-accent: #2456E4;
   --color-border-hover: #2456E4;
   --color-border-active: #1e48d0;
@@ -58,8 +57,8 @@
   --color-background-success: #15803d;
   --color-background-success-alt: #dcfce7;
   --color-background-warning: #d97706;
-  --color-background-warning-alt: #fde047;
-  --color-background-warning-subtle: #FDF6E8; /* TODO: move to brand-tokens — lightened for invalid-row tint (was #FAEEDA, too saturated against white inputs) */
+  --color-background-warning-alt: #fef3c7;     /* amber-100 — soft cream banner bg (Arctic theme; was #fde047 yellow-300, too vivid) */
+  --color-background-warning-subtle: #fef3c7;  /* amber-100 — invalid-row tint; strong enough to scan without hovering */
   --color-background-info: #2456e4;
   --color-background-info-alt: #e5ebfc;
   --color-foreground-success: #15803d;
@@ -84,10 +83,10 @@
   --color-accent-subtle: #E0E7FB;
   --color-accent-subtle-border: #92AAF2;
   /* Avatar palette — collaborator stack colors (TODO: move to brand-tokens) */
-  --color-avatar-indigo: #6366f1;
-  --color-avatar-sky: #0ea5e9;
-  --color-avatar-emerald: #10b981;
-  --color-avatar-amber: #f59e0b;
+  --color-avatar-indigo: #4338ca;  /* indigo-700 — 7.98:1 vs #fff ✅ AA */
+  --color-avatar-sky: #0369a1;     /* sky-700    — 5.90:1 vs #fff ✅ AA */
+  --color-avatar-emerald: #047857; /* emerald-700 — 5.47:1 vs #fff ✅ AA */
+  --color-avatar-amber: #b45309;   /* amber-700  — 5.02:1 vs #fff ✅ AA */
   /* Spacing */
   --space-2xs: 2px;
   --space-xs: 4px;

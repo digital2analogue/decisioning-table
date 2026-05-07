@@ -26,8 +26,8 @@ export interface ConditionalCellProps {
   onVariableChange: (variable: string) => void
   /** Placeholder text for the variable input when no variable is selected. */
   variablePlaceholder?: string
-  /** 'search' = data-element combobox (default); 'amount' = dollar amount input */
-  variableType?: 'search' | 'amount'
+  /** 'search' = data-element combobox (default); 'amount' = dollar amount input; 'number' = plain number input (no prefix) */
+  variableType?: 'search' | 'amount' | 'number'
 }
 
 export function ConditionalCell({
@@ -89,12 +89,26 @@ export function ConditionalCell({
         ariaLabel="Condition operator"
       />
 
-      {/* Variable input — amount input or data-element search combobox */}
+      {/* Variable input — amount input, plain number, or data-element search combobox */}
       {variableType === 'amount' ? (
         <div className="min-w-0 flex-1">
           <AmountCell
             value={variable ? parseFloat(variable) : null}
             onChange={(v) => onVariableChange(v !== null ? String(v) : '')}
+          />
+        </div>
+      ) : variableType === 'number' ? (
+        <div className="min-w-0 flex-1">
+          <input
+            type="text"
+            inputMode="numeric"
+            value={variable ?? ''}
+            placeholder={variablePlaceholder}
+            onChange={(e) => {
+              const raw = e.target.value.replace(/[^0-9]/g, '')
+              onVariableChange(raw)
+            }}
+            className={cn('dt-amount-input dt-number-input', !variable && 'dt-conditional-operator-empty')}
           />
         </div>
       ) : (
@@ -117,7 +131,7 @@ export function ConditionalCell({
         </div>
       )}
 
-      {variableType === 'search' && isVariableOpen && variablePos && filteredVariables.length > 0 && createPortal(
+      {(variableType === 'search' || variableType === undefined) && isVariableOpen && variablePos && filteredVariables.length > 0 && createPortal(
         <div
           className="dt-conditional-dropdown"
           style={{

@@ -28,10 +28,11 @@ export function DecisioningEngine({ modelConfig, initialRulesets }: DecisioningE
   const defaultTitle = modelConfig?.modelName ?? 'My Decision Model'
   const [titleDraft, setTitleDraft] = useState(defaultTitle)
   const [title, setTitle] = useState(defaultTitle)
-  const [descDraft, setDescDraft] = useState('')
-  const [desc, setDesc] = useState('')
+  const defaultDesc = 'Automated credit approval policy for consumer loans — evaluates income, account history, and risk indicators across all applicant segments.'
+  const [descDraft, setDescDraft] = useState(defaultDesc)
+  const [desc, setDesc] = useState(defaultDesc)
   const titleInputRef = useRef<HTMLInputElement>(null)
-  const descInputRef = useRef<HTMLInputElement>(null)
+  const descInputRef = useRef<HTMLTextAreaElement>(null)
 
   const activeRuleset = rulesets.find((rs) => rs.id === activeRulesetId)!
 
@@ -118,6 +119,8 @@ export function DecisioningEngine({ modelConfig, initialRulesets }: DecisioningE
       existingAccountVariable: '',
       annualIncomeOperator: null,
       annualIncomeVariable: '',
+      creditScoreOperator: null,
+      creditScoreVariable: '',
     }
     updateRuleset({ ...rs, rules: [...rs.rules, newRule] })
     setAutoFocusRuleId(newRule.id)
@@ -141,6 +144,8 @@ export function DecisioningEngine({ modelConfig, initialRulesets }: DecisioningE
       existingAccountVariable: '',
       annualIncomeOperator: null,
       annualIncomeVariable: '',
+      creditScoreOperator: null,
+      creditScoreVariable: '',
       logicOperator: 'AND',
     }
     const updatedParent: Rule = { ...parent, children: [...(parent.children ?? []), newChild] }
@@ -154,10 +159,10 @@ export function DecisioningEngine({ modelConfig, initialRulesets }: DecisioningE
   return (
     <div className="dt-page h-screen flex flex-col">
       {/* Header */}
-      <div className="dt-page-header pl-4 pr-6 pt-4 pb-5 flex items-start justify-between">
+      <div className="dt-page-header pl-4 pr-6 pt-6 pb-5 flex items-start justify-between">
         <div>
-<div className="flex items-start gap-2 mt-3">
-            <AppIcon size={72} />
+<div className="flex items-center gap-2">
+            <AppIcon size={40} />
             <div>
               <div className="dt-page-title-row">
                 {editingTitle ? (
@@ -184,32 +189,41 @@ export function DecisioningEngine({ modelConfig, initialRulesets }: DecisioningE
                     <h1 className="dt-page-title">{title}</h1>
                   </div>
                 )}
+                <span className="dt-status-active" aria-label="Status: Active">
+                  <span className="dt-status-ping-wrap" aria-hidden="true">
+                    <span className="dt-status-ping" />
+                    <span className="dt-status-dot" />
+                  </span>
+                  Active
+                </span>
               </div>
-              {editingDesc ? (
-                <input
-                  ref={descInputRef}
-                  type="text"
-                  value={descDraft}
-                  onChange={(e) => setDescDraft(e.target.value)}
-                  onBlur={commitDesc}
-                  onKeyDown={(e) => {
-                    if (e.key === 'Enter') commitDesc()
-                    if (e.key === 'Escape') { setDescDraft(desc); setEditingDesc(false) }
-                  }}
-                  placeholder={`${rulesets.reduce((n, rs) => n + rs.rules.length, 0)} rules across ${rulesets.length} rulesets`}
-                  className="dt-desc-input"
-                />
-              ) : (
-                <p
-                  className="dt-page-meta dt-editable-meta"
-                  onClick={() => { setDescDraft(desc); setEditingDesc(true) }}
-                  tabIndex={0}
-                  onKeyDown={(e) => { if (e.key === 'Enter') { setDescDraft(desc); setEditingDesc(true) } }}
-                  title="Click to add a description"
-                >
-                  {desc || `${rulesets.reduce((n, rs) => n + rs.rules.length, 0)} rules across ${rulesets.length} rulesets`}
-                </p>
-              )}
+              <div className="dt-desc-area">
+                {editingDesc ? (
+                  <textarea
+                    ref={descInputRef}
+                    value={descDraft}
+                    onChange={(e) => setDescDraft(e.target.value)}
+                    onBlur={commitDesc}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); commitDesc() }
+                      if (e.key === 'Escape') { e.preventDefault(); setDescDraft(desc); setEditingDesc(false) }
+                    }}
+                    placeholder={`${rulesets.reduce((n, rs) => n + rs.rules.length, 0)} rules across ${rulesets.length} rulesets`}
+                    className="dt-desc-textarea"
+                    rows={2}
+                  />
+                ) : (
+                  <p
+                    className="dt-page-meta dt-editable-meta"
+                    onClick={() => { setDescDraft(desc); setEditingDesc(true) }}
+                    tabIndex={0}
+                    onKeyDown={(e) => { if (e.key === 'Enter') { setDescDraft(desc); setEditingDesc(true) } }}
+                    title={desc || `${rulesets.reduce((n, rs) => n + rs.rules.length, 0)} rules across ${rulesets.length} rulesets`}
+                  >
+                    {desc || `${rulesets.reduce((n, rs) => n + rs.rules.length, 0)} rules across ${rulesets.length} rulesets`}
+                  </p>
+                )}
+              </div>
             </div>
           </div>
         </div>
@@ -218,6 +232,8 @@ export function DecisioningEngine({ modelConfig, initialRulesets }: DecisioningE
             <AvatarStack />
             <span className="dt-last-edited">Edited 2h ago</span>
           </div>
+          <div className="dt-header-sep" aria-hidden="true" />
+          <RuleSearch value={ruleNameQuery} onChange={setRuleNameQuery} />
           <div className="dt-header-sep" aria-hidden="true" />
           <button type="button" className="dt-outline-btn">
             <UserPlusIcon size={14} />
@@ -258,17 +274,6 @@ export function DecisioningEngine({ modelConfig, initialRulesets }: DecisioningE
 
       {/* Validation banner — surfaces incomplete rules in the active ruleset */}
       {activeRuleset && <ValidationBanner ruleset={activeRuleset} />}
-
-      {/* Table sub-nav — compact filter strip directly above the column headers.
-          Lives below the page toolbar + alert banner so filtering reads as
-          scoped to the active ruleset's rows, not the whole page. */}
-      <div className="dt-table-subnav">
-        <span className="dt-status-pill dt-status-active">
-          <span className="dt-status-dot" aria-hidden="true" />
-          Active
-        </span>
-        <RuleSearch value={ruleNameQuery} onChange={setRuleNameQuery} className="ml-auto" />
-      </div>
 
       {/* Table area — fills remaining viewport height; overflow handled inside dt-table-edge */}
       <div className="flex-1 min-h-0 overflow-hidden">

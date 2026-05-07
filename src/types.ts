@@ -51,6 +51,8 @@ export interface Rule {
   existingAccountVariable: string
   annualIncomeOperator: ConditionalOperator | null
   annualIncomeVariable: string
+  creditScoreOperator?: ConditionalOperator | null
+  creditScoreVariable?: string
   children?: Rule[]
   logicOperator?: LogicOperator
 }
@@ -100,6 +102,8 @@ export function isRuleTouched(rule: Rule): boolean {
     rule.existingAccountVariable ||
     rule.annualIncomeOperator ||
     rule.annualIncomeVariable ||
+    rule.creditScoreOperator ||
+    rule.creditScoreVariable ||
     (rule.children && rule.children.some(isRuleTouched))
   )
 }
@@ -115,7 +119,9 @@ export function isEmptyDraft(rule: Rule): boolean {
     rule.existingAccountOperator === null &&
     rule.existingAccountVariable === '' &&
     rule.annualIncomeOperator === null &&
-    rule.annualIncomeVariable === ''
+    rule.annualIncomeVariable === '' &&
+    !rule.creditScoreOperator &&
+    !rule.creditScoreVariable
   )
 }
 

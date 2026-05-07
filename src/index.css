@@ -35,6 +35,13 @@ input[type="checkbox"] { accent-color: var(--color-foreground-action); }
 select { color-scheme: light; }
 select option { background-color: var(--color-background-elevated); color: var(--color-foreground-default); }
 
+/* ── Keyframe animations ────────────────────────────── */
+/* Pulsing ring behind the Active status dot (Vercel/Linear style) */
+@keyframes dt-ping {
+  0%        { transform: scale(1);   opacity: 0.35; }
+  65%, 100% { transform: scale(1.7); opacity: 0; }
+}
+
 /* ── Components ─────────────────────────────────────── */
 @layer components {
 
@@ -53,6 +60,11 @@ select option { background-color: var(--color-background-elevated); color: var(-
   .dt-page-subtitle { font: var(--font-body-medium); color: var(--color-foreground-muted); margin: var(--space-xs) 0 0; cursor: text; }
   .dt-page-subtitle--empty { color: var(--color-foreground-muted); font-style: italic; }
   .dt-page-subtitle-input { font: var(--font-body-medium); color: var(--color-foreground-default); background-color: var(--color-background-default); border: 0; outline: none; border-radius: var(--radius-sm); padding: 2px 6px; margin: -2px -6px; box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-background-action) 18%, transparent); margin-top: var(--space-xs); width: 280px; }
+  /* Description textarea — two-line edit mode; same visual weight as .dt-page-meta */
+  /* Description area — fixed width locks the container so read↔edit swap causes no layout shift.
+     width: 100% on the textarea fills this; max-width: 100% prevents overflow on narrow viewports. */
+  .dt-desc-area { width: 560px; max-width: 100%; }
+  .dt-desc-textarea { display: block; width: 100%; box-sizing: border-box; font: var(--font-body-medium); color: var(--color-foreground-default); background-color: var(--color-background-default); border: 1px solid var(--color-border-focus); outline: none; border-radius: var(--radius-sm); padding: 3px 6px; margin: 1px 0 0; box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-background-action) 18%, transparent); resize: none; line-height: 1.5; }
 
   /* Breadcrumb */
   .dt-breadcrumb { display: flex; align-items: center; gap: var(--space-xs); margin-bottom: var(--space-sm); }
@@ -63,13 +75,16 @@ select option { background-color: var(--color-background-elevated); color: var(-
   /* Title row — h1 + status pill on one line */
   .dt-page-title-row { display: flex; align-items: center; gap: var(--space-sm); }
 
-  /* Status pill */
+  /* Status chip — pulsing live-dot pattern (Vercel/Linear style) */
   .dt-status-pill { display: inline-flex; align-items: center; gap: 5px; padding: 1px var(--space-sm); border-radius: var(--radius-sm); font: var(--font-label-small); font-weight: var(--font-weight-semibold); letter-spacing: var(--letter-spacing-label); flex-shrink: 0; }
-  .dt-status-active { background-color: var(--color-background-accent-green); color: var(--color-foreground-success); border: 1px solid color-mix(in srgb, var(--color-foreground-success) 25%, transparent); }
-  .dt-status-dot { width: 6px; height: 6px; border-radius: 50%; background-color: currentColor; flex-shrink: 0; }
+  .dt-status-active { display: inline-flex; align-items: center; gap: var(--space-xs); font: var(--font-label-small); font-weight: var(--font-weight-semibold); color: var(--color-foreground-success); letter-spacing: var(--letter-spacing-label); flex-shrink: 0; }
+  /* Ping dot — outer glow ring + inner solid dot stacked in a 10×10 wrapper */
+  .dt-status-ping-wrap { position: relative; display: inline-flex; align-items: center; justify-content: center; width: 10px; height: 10px; flex-shrink: 0; }
+  .dt-status-ping { position: absolute; inset: 0; border-radius: 50%; background-color: var(--color-foreground-success); animation: dt-ping 3.5s cubic-bezier(0, 0, 0.2, 1) infinite; }
+  .dt-status-dot { position: relative; width: 7px; height: 7px; border-radius: 50%; background-color: var(--color-foreground-success); flex-shrink: 0; }
 
   /* Page meta line */
-  .dt-page-meta { font: var(--font-body-medium); color: var(--color-foreground-muted); margin: 1px 0 0; }
+  .dt-page-meta { font: var(--font-body-medium); color: var(--color-foreground-muted); margin: 1px 0 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .dt-meta-link { font: inherit; color: inherit; background: none; border: none; padding: 0; cursor: pointer; text-decoration: underline; text-underline-offset: 2px; border-radius: var(--radius-sm); transition: color var(--duration-fast) var(--easing-default); }
   .dt-meta-link:hover { color: var(--color-foreground-default); }
   .dt-meta-link:focus-visible { outline: none; box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-background-action) 18%, transparent); }
@@ -87,9 +102,24 @@ select option { background-color: var(--color-background-elevated); color: var(-
   .dt-outline-btn:hover { background-color: var(--color-background-alt); border-color: var(--color-foreground-muted); }
   .dt-outline-btn:focus-visible { outline: none; box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-background-action) 18%, transparent); border-color: var(--color-border-focus); }
   /* Avatar stack — overlapping circular avatars with +N overflow count */
+  /* Avatar stack — collapsed by default (slivers only); springs out to the left on hover.
+     flex-direction: row-reverse → DOM first-child (JT) = rightmost visual anchor.
+     margin-left controls the overlap; more negative = tighter stack. */
   .dt-avatar-stack { display: flex; align-items: center; flex-direction: row-reverse; }
-  .dt-avatar { display: inline-flex; align-items: center; justify-content: center; width: 28px; height: 28px; border-radius: 50%; font-size: 10px; font-weight: 600; letter-spacing: 0.02em; border: 2px solid var(--color-background-elevated); box-sizing: border-box; margin-left: -6px; position: relative; flex-shrink: 0; }
-  .dt-avatar-stack .dt-avatar:last-child { margin-left: 0; }
+  .dt-avatar {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 28px; height: 28px; border-radius: 50%;
+    font-size: 10px; font-weight: 600; letter-spacing: 0.02em;
+    border: 2px solid var(--color-background-elevated); box-sizing: border-box;
+    position: relative; flex-shrink: 0;
+    /* Collapsed: -20px = slight peek, edges visible behind the one in front */
+    margin-left: -20px;
+    transition: margin-left 240ms cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+  /* JT (first-child, rightmost) stays anchored — no left margin */
+  .dt-avatar-stack .dt-avatar:first-child { margin-left: 0; }
+  /* Hover: spring out to the left, generous overlap */
+  .dt-avatar-stack:hover .dt-avatar:not(:first-child) { margin-left: -8px; }
   .dt-avatar-overflow { background-color: var(--color-foreground-default); color: var(--color-background-elevated); font-size: 9px; }
 
   /* Collab cluster — avatars + "Edited Xh ago" inline */
@@ -146,14 +176,13 @@ select option { background-color: var(--color-background-elevated); color: var(-
   /* Table sub-nav — compact filter strip between the alert banner and the
      column headers. Sits on bg-alt so it reads as scoped table chrome
      (not page surface) and the search input pops as a control on top of it. */
-  .dt-table-subnav { display: flex; align-items: center; justify-content: flex-start; gap: var(--space-sm); padding: var(--space-sm) var(--space-md); background-color: var(--color-background-default); border-top: 1px solid var(--color-border-default); border-bottom: 1px solid var(--color-border-default); }
+  .dt-table-subnav { position: relative; display: flex; align-items: center; justify-content: flex-start; gap: var(--space-sm); padding: var(--space-sm) var(--space-md); background-color: var(--color-background-default); border-top: 1px solid var(--color-border-default); border-bottom: 1px solid var(--color-border-default); }
 
   /* Rule search — sub-nav-level filter input. One step smaller than the
      standard 32px control (24px high, label-small font) so it reads as a
      filter chip, not a primary toolbar control. */
-  /* Width = (Outcome col 190px + Actions col 40px) − subnav right-padding 16px = 214px, minus 16px right-pad = 198px.
-     This aligns the search left edge with the Outcome column label when ml-auto pushes it right. */
-  .dt-rule-search { display: inline-flex; align-items: center; gap: var(--space-xs); height: 24px; box-sizing: border-box; padding: 0 var(--space-xs); background-color: var(--color-background-default); border: 1px solid var(--color-border-default); border-radius: var(--radius-sm); width: 198px; transition: border-color var(--duration-fast) var(--easing-default), box-shadow var(--duration-fast) var(--easing-default); }
+  /* Fixed-width search sits in the header toolbar between the collab cluster and Share button */
+  .dt-rule-search { display: inline-flex; align-items: center; gap: var(--space-xs); height: 28px; box-sizing: border-box; padding: 0 var(--space-sm); background-color: var(--color-background-default); border: 1px solid var(--color-border-default); border-radius: var(--radius-sm); width: 200px; transition: border-color var(--duration-fast) var(--easing-default), box-shadow var(--duration-fast) var(--easing-default); }
   .dt-rule-search:focus-within { border-color: var(--color-border-focus); box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-background-action) 18%, transparent); }
   .dt-rule-search-icon { color: var(--color-foreground-muted); flex-shrink: 0; }
   .dt-rule-search-input { flex: 1; min-width: 0; background: transparent; border: none; outline: none; font: var(--font-label-small); letter-spacing: var(--letter-spacing-label); color: var(--color-foreground-default); }
@@ -246,6 +275,10 @@ select option { background-color: var(--color-background-elevated); color: var(-
   .dt-amount-cell:focus-within { border-color: var(--color-border-focus); box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-background-action) 18%, transparent); }
   .dt-amount-prefix { font: var(--font-body-medium); color: var(--color-foreground-muted); flex-shrink: 0; }
   .dt-amount-input { font: var(--font-body-medium); color: var(--color-foreground-default); background: transparent; border: 0; outline: none; flex: 1; min-width: 0; padding: 0; font-variant-numeric: tabular-nums; }
+  /* Plain number input — same visual chrome as amount-cell but no prefix; used for credit score, counts, etc. */
+  .dt-number-input { display: flex; align-items: center; min-height: var(--control-height-md); width: 100%; background-color: var(--color-background-default); border: 1px solid var(--color-border-default); border-radius: var(--radius-sm); padding: 0 var(--space-sm); font: var(--font-body-medium); color: var(--color-foreground-default); font-variant-numeric: tabular-nums; transition: border-color var(--duration-fast) var(--easing-default), box-shadow var(--duration-fast) var(--easing-default); }
+  .dt-number-input:focus { outline: none; border-color: var(--color-border-focus); box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-background-action) 18%, transparent); }
+  .dt-number-input::placeholder { color: var(--color-foreground-muted); }
 
   /* Actions menu */
   .dt-menu { background-color: var(--color-background-elevated); border: 1px solid var(--color-border-default); border-radius: var(--radius-md); box-shadow: var(--shadow-md); padding: var(--space-xs) 0; min-width: 160px; }
@@ -328,11 +361,11 @@ select option { background-color: var(--color-background-elevated); color: var(-
   .dt-icon-btn { color: var(--color-foreground-muted); background: none; border: none; padding: var(--space-2xs); border-radius: var(--radius-sm); cursor: pointer; line-height: 0; transition: color var(--duration-fast) var(--easing-default), background-color var(--duration-fast) var(--easing-default), box-shadow var(--duration-fast) var(--easing-default); }
   /* Toolbar variant — matches the vertical height of the primary split button */
   .dt-icon-btn.dt-toolbar-btn { display: inline-flex; align-items: center; justify-content: center; padding: var(--space-sm); border-radius: var(--radius-md); }
-  /* Overflow button hidden at rest, revealed on row hover or when its menu is open */
-  .dt-col-actions .dt-toolbar-btn { opacity: 0; transition: opacity var(--duration-fast) var(--easing-default); }
+  /* Overflow button ghosted at rest (matches drag-grip pattern), full opacity on hover or menu-open */
+  .dt-col-actions .dt-toolbar-btn { opacity: 0.25; transition: opacity var(--duration-fast) var(--easing-default); }
   .dt-tbody-row:hover .dt-col-actions .dt-toolbar-btn,
   .dt-child-row:hover .dt-col-actions .dt-toolbar-btn,
-  .dt-col-actions[data-menu-open] .dt-toolbar-btn { opacity: 1; }
+  .dt-col-actions[data-menu-open] .dt-toolbar-btn { opacity: 0.8; }
   .dt-icon-btn:hover { color: var(--color-foreground-default); background-color: var(--color-background-hover); }
   .dt-icon-btn:focus-visible { color: var(--color-foreground-default); background-color: var(--color-background-hover); outline: none; box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-background-action) 18%, transparent); }
   .dt-icon-btn[aria-expanded="true"] { color: var(--color-foreground-default); background-color: var(--color-background-hover); }
@@ -463,7 +496,7 @@ select option { background-color: var(--color-background-elevated); color: var(-
   .dt-col-sticky-num { position: sticky; left: 0; z-index: 2; background-color: var(--color-background-elevated); }
   .dt-col-sticky-num-head { position: sticky; left: 0; z-index: 3; background-color: color-mix(in srgb, var(--color-background-alt) 85%, transparent); }
   /* Rule name sticks immediately to the right of the # column (w-14 = 56px). Fixed width so it doesn't grow on wide viewports. */
-  .dt-col-sticky { position: sticky; left: 56px; z-index: 2; background-color: var(--color-background-elevated); width: 220px; max-width: 220px; }
+  .dt-col-sticky { position: sticky; left: 56px; z-index: 2; background-color: var(--color-background-elevated); width: 260px; max-width: 260px; }
   .dt-col-sticky-head { position: sticky; left: 56px; z-index: 3; background-color: color-mix(in srgb, var(--color-background-alt) 85%, transparent); }
   .dt-col-sticky::after,
   .dt-col-sticky-head::after {
@@ -559,18 +592,19 @@ select option { background-color: var(--color-background-elevated); color: var(-
     display: inline-flex; align-items: center; justify-content: center;
     gap: 3px;
     flex-shrink: 0; min-width: 44px;
-    min-height: 22px; box-sizing: border-box;
+    min-height: var(--control-height-md); box-sizing: border-box;
     font: var(--font-label-small); font-weight: var(--font-weight-semibold);
     letter-spacing: 0.04em; text-transform: uppercase;
     border-radius: var(--radius-sm); padding: 2px var(--space-xs);
-    background-color: color-mix(in srgb, var(--color-foreground-action) 30%, var(--color-border-elevated));
+    background-color: var(--color-background-inverted);
     color: var(--color-foreground-on-inverted);
-    border: none;
+    border: 1px solid var(--color-border-default);
     cursor: pointer;
-    transition: opacity var(--duration-fast) var(--easing-default), box-shadow var(--duration-fast) var(--easing-default);
+    transition: border-color var(--duration-fast) var(--easing-default), background-color var(--duration-fast) var(--easing-default), box-shadow var(--duration-fast) var(--easing-default);
   }
-  .dt-logic-chip:hover { opacity: 0.82; }
-  .dt-logic-chip:focus-visible { outline: none; box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-background-inverted) 30%, transparent); }
+  .dt-logic-chip:hover { border-color: var(--color-foreground-muted); background-color: var(--color-background-hover); }
+  .dt-logic-chip:active { border-color: var(--color-border-active); background-color: var(--color-background-hover); }
+  .dt-logic-chip:focus-visible { outline: none; border-color: var(--color-border-focus); background-color: var(--color-background-elevated); box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-background-action) 18%, transparent); }
   .dt-logic-chip-chevron { opacity: 0.45; flex-shrink: 0; }
 
   /* Row entry motion — fade + slight slide-down. Applies to every tbody row
@@ -589,6 +623,24 @@ select option { background-color: var(--color-background-elevated); color: var(-
     .dt-tbody-row { animation: none; }
   }
 
+
+  /* Selection bar — persistent bottom-center status bar while rows are selected */
+  .dt-selection-bar {
+    position: fixed; bottom: var(--space-lg); left: 50%; transform: translateX(-50%);
+    display: inline-flex; align-items: center; gap: var(--space-md);
+    padding: var(--space-sm) var(--space-sm) var(--space-sm) var(--space-md);
+    background-color: var(--color-foreground-default); color: var(--color-foreground-inverse);
+    border-radius: var(--radius-md); box-shadow: var(--shadow-menu);
+    z-index: 9999; /* --z-dropdown — below toast (10000) so undo toast wins if both appear */
+    animation: dt-toast-in var(--duration-normal) var(--easing-out) both;
+  }
+  .dt-selection-bar-count { font: var(--font-label-medium); letter-spacing: var(--letter-spacing-label); }
+  .dt-selection-bar-action { font: var(--font-label-medium); letter-spacing: var(--letter-spacing-label); color: var(--color-foreground-inverse); background: none; border: none; padding: var(--space-2xs) var(--space-sm); border-radius: var(--radius-sm); cursor: pointer; text-decoration: underline; text-underline-offset: 2px; transition: background-color var(--duration-fast) var(--easing-default); }
+  .dt-selection-bar-action:hover { background-color: color-mix(in srgb, transparent 85%, var(--color-foreground-inverse) 15%); text-decoration: none; }
+  .dt-selection-bar-action:focus-visible { outline: none; box-shadow: 0 0 0 2px var(--color-foreground-inverse); }
+  @media (prefers-reduced-motion: reduce) {
+    .dt-selection-bar { animation: none; }
+  }
 
   /* Toast — single-toast notification anchored bottom-center via portal. Used for delete-undo. */
   @keyframes dt-toast-in {

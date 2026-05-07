@@ -162,11 +162,16 @@ const PAIRINGS = [
   // Row-level warning indicator — icon + number sit on normal row background (no tint)
   { text: '--color-foreground-warning',       bg: WHITE,                               label: 'Invalid-row warning icon + number' },
   // Validation banner — bright yellow strip
-  { text: '--color-foreground-warning-dark',  bg: '--color-background-warning-alt',    label: 'Validation banner text + CTA on yellow' },
-  // AND/OR logic chip — dark navy text on blue-tinted bg (matches tree connector line color)
-  { text: '--color-foreground-on-inverted', bg: LOGIC_CHIP_BG,                         label: 'AND/OR logic chip text' },
+  { text: '--color-foreground-warning-dark',  bg: '--color-background-warning-alt',    label: 'Validation banner text + CTA on amber-100' },
+  // AND/OR logic chip — dark navy text on light slate (--color-background-inverted)
+  { text: '--color-foreground-on-inverted', bg: '--color-background-inverted',          label: 'AND/OR logic chip text' },
   // Conditional operator chip — dark navy text on very light gray bg
   { text: '--color-foreground-on-inverted', bg: '--color-background-hover',             label: 'Conditional operator chip text' },
+  // Avatar stack — white initials on each avatar background color (darkened to -700 variants for AA)
+  { text: '#ffffff', bg: '--color-avatar-indigo',  label: 'Avatar: indigo (JT)' },
+  { text: '#ffffff', bg: '--color-avatar-sky',     label: 'Avatar: sky (MR)' },
+  { text: '#ffffff', bg: '--color-avatar-emerald', label: 'Avatar: emerald (AS)' },
+  { text: '#ffffff', bg: '--color-avatar-amber',   label: 'Avatar: amber (DK)' },
 ]
 
 // ─── Run ───────────────────────────────────────────────────────────────────────

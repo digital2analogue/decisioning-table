@@ -182,7 +182,7 @@ export function RuleRow({
               aria-label={`Incomplete rule: missing ${missing.join(', ')}`}
               title={`Missing: ${missing.join(', ')}`}
             >
-              <AlertTriangleIcon size={16} fill="currentColor" stroke="white" strokeWidth={1.5} />
+              <AlertTriangleIcon size={16} fill="currentColor" stroke="white" strokeWidth={2} />
             </span>
           )}
           <span className="dt-row-number">{index + 1}</span>
@@ -231,6 +231,18 @@ export function RuleRow({
           onVariableChange={(v) => onUpdate(rule.id, { annualIncomeVariable: v })}
           variablePlaceholder="Amount"
           variableType="amount"
+        />
+      </td>
+
+      {/* Credit Score — operator + plain number */}
+      <td className="dt-td min-w-[200px]">
+        <ConditionalCell
+          operator={rule.creditScoreOperator ?? null}
+          variable={rule.creditScoreVariable ?? ''}
+          onOperatorChange={(op) => onUpdate(rule.id, { creditScoreOperator: op })}
+          onVariableChange={(v) => onUpdate(rule.id, { creditScoreVariable: v })}
+          variablePlaceholder="Score"
+          variableType="number"
         />
       </td>
 

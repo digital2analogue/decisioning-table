@@ -328,7 +328,7 @@ export function OnboardingFlow({ onComplete }: OnboardingFlowProps) {
         </section>
 
         {/* Spacer for sticky footer */}
-        <div style={{ height: '88px' }} />
+        <div className="ob-footer-spacer" />
       </main>
 
       {/* Sticky footer */}

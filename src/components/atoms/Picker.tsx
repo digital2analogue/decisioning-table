@@ -9,6 +9,7 @@ import {
 import { createPortal } from 'react-dom'
 import { ChevronDownIcon } from 'lucide-react'
 import { cn } from '../../lib/utils'
+import { computePortalPos } from '../../lib/portalPosition'
 
 export interface PickerOption<T> {
   value: T
@@ -45,11 +46,6 @@ export interface PickerProps<T extends string> {
   renderOption?: (option: PickerOption<T>, isActive: boolean) => ReactNode
 }
 
-interface DropdownPos {
-  top: number
-  left: number
-  width?: number
-}
 
 const TRIGGER_CLASS: Record<PickerTriggerVariant, string> = {
   'select-trigger': 'dt-select-trigger',
@@ -80,7 +76,7 @@ export function Picker<T extends string>({
   const triggerRef = useRef<HTMLButtonElement>(null)
   const listboxRef = useRef<HTMLDivElement>(null)
   const [isOpen, setIsOpen] = useState(false)
-  const [pos, setPos] = useState<DropdownPos | null>(null)
+  const [pos, setPos] = useState<{ top: number; left: number; width?: number } | null>(null)
   const [focusedIdx, setFocusedIdx] = useState<number>(-1)
   // True only when focus movement came from keyboard — prevents mouse-hover
   // from painting the inset focus ring (CSS :hover already handles background).
@@ -101,8 +97,8 @@ export function Picker<T extends string>({
   const open = useCallback(
     (focusFirst?: 'first' | 'selected') => {
       if (triggerRef.current) {
-        const r = triggerRef.current.getBoundingClientRect()
-        setPos({ top: r.bottom + 4, left: r.left, width: r.width })
+        const p = computePortalPos(triggerRef.current, 'below-left')
+        setPos({ top: p.top!, left: p.left!, width: p.width })
       }
       setIsOpen(true)
       const startIdx =

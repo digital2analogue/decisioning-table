@@ -61,7 +61,7 @@ export function ValidationBanner({ ruleset }: ValidationBannerProps) {
       <p className="dt-validation-banner-text">
         <strong><span className="dt-metric">{count}</span> incomplete {noun}</strong> must be filled in before this decision model can run.{' '}
         <button type="button" onClick={scrollToFirst} className="dt-validation-banner-cta">
-          Jump to first incomplete
+          Fix incomplete rules
         </button>
       </p>
     </div>

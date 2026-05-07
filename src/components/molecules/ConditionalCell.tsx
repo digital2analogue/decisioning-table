@@ -5,9 +5,8 @@ import { dataElements } from '../../data'
 import { cn } from '../../lib/utils'
 import { Picker, type PickerOption } from '../atoms/Picker'
 import { AmountCell } from '../atoms/AmountCell'
+import { computePortalPos, type PortalPos } from '../../lib/portalPosition'
 import '../../index.css'
-
-interface DropdownPos { top: number; left: number; width?: number }
 
 const CONDITIONAL_OPERATOR_OPTIONS: PickerOption<ConditionalOperator>[] = [
   { value: '==', label: '==' },
@@ -27,8 +26,8 @@ export interface ConditionalCellProps {
   onVariableChange: (variable: string) => void
   /** Placeholder text for the variable input when no variable is selected. */
   variablePlaceholder?: string
-  /** 'search' = data-element combobox (default); 'amount' = dollar amount input */
-  variableType?: 'search' | 'amount'
+  /** 'search' = data-element combobox (default); 'amount' = dollar amount input; 'number' = plain number input (no prefix) */
+  variableType?: 'search' | 'amount' | 'number'
 }
 
 export function ConditionalCell({
@@ -41,7 +40,7 @@ export function ConditionalCell({
 }: ConditionalCellProps) {
   const [isVariableOpen, setIsVariableOpen] = useState(false)
   const [variableSearch, setVariableSearch] = useState('')
-  const [variablePos, setVariablePos] = useState<DropdownPos | null>(null)
+  const [variablePos, setVariablePos] = useState<PortalPos | null>(null)
   const variableRef = useRef<HTMLDivElement>(null)
   const variableInputRef = useRef<HTMLInputElement>(null)
 
@@ -54,8 +53,7 @@ export function ConditionalCell({
 
   const openVariable = useCallback(() => {
     if (variableRef.current) {
-      const r = variableRef.current.getBoundingClientRect()
-      setVariablePos({ top: r.bottom + 4, left: r.left, width: r.width })
+      setVariablePos(computePortalPos(variableRef.current, 'below-left'))
     }
     setIsVariableOpen(true)
   }, [])
@@ -91,12 +89,26 @@ export function ConditionalCell({
         ariaLabel="Condition operator"
       />
 
-      {/* Variable input — amount input or data-element search combobox */}
+      {/* Variable input — amount input, plain number, or data-element search combobox */}
       {variableType === 'amount' ? (
         <div className="min-w-0 flex-1">
           <AmountCell
             value={variable ? parseFloat(variable) : null}
             onChange={(v) => onVariableChange(v !== null ? String(v) : '')}
+          />
+        </div>
+      ) : variableType === 'number' ? (
+        <div className="min-w-0 flex-1">
+          <input
+            type="text"
+            inputMode="numeric"
+            value={variable ?? ''}
+            placeholder={variablePlaceholder}
+            onChange={(e) => {
+              const raw = e.target.value.replace(/[^0-9]/g, '')
+              onVariableChange(raw)
+            }}
+            className={cn('dt-amount-input dt-number-input', !variable && 'dt-conditional-operator-empty')}
           />
         </div>
       ) : (
@@ -119,17 +131,17 @@ export function ConditionalCell({
         </div>
       )}
 
-      {variableType === 'search' && isVariableOpen && variablePos && filteredVariables.length > 0 && createPortal(
+      {(variableType === 'search' || variableType === undefined) && isVariableOpen && variablePos && filteredVariables.length > 0 && createPortal(
         <div
           className="dt-conditional-dropdown"
           style={{
             position: 'fixed',
             top: variablePos.top,
             left: variablePos.left,
-            width: variablePos.width,
-            maxHeight: 192,
+            width: variablePos.width ?? undefined,
+            maxHeight: 192,   // --dropdown-max-height
             overflowY: 'auto',
-            zIndex: 9999,
+            zIndex: 9999,     // --z-dropdown
           }}
         >
           {filteredVariables.map((el) => (

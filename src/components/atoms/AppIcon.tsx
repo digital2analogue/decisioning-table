@@ -1,12 +1,34 @@
-export function AppIcon({ size = 20 }: { size?: number }) {
+export function AppIcon({ size = 40 }: { size?: number }) {
   return (
-    <svg width={size} height={size} viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
-      <rect width="20" height="20" rx="3" fill="#2456E4" />
-      <rect x="2" y="2" width="16" height="5" rx="1" fill="#3D6BF0" />
-      <line x1="6.5" y1="2" x2="6.5" y2="18" stroke="rgba(255,255,255,0.3)" strokeWidth="0.75" />
-      <line x1="12" y1="2" x2="12" y2="18" stroke="rgba(255,255,255,0.3)" strokeWidth="0.75" />
-      <line x1="2" y1="7" x2="18" y2="7" stroke="rgba(255,255,255,0.3)" strokeWidth="0.75" />
-      <line x1="2" y1="12.5" x2="18" y2="12.5" stroke="rgba(255,255,255,0.3)" strokeWidth="0.75" />
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 128 128"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      aria-hidden="true"
+      focusable="false"
+    >
+      <defs>
+        <linearGradient id="appIconGrad" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stopColor="#5AA8FF" />
+          <stop offset="100%" stopColor="#1565F9" />
+        </linearGradient>
+      </defs>
+      {/* Document body */}
+      <path
+        d="M22 12C22 8.7 24.7 6 28 6H76L106 36V100C106 103.3 103.3 106 100 106H28C24.7 106 22 103.3 22 100V12Z"
+        fill="url(#appIconGrad)"
+      />
+      {/* Folded corner */}
+      <path d="M76 6L106 36H82C78.7 36 76 33.3 76 30V6Z" fill="#0C56E8" />
+      {/* Stems */}
+      <path d="M46 68H82" stroke="white" strokeWidth="6" strokeLinecap="round" />
+      <path d="M64 68V50" stroke="white" strokeWidth="6" strokeLinecap="round" />
+      {/* Decision nodes */}
+      <circle cx="46" cy="68" r="9" fill="white" />
+      <circle cx="82" cy="68" r="9" fill="white" />
+      <circle cx="64" cy="50" r="9" fill="white" />
     </svg>
   )
 }

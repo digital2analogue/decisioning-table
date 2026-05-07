@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from 'react'
-import { MoreHorizontalIcon, CheckIcon } from 'lucide-react'
+import { MoreHorizontalIcon, CheckIcon, Trash2Icon } from 'lucide-react'
 import { createPortal } from 'react-dom'
+import { computePortalPos, type PortalPos } from '../../lib/portalPosition'
 
 export interface TabItemProps {
   id: string
@@ -17,7 +18,7 @@ export function TabItem({ id, name, isActive, onClick, onRename, onDuplicate, on
   const [editing, setEditing] = useState(false)
   const [draft, setDraft] = useState(name)
   const [menuOpen, setMenuOpen] = useState(false)
-  const [menuPos, setMenuPos] = useState<{ bottom: number; right: number } | null>(null)
+  const [menuPos, setMenuPos] = useState<PortalPos | null>(null)
   const inputRef = useRef<HTMLInputElement>(null)
   const menuBtnRef = useRef<HTMLButtonElement>(null)
 
@@ -37,8 +38,7 @@ export function TabItem({ id, name, isActive, onClick, onRename, onDuplicate, on
   function openMenu(e: React.MouseEvent) {
     e.stopPropagation()
     if (!menuBtnRef.current) return
-    const r = menuBtnRef.current.getBoundingClientRect()
-    setMenuPos({ bottom: window.innerHeight - r.top + 4, right: window.innerWidth - r.right })
+    setMenuPos(computePortalPos(menuBtnRef.current, 'above-right'))
     setMenuOpen(true)
   }
 
@@ -80,14 +80,12 @@ export function TabItem({ id, name, isActive, onClick, onRename, onDuplicate, on
         <span>{name}</span>
         <button
           ref={menuBtnRef}
-          onClick={isActive ? openMenu : undefined}
-          className="dt-tab-edit-btn"
-          title={isActive ? 'Tab options' : undefined}
-          aria-label={isActive ? `Options for ${name}` : undefined}
-          aria-haspopup={isActive ? 'menu' : undefined}
-          aria-expanded={isActive ? menuOpen : undefined}
-          tabIndex={isActive ? undefined : -1}
-          style={{ visibility: isActive ? 'visible' : 'hidden' }}
+          onClick={openMenu}
+          className={`dt-tab-edit-btn${menuOpen ? ' dt-tab-edit-btn-open' : ''}`}
+          title="Tab options"
+          aria-label={`Options for ${name}`}
+          aria-haspopup="menu"
+          aria-expanded={menuOpen}
         >
           <MoreHorizontalIcon size={12} />
         </button>
@@ -116,6 +114,7 @@ export function TabItem({ id, name, isActive, onClick, onRename, onDuplicate, on
             <hr className="dt-menu-divider" />
             <button type="button" role="menuitem" className="dt-menu-item-danger"
               onClick={() => { onDelete(id); closeMenu() }}>
+              <Trash2Icon size={13} />
               Delete ruleset
             </button>
           </div>

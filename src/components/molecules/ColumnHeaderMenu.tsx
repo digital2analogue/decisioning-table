@@ -1,5 +1,7 @@
-import { useEffect, useState, type RefObject } from 'react'
+import { useEffect, type RefObject } from 'react'
 import { createPortal } from 'react-dom'
+import { Trash2Icon } from 'lucide-react'
+import { usePortalPosition } from '../../lib/portalPosition'
 
 export interface ColumnHeaderMenuProps {
   anchorRef: RefObject<HTMLElement | null>
@@ -9,13 +11,7 @@ export interface ColumnHeaderMenuProps {
 }
 
 export function ColumnHeaderMenu({ anchorRef, onChangeDataElement, onDelete, onClose }: ColumnHeaderMenuProps) {
-  const [pos, setPos] = useState<{ top: number; right: number } | null>(null)
-
-  useEffect(() => {
-    if (!anchorRef.current) return
-    const r = anchorRef.current.getBoundingClientRect()
-    setPos({ top: r.bottom + 4, right: window.innerWidth - r.right })
-  }, [anchorRef])
+  const pos = usePortalPosition(anchorRef, 'below-right')
 
   useEffect(() => {
     function close() { onClose() }
@@ -48,6 +44,7 @@ export function ColumnHeaderMenu({ anchorRef, onChangeDataElement, onDelete, onC
           className="dt-menu-item-danger"
           onClick={() => { onDelete(); onClose() }}
         >
+          <Trash2Icon size={13} />
           Delete
         </button>
       </div>

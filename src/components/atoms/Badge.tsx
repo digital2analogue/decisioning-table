@@ -30,7 +30,7 @@ export function AttributeSelectBadge({ value, onChange, error }: AttributeSelect
       renderTrigger={({ label }) => (
         <>
           {label}
-          <ChevronDownIcon size={12} className="dt-select-chevron" style={{ flexShrink: 0 }} />
+          <ChevronDownIcon size={12} className="dt-select-chevron" />
         </>
       )}
     />

@@ -1,5 +1,7 @@
-import { useEffect, useState, type RefObject } from 'react'
+import { useEffect, type RefObject } from 'react'
 import { createPortal } from 'react-dom'
+import { Trash2Icon } from 'lucide-react'
+import { usePortalPosition } from '../../lib/portalPosition'
 
 export interface ActionsMenuProps {
   anchorRef: RefObject<HTMLElement | null>
@@ -25,13 +27,7 @@ export function ActionsMenu({
   onMoveDown,
   isChild,
 }: ActionsMenuProps) {
-  const [pos, setPos] = useState<{ top: number; right: number } | null>(null)
-
-  useEffect(() => {
-    if (!anchorRef.current) return
-    const r = anchorRef.current.getBoundingClientRect()
-    setPos({ top: r.bottom + 4, right: window.innerWidth - r.right })
-  }, [anchorRef])
+  const pos = usePortalPosition(anchorRef, 'below-right')
 
   useEffect(() => {
     function close() { onClose() }
@@ -78,6 +74,7 @@ export function ActionsMenu({
         </button>
         <hr className="dt-menu-divider" />
         <button type="button" role="menuitem" onClick={onDelete} className="dt-menu-item-danger">
+          <Trash2Icon size={13} />
           {isChild ? 'Delete child rule' : 'Delete rule'}
         </button>
       </div>

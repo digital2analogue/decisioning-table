@@ -212,7 +212,7 @@ select option { background-color: var(--color-background-elevated); color: var(-
   .dt-tbody-row-selected { background-color: color-mix(in srgb, var(--color-background-elevated) 94%, var(--color-background-action) 6%); }
   .dt-tbody-row-selected:hover { background-color: color-mix(in srgb, var(--color-background-elevated) 91%, var(--color-background-action) 9%); }
   /* Row numbers and warning indicators in the # column */
-  .dt-row-number { font-size: var(--font-size-xs); font-weight: var(--font-weight-regular); color: var(--color-foreground-alt); letter-spacing: 0; font-variant-numeric: tabular-nums; }
+  .dt-row-number { font-size: var(--font-size-xs); font-weight: var(--font-weight-regular); color: var(--color-foreground-alt); letter-spacing: 0; font-variant-numeric: tabular-nums; font-family: var(--font-family-mono); }
   .dt-empty-cell { font: var(--font-body-medium); color: var(--color-foreground-muted); }
   .dt-empty-state { display: flex; flex-direction: column; align-items: center; gap: var(--space-xs); padding: var(--space-lg) 0; }
   .dt-empty-icon { color: var(--color-foreground-muted); margin-bottom: var(--space-sm); opacity: 0.5; }
@@ -274,14 +274,14 @@ select option { background-color: var(--color-background-elevated); color: var(-
   .dt-amount-cell { display: inline-flex; align-items: center; gap: 2px; min-height: var(--control-height-md); box-sizing: border-box; padding: 0 var(--space-sm); width: 100%; background-color: var(--color-background-default); border: 1px solid var(--color-border-default); border-radius: var(--radius-sm); transition: border-color var(--duration-fast) var(--easing-default), box-shadow var(--duration-fast) var(--easing-default); }
   .dt-amount-cell:focus-within { border-color: var(--color-border-focus); box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-background-action) 18%, transparent); }
   .dt-amount-prefix { font: var(--font-body-medium); color: var(--color-foreground-muted); flex-shrink: 0; }
-  .dt-amount-input { font: var(--font-body-medium); color: var(--color-foreground-default); background: transparent; border: 0; outline: none; flex: 1; min-width: 0; padding: 0; font-variant-numeric: tabular-nums; }
+  .dt-amount-input { font: var(--font-body-medium); font-family: var(--font-family-mono); color: var(--color-foreground-default); background: transparent; border: 0; outline: none; flex: 1; min-width: 0; padding: 0; font-variant-numeric: tabular-nums; }
   /* Plain number input — same visual chrome as amount-cell but no prefix; used for credit score, counts, etc. */
-  .dt-number-input { display: flex; align-items: center; min-height: var(--control-height-md); width: 100%; background-color: var(--color-background-default); border: 1px solid var(--color-border-default); border-radius: var(--radius-sm); padding: 0 var(--space-sm); font: var(--font-body-medium); color: var(--color-foreground-default); font-variant-numeric: tabular-nums; transition: border-color var(--duration-fast) var(--easing-default), box-shadow var(--duration-fast) var(--easing-default); }
+  .dt-number-input { display: flex; align-items: center; min-height: var(--control-height-md); width: 100%; background-color: var(--color-background-default); border: 1px solid var(--color-border-default); border-radius: var(--radius-sm); padding: 0 var(--space-sm); font: var(--font-body-medium); font-family: var(--font-family-mono); color: var(--color-foreground-default); font-variant-numeric: tabular-nums; transition: border-color var(--duration-fast) var(--easing-default), box-shadow var(--duration-fast) var(--easing-default); }
   .dt-number-input:focus { outline: none; border-color: var(--color-border-focus); box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-background-action) 18%, transparent); }
   .dt-number-input::placeholder { color: var(--color-foreground-muted); }
 
   /* Actions menu */
-  .dt-menu { background-color: var(--color-background-elevated); border: 1px solid var(--color-border-default); border-radius: var(--radius-md); box-shadow: var(--shadow-md); padding: var(--space-xs) 0; min-width: 160px; }
+  .dt-menu { background-color: var(--color-background-elevated); border: 1px solid var(--color-border-default); border-radius: var(--radius-md); box-shadow: var(--shadow-brand-tint); padding: var(--space-xs) 0; min-width: 160px; }
   .dt-menu-item { display: flex; align-items: center; gap: var(--space-xs); width: 100%; font: var(--font-label-medium); letter-spacing: var(--letter-spacing-label); color: var(--color-foreground-default); background: none; border: none; cursor: pointer; padding: 7px var(--space-md); transition: background-color var(--duration-fast) var(--easing-default); text-align: left; }
   .dt-menu-item:hover,
   .dt-menu-item[data-highlighted] { background-color: var(--color-background-alt); }
@@ -293,7 +293,7 @@ select option { background-color: var(--color-background-elevated); color: var(-
   .dt-menu-item-danger { display: flex; align-items: center; gap: var(--space-xs); width: 100%; font: var(--font-label-medium); letter-spacing: var(--letter-spacing-label); color: var(--color-foreground-danger); background: none; border: none; cursor: pointer; padding: 7px var(--space-md); transition: background-color var(--duration-fast) var(--easing-default); text-align: left; }
   .dt-menu-item-danger:hover,
   .dt-menu-item-danger[data-highlighted] { background-color: var(--color-background-danger-subtle); }
-  .dt-menu-item-danger:focus-visible { outline: none; background-color: var(--color-background-danger-subtle); box-shadow: inset 0 0 0 2px var(--color-foreground-danger); }
+  .dt-menu-item-danger:focus-visible { outline: none; background-color: var(--color-background-danger-subtle); box-shadow: inset 0 0 0 3px color-mix(in srgb, var(--color-foreground-danger) 18%, transparent); }
   .dt-menu-item-danger:active { background-color: color-mix(in srgb, var(--color-background-danger-subtle) 70%, var(--color-foreground-danger) 30%); }
   .dt-menu-item-danger:disabled { color: var(--color-foreground-disabled); cursor: not-allowed; background-color: transparent; }
   .dt-menu-item-danger:disabled:hover { background-color: transparent; }
@@ -468,7 +468,7 @@ select option { background-color: var(--color-background-elevated); color: var(-
   .dt-conditional-variable--filled::placeholder { color: var(--color-foreground-default); opacity: 1; }
   .dt-conditional-variable:hover { background-color: color-mix(in srgb, var(--color-background-hover) 80%, var(--color-border-elevated) 20%); }
   .dt-conditional-variable:focus-visible { outline: none; box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-background-action) 18%, transparent); background-color: var(--color-background-elevated); color: var(--color-foreground-default); }
-  .dt-conditional-dropdown { background-color: var(--color-background-elevated); border: 1px solid var(--color-border-default); border-radius: var(--radius-sm); box-shadow: var(--shadow-md); z-index: 50; min-width: 160px; overflow: hidden; }
+  .dt-conditional-dropdown { background-color: var(--color-background-elevated); border: 1px solid var(--color-border-default); border-radius: var(--radius-sm); box-shadow: var(--shadow-brand-tint); z-index: 50; min-width: 160px; overflow: hidden; }
   .dt-conditional-dropdown-item { display: block; width: 100%; padding: var(--space-xs) var(--space-sm); text-align: left; font: var(--font-label-medium); color: var(--color-foreground-default); background: none; border: none; border-bottom: 1px solid var(--color-border-subtle); cursor: pointer; transition: background-color var(--duration-fast) var(--easing-default), box-shadow var(--duration-fast) var(--easing-default); }
   .dt-conditional-dropdown-item:last-child { border-bottom: none; }
   .dt-conditional-dropdown-item:hover { background-color: var(--color-background-alt); }
@@ -587,24 +587,24 @@ select option { background-color: var(--color-background-elevated); color: var(-
   .dt-th-label-wrap { display: flex; align-items: center; justify-content: space-between; gap: var(--space-xs); }
   .dt-th-menu-btn { padding: 2px; border-radius: var(--radius-sm); }
 
-  /* AND / OR logic chips — cool blue-gray pill, distinct from form inputs without being heavy */
+  /* AND / OR logic chips — blue-tinted frosted glass; same brand hue as action color at low alpha */
   .dt-logic-chip {
     display: inline-flex; align-items: center; justify-content: center;
     gap: 3px;
-    flex-shrink: 0; min-width: 44px;
-    min-height: var(--control-height-md); box-sizing: border-box;
+    flex-shrink: 0; min-width: 36px;
+    height: 22px; box-sizing: border-box;
     font: var(--font-label-small); font-weight: var(--font-weight-semibold);
     letter-spacing: 0.04em; text-transform: uppercase;
-    border-radius: var(--radius-sm); padding: 2px var(--space-xs);
-    background-color: var(--color-background-inverted);
-    color: var(--color-foreground-on-inverted);
-    border: 1px solid var(--color-border-default);
+    border-radius: var(--radius-sm); padding: 0 var(--space-xs);
+    background-color: rgba(36, 86, 228, 0.07); /* glass-chip */
+    color: var(--color-foreground-action);
+    border: 1px solid rgba(36, 86, 228, 0.15); /* glass-chip */
     cursor: pointer;
     transition: border-color var(--duration-fast) var(--easing-default), background-color var(--duration-fast) var(--easing-default), box-shadow var(--duration-fast) var(--easing-default);
   }
-  .dt-logic-chip:hover { border-color: var(--color-foreground-muted); background-color: var(--color-background-hover); }
-  .dt-logic-chip:active { border-color: var(--color-border-active); background-color: var(--color-background-hover); }
-  .dt-logic-chip:focus-visible { outline: none; border-color: var(--color-border-focus); background-color: var(--color-background-elevated); box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-background-action) 18%, transparent); }
+  .dt-logic-chip:hover { border-color: rgba(36, 86, 228, 0.25); background-color: rgba(36, 86, 228, 0.12); } /* glass-chip hover */
+  .dt-logic-chip:active { border-color: rgba(36, 86, 228, 0.35); background-color: rgba(36, 86, 228, 0.16); }
+  .dt-logic-chip:focus-visible { outline: none; box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-background-action) 18%, transparent); }
   .dt-logic-chip-chevron { opacity: 0.45; flex-shrink: 0; }
 
   /* Row entry motion — fade + slight slide-down. Applies to every tbody row
@@ -704,7 +704,7 @@ select option { background-color: var(--color-background-elevated); color: var(-
   .ob-outcome-item { display: flex; align-items: flex-start; gap: var(--space-md); padding: var(--space-md); background-color: var(--color-background-elevated); border: 1px solid var(--color-border-default); border-radius: var(--radius-lg); cursor: pointer; transition: border-color var(--duration-fast) var(--easing-default), box-shadow var(--duration-fast) var(--easing-default), background-color var(--duration-fast) var(--easing-default); }
   .ob-outcome-item:hover { border-color: var(--color-foreground-muted); background-color: var(--color-background-alt); }
   .ob-outcome-item:focus-visible { outline: 2px solid var(--color-foreground-action); outline-offset: 2px; }
-  .ob-outcome-item--selected { border-color: var(--color-foreground-action); background-color: color-mix(in srgb, var(--color-background-elevated) 92%, var(--color-background-action) 8%); box-shadow: 0 0 0 2px var(--color-foreground-action); }
+  .ob-outcome-item--selected { border-color: var(--color-foreground-action); background-color: color-mix(in srgb, var(--color-background-elevated) 92%, var(--color-background-action) 8%); box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-background-action) 18%, transparent); }
   .ob-radio { width: 16px; height: 16px; accent-color: var(--color-foreground-action); flex-shrink: 0; margin-top: 2px; cursor: pointer; }
   .ob-outcome-text { display: flex; flex-direction: column; gap: var(--space-xs); }
   .ob-outcome-label { font: var(--font-label-medium); letter-spacing: var(--letter-spacing-label); color: var(--color-foreground-default); }

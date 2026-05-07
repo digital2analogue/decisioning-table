@@ -182,7 +182,7 @@ export function RuleRow({
               aria-label={`Incomplete rule: missing ${missing.join(', ')}`}
               title={`Missing: ${missing.join(', ')}`}
             >
-              <AlertTriangleIcon size={16} fill="currentColor" stroke="white" strokeWidth={2} />
+              <AlertTriangleIcon size={16} strokeWidth={1.75} />
             </span>
           )}
           <span className="dt-row-number">{index + 1}</span>

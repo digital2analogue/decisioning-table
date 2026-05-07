@@ -37,6 +37,7 @@ export function DecisioningTable({
   onAutoFocusConsumed,
 }: DecisioningTableProps) {
   const [openMenuId, setOpenMenuId] = useState<string | null>(null)
+  const [collapsingIds, setCollapsingIds] = useState<Set<string>>(new Set())
   const [openColumnMenuId, setOpenColumnMenuId] = useState<string | null>(null)
   const existingAccountBtnRef = useRef<HTMLButtonElement>(null)
   const annualIncomeBtnRef = useRef<HTMLButtonElement>(null)
@@ -248,12 +249,16 @@ export function DecisioningTable({
   }
 
   function toggleExpand(id: string) {
-    setExpandedIds((prev) => {
-      const next = new Set(prev)
-      if (next.has(id)) next.delete(id)
-      else next.add(id)
-      return next
-    })
+    if (expandedIds.has(id)) {
+      // Animate children out before removing them from the DOM
+      setCollapsingIds((prev) => new Set(prev).add(id))
+      setTimeout(() => {
+        setExpandedIds((prev) => { const next = new Set(prev); next.delete(id); return next })
+        setCollapsingIds((prev) => { const next = new Set(prev); next.delete(id); return next })
+      }, 150)
+    } else {
+      setExpandedIds((prev) => new Set(prev).add(id))
+    }
   }
 
   const allSelected = ruleset.rules.length > 0 && ruleset.rules.every((r) => r.selected)
@@ -376,7 +381,7 @@ export function DecisioningTable({
                     autoFocus={autoFocusRuleId === rule.id}
                     onAutoFocusConsumed={onAutoFocusConsumed}
                   />
-                  {expanded && children.map((child, ci) => (
+                  {(expanded || collapsingIds.has(rule.id)) && children.map((child, ci) => (
                     <ChildRuleRow
                       key={child.id}
                       rule={child}
@@ -384,6 +389,7 @@ export function DecisioningTable({
                       childIndex={ci}
                       totalChildren={children.length}
                       isLast={ci === children.length - 1}
+                      isCollapsing={collapsingIds.has(rule.id)}
                       menuOpen={openMenuId === child.id}
                       onMenuToggle={() => setOpenMenuId(openMenuId === child.id ? null : child.id)}
                       onMenuClose={() => setOpenMenuId(null)}

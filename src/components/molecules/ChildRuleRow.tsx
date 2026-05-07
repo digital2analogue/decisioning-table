@@ -17,6 +17,7 @@ export interface ChildRuleRowProps {
   childIndex: number
   totalChildren: number
   isLast: boolean
+  isCollapsing?: boolean
   menuOpen: boolean
   onMenuToggle: () => void
   onMenuClose: () => void
@@ -32,6 +33,7 @@ export function ChildRuleRow({
   childIndex,
   totalChildren,
   isLast,
+  isCollapsing,
   menuOpen,
   onMenuToggle,
   onMenuClose,
@@ -59,7 +61,7 @@ export function ChildRuleRow({
       data-rule-invalid={isInvalid ? 'true' : undefined}
       aria-invalid={isInvalid || undefined}
       onBlur={handleFocusOut}
-      className={cn('dt-tbody-row dt-child-row', isLast && 'dt-child-row-last')}
+      className={cn('dt-tbody-row dt-child-row', isLast && 'dt-child-row-last', isCollapsing && 'dt-child-row-collapsing')}
     >
       {/* Checkbox column — empty for children */}
       <td className="dt-child-cell-bare dt-td"></td>
@@ -73,7 +75,7 @@ export function ChildRuleRow({
             aria-label={`Incomplete child rule: missing ${missing.join(', ')}`}
             title={`Missing: ${missing.join(', ')}`}
           >
-            <AlertTriangleIcon size={16} fill="currentColor" stroke="white" strokeWidth={1.5} />
+            <AlertTriangleIcon size={16} strokeWidth={1.75} />
           </span>
         )}
       </td>

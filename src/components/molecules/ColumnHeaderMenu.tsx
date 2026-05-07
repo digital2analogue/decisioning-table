@@ -23,11 +23,11 @@ export function ColumnHeaderMenu({ anchorRef, onChangeDataElement, onDelete, onC
 
   return createPortal(
     <>
-      <div className="fixed inset-0 z-[9998]" onClick={onClose} />
+      <div className="fixed inset-0" style={{ zIndex: 'var(--z-backdrop)' }} onClick={onClose} />
       <div
         className="dt-menu"
         role="menu"
-        style={{ position: 'fixed', top: pos.top, right: pos.right, zIndex: 9999 }}
+        style={{ position: 'fixed', top: pos.top, right: pos.right, zIndex: 'var(--z-dropdown)' }}
       >
         <button
           type="button"

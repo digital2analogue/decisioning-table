@@ -3,6 +3,7 @@ import { ChevronDownIcon, PlusIcon, UserPlusIcon } from 'lucide-react'
 import { AppIcon } from '../atoms/AppIcon'
 import { AvatarStack } from '../atoms/AvatarStack'
 import type { Rule, Ruleset, ModelConfig } from '../../types'
+import { isRuleValid, isRuleTouched } from '../../types'
 import { initialRulesets as defaultRulesets } from '../../data'
 import { DecisioningTable } from '../organisms/DecisioningTable'
 import { RulesetTabs } from '../organisms/RulesetTabs'
@@ -53,6 +54,15 @@ export function DecisioningEngine({ modelConfig, initialRulesets }: DecisioningE
   function commitDesc() {
     setDesc(descDraft.trim())
     setEditingDesc(false)
+  }
+
+  function selectInvalidRules() {
+    const rs = rulesets.find((r) => r.id === activeRulesetId)
+    if (!rs) return
+    const updatedRules = rs.rules.map((rule) =>
+      isRuleTouched(rule) && !isRuleValid(rule) ? { ...rule, selected: true } : rule,
+    )
+    updateRuleset({ ...rs, rules: updatedRules })
   }
 
   function updateRuleset(updated: Ruleset) {
@@ -160,81 +170,75 @@ export function DecisioningEngine({ modelConfig, initialRulesets }: DecisioningE
     <div className="dt-page h-screen flex flex-col">
       {/* Header */}
       <div className="dt-page-header pl-4 pr-6 pt-6 pb-5 flex items-start justify-between">
-        <div>
-<div className="flex items-center gap-2">
-            <AppIcon size={40} />
-            <div>
-              <div className="dt-page-title-row">
-                {editingTitle ? (
-                  <input
-                    ref={titleInputRef}
-                    type="text"
-                    value={titleDraft}
-                    onChange={(e) => setTitleDraft(e.target.value)}
-                    onBlur={commitTitle}
-                    onKeyDown={(e) => {
-                      if (e.key === 'Enter') commitTitle()
-                      if (e.key === 'Escape') { setTitleDraft(title); setEditingTitle(false) }
-                    }}
-                    className="dt-toolbar-name-input"
-                  />
-                ) : (
-                  <div
-                    className="dt-editable-label"
-                    onClick={() => { setTitleDraft(title); setEditingTitle(true) }}
-                    tabIndex={0}
-                    onKeyDown={(e) => { if (e.key === 'Enter') { setTitleDraft(title); setEditingTitle(true) } }}
-                    title="Click to rename"
-                  >
-                    <h1 className="dt-page-title">{title}</h1>
-                  </div>
-                )}
-                <span className="dt-status-active" aria-label="Status: Active">
-                  <span className="dt-status-ping-wrap" aria-hidden="true">
-                    <span className="dt-status-ping" />
-                    <span className="dt-status-dot" />
-                  </span>
-                  Active
+        <div className="flex items-start gap-2">
+          <AppIcon />
+          <div>
+            <div className="dt-page-title-row">
+              {editingTitle ? (
+                <input
+                  ref={titleInputRef}
+                  type="text"
+                  value={titleDraft}
+                  onChange={(e) => setTitleDraft(e.target.value)}
+                  onBlur={commitTitle}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter') commitTitle()
+                    if (e.key === 'Escape') { setTitleDraft(title); setEditingTitle(false) }
+                  }}
+                  className="dt-toolbar-name-input"
+                />
+              ) : (
+                <div
+                  className="dt-editable-label"
+                  onClick={() => { setTitleDraft(title); setEditingTitle(true) }}
+                  tabIndex={0}
+                  onKeyDown={(e) => { if (e.key === 'Enter') { setTitleDraft(title); setEditingTitle(true) } }}
+                  title="Click to rename"
+                >
+                  <h1 className="dt-page-title">{title}</h1>
+                </div>
+              )}
+              <span className="dt-status-active" aria-label="Status: Active">
+                <span className="dt-status-ping-wrap" aria-hidden="true">
+                  <span className="dt-status-ping" />
+                  <span className="dt-status-dot" />
                 </span>
-              </div>
-              <div className="dt-desc-area">
-                {editingDesc ? (
-                  <textarea
-                    ref={descInputRef}
-                    value={descDraft}
-                    onChange={(e) => setDescDraft(e.target.value)}
-                    onBlur={commitDesc}
-                    onKeyDown={(e) => {
-                      if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); commitDesc() }
-                      if (e.key === 'Escape') { e.preventDefault(); setDescDraft(desc); setEditingDesc(false) }
-                    }}
-                    placeholder={`${rulesets.reduce((n, rs) => n + rs.rules.length, 0)} rules across ${rulesets.length} rulesets`}
-                    className="dt-desc-textarea"
-                    rows={2}
-                  />
-                ) : (
-                  <p
-                    className="dt-page-meta dt-editable-meta"
-                    onClick={() => { setDescDraft(desc); setEditingDesc(true) }}
-                    tabIndex={0}
-                    onKeyDown={(e) => { if (e.key === 'Enter') { setDescDraft(desc); setEditingDesc(true) } }}
-                    title={desc || `${rulesets.reduce((n, rs) => n + rs.rules.length, 0)} rules across ${rulesets.length} rulesets`}
-                  >
-                    {desc || `${rulesets.reduce((n, rs) => n + rs.rules.length, 0)} rules across ${rulesets.length} rulesets`}
-                  </p>
-                )}
-              </div>
+                Active
+              </span>
+            </div>
+            <div className="dt-desc-area">
+              {editingDesc ? (
+                <textarea
+                  ref={descInputRef}
+                  value={descDraft}
+                  onChange={(e) => setDescDraft(e.target.value)}
+                  onBlur={commitDesc}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); commitDesc() }
+                    if (e.key === 'Escape') { e.preventDefault(); setDescDraft(desc); setEditingDesc(false) }
+                  }}
+                  placeholder={`${rulesets.reduce((n, rs) => n + rs.rules.length, 0)} rules across ${rulesets.length} rulesets`}
+                  className="dt-desc-textarea"
+                  rows={2}
+                />
+              ) : (
+                <p
+                  className="dt-page-meta dt-editable-meta"
+                  onClick={() => { setDescDraft(desc); setEditingDesc(true) }}
+                  tabIndex={0}
+                  onKeyDown={(e) => { if (e.key === 'Enter') { setDescDraft(desc); setEditingDesc(true) } }}
+                  title={desc || `${rulesets.reduce((n, rs) => n + rs.rules.length, 0)} rules across ${rulesets.length} rulesets`}
+                >
+                  {desc || `${rulesets.reduce((n, rs) => n + rs.rules.length, 0)} rules across ${rulesets.length} rulesets`}
+                </p>
+              )}
             </div>
           </div>
         </div>
-        <div className="flex items-center gap-3 self-center">
-          <div className="dt-collab-cluster">
-            <AvatarStack />
-            <span className="dt-last-edited">Edited 2h ago</span>
-          </div>
-          <div className="dt-header-sep" aria-hidden="true" />
+        <div className="flex items-center gap-2 self-center">
           <RuleSearch value={ruleNameQuery} onChange={setRuleNameQuery} />
-          <div className="dt-header-sep" aria-hidden="true" />
+          <div className="w-4 shrink-0" />
+          <AvatarStack />
           <button type="button" className="dt-outline-btn">
             <UserPlusIcon size={14} />
             Share
@@ -273,10 +277,10 @@ export function DecisioningEngine({ modelConfig, initialRulesets }: DecisioningE
       </div>
 
       {/* Validation banner — surfaces incomplete rules in the active ruleset */}
-      {activeRuleset && <ValidationBanner ruleset={activeRuleset} />}
+      {activeRuleset && <ValidationBanner ruleset={activeRuleset} onSelectInvalid={selectInvalidRules} />}
 
       {/* Table area — fills remaining viewport height; overflow handled inside dt-table-edge */}
-      <div className="flex-1 min-h-0 overflow-hidden">
+      <div key={activeRulesetId} className="dt-tab-content flex-1 min-h-0 overflow-hidden">
         {activeRuleset && (
           <DecisioningTable
             ruleset={activeRuleset}

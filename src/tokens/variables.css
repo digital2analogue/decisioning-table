@@ -156,6 +156,7 @@
   --shadow-inset-trough: inset 0 2px 4px rgba(15, 26, 46, 0.14), inset 0 0 0 1px rgba(15, 26, 46, 0.03); /* Recessed segmented-control trough */
   --shadow-segment-raised: 0 2px 4px rgba(15, 26, 46, 0.16), 0 1px 2px rgba(15, 26, 46, 0.08), 0 0 0 0.5px rgba(15, 26, 46, 0.08); /* Raised active segment inside a recessed trough */
   --shadow-footer-up: 0 -2px 8px rgba(15, 26, 46, 0.06); /* Soft lift from below — sticky footers */
+  --shadow-brand-tint: rgba(36, 86, 228, 0.10) 0px 20px 40px -20px, rgba(0, 0, 0, 0.08) 0px 8px 16px -8px; /* TODO: move to brand-tokens — blue-tinted atmospheric lift for featured surfaces */
   /* Motion */
   --duration-fast: 120ms;
   --duration-normal: 200ms;

@@ -58,14 +58,14 @@
   --color-background-success: #15803d;
   --color-background-success-alt: #dcfce7;
   --color-background-warning: #d97706;
-  --color-background-warning-alt: #fef3c7;
+  --color-background-warning-alt: #fde047;
   --color-background-warning-subtle: #FDF6E8; /* TODO: move to brand-tokens — lightened for invalid-row tint (was #FAEEDA, too saturated against white inputs) */
   --color-background-info: #2456e4;
   --color-background-info-alt: #e5ebfc;
   --color-foreground-success: #15803d;
   --color-foreground-on-success: #ffffff;
   --color-foreground-warning: #92400e;
-  --color-foreground-warning-dark: #854F0B; /* TODO: move to brand-tokens — OR logic chip foreground (deeper amber for chip-on-tint contrast) */
+  --color-foreground-warning-dark: #78350f; /* TODO: move to brand-tokens — OR logic chip foreground (deeper amber for chip-on-tint contrast) */
   --color-foreground-on-warning: #1A1A2E; /* DE light-mode override; brand-tokens ships #fff for dark theme */
   --color-foreground-info: #2456e4;
   --color-foreground-on-info: #ffffff;
@@ -83,6 +83,11 @@
   /* Accent tints */
   --color-accent-subtle: #E0E7FB;
   --color-accent-subtle-border: #92AAF2;
+  /* Avatar palette — collaborator stack colors (TODO: move to brand-tokens) */
+  --color-avatar-indigo: #6366f1;
+  --color-avatar-sky: #0ea5e9;
+  --color-avatar-emerald: #10b981;
+  --color-avatar-amber: #f59e0b;
   /* Spacing */
   --space-2xs: 2px;
   --space-xs: 4px;
@@ -94,7 +99,14 @@
   /* Sizing — control heights (TODO: move to brand-tokens once stabilized).
      Single source of truth so text inputs, select triggers, chips, and any
      custom input chrome all align in a row. */
+  --control-height-sm: 24px;   /* compact chips, tags, inline badges */
   --control-height-md: 32px;
+  --control-height-lg: 40px;   /* large standalone inputs */
+  /* z-index — stacking context values (TODO: move to brand-tokens) */
+  --z-backdrop: 9998;  /* fixed backdrop overlay behind portal menus */
+  --z-dropdown: 9999;  /* portal-positioned menus, pickers, dropdowns */
+  /* Dropdown constraints */
+  --dropdown-max-height: 192px;  /* portal listboxes and pickers */
   /* Fonts */
   --font-family-sans: 'Plus Jakarta Sans', sans-serif;
   --font-family-mono: 'DM Mono', 'JetBrains Mono', monospace;

@@ -64,8 +64,9 @@ select option { background-color: var(--color-background-elevated); color: var(-
   .dt-page-title-row { display: flex; align-items: center; gap: var(--space-sm); }
 
   /* Status pill */
-  .dt-status-pill { display: inline-flex; align-items: center; padding: 1px var(--space-sm); border-radius: var(--radius-md); font: var(--font-label-small); font-weight: var(--font-weight-semibold); letter-spacing: var(--letter-spacing-label); flex-shrink: 0; }
+  .dt-status-pill { display: inline-flex; align-items: center; gap: 5px; padding: 1px var(--space-sm); border-radius: var(--radius-sm); font: var(--font-label-small); font-weight: var(--font-weight-semibold); letter-spacing: var(--letter-spacing-label); flex-shrink: 0; }
   .dt-status-active { background-color: var(--color-background-accent-green); color: var(--color-foreground-success); border: 1px solid color-mix(in srgb, var(--color-foreground-success) 25%, transparent); }
+  .dt-status-dot { width: 6px; height: 6px; border-radius: 50%; background-color: currentColor; flex-shrink: 0; }
 
   /* Page meta line */
   .dt-page-meta { font: var(--font-body-small); color: var(--color-foreground-muted); margin: 1px 0 0; }
@@ -91,6 +92,10 @@ select option { background-color: var(--color-background-elevated); color: var(-
   .dt-avatar-stack .dt-avatar:last-child { margin-left: 0; }
   .dt-avatar-overflow { background-color: var(--color-foreground-default); color: var(--color-background-elevated); font-size: 9px; }
 
+  /* Collab cluster — avatars + "Edited Xh ago" inline */
+  .dt-collab-cluster { display: flex; align-items: center; gap: var(--space-sm); }
+  .dt-last-edited { font: var(--font-body-small); color: var(--color-foreground-muted); white-space: nowrap; }
+  .dt-header-sep { width: 1px; height: 20px; background-color: var(--color-border-default); flex-shrink: 0; }
   .dt-split-btn { position: relative; display: inline-flex; align-items: stretch; box-shadow: var(--shadow-sm); border-radius: var(--radius-md); }
   .dt-split-btn-main { display: inline-flex; align-items: center; gap: var(--space-6); font: var(--font-label-medium); letter-spacing: var(--letter-spacing-label); color: var(--color-foreground-on-action); background-color: var(--color-background-action); border: 1px solid var(--color-background-action); border-right: none; border-radius: var(--radius-md) 0 0 var(--radius-md); padding: var(--space-sm) var(--space-md); cursor: pointer; transition: background-color var(--duration-fast) var(--easing-default); }
   .dt-split-btn-main:hover { background-color: var(--color-background-action-hover); border-color: var(--color-background-action-hover); }
@@ -141,12 +146,14 @@ select option { background-color: var(--color-background-elevated); color: var(-
   /* Table sub-nav — compact filter strip between the alert banner and the
      column headers. Sits on bg-alt so it reads as scoped table chrome
      (not page surface) and the search input pops as a control on top of it. */
-  .dt-table-subnav { display: flex; align-items: center; justify-content: flex-start; gap: var(--space-sm); padding: var(--space-sm) var(--space-md); background-color: var(--color-background-default); border-bottom: 1px solid var(--color-border-default); }
+  .dt-table-subnav { display: flex; align-items: center; justify-content: flex-start; gap: var(--space-sm); padding: var(--space-sm) var(--space-md); background-color: var(--color-background-default); border-top: 1px solid var(--color-border-default); border-bottom: 1px solid var(--color-border-default); }
 
   /* Rule search — sub-nav-level filter input. One step smaller than the
      standard 32px control (24px high, label-small font) so it reads as a
      filter chip, not a primary toolbar control. */
-  .dt-rule-search { display: inline-flex; align-items: center; gap: var(--space-xs); height: 24px; box-sizing: border-box; padding: 0 var(--space-xs); background-color: var(--color-background-default); border: 1px solid var(--color-border-default); border-radius: var(--radius-sm); width: 220px; transition: border-color var(--duration-fast) var(--easing-default), box-shadow var(--duration-fast) var(--easing-default); }
+  /* Width = (Outcome col 190px + Actions col 40px) − subnav right-padding 16px = 214px, minus 16px right-pad = 198px.
+     This aligns the search left edge with the Outcome column label when ml-auto pushes it right. */
+  .dt-rule-search { display: inline-flex; align-items: center; gap: var(--space-xs); height: 24px; box-sizing: border-box; padding: 0 var(--space-xs); background-color: var(--color-background-default); border: 1px solid var(--color-border-default); border-radius: var(--radius-sm); width: 198px; transition: border-color var(--duration-fast) var(--easing-default), box-shadow var(--duration-fast) var(--easing-default); }
   .dt-rule-search:focus-within { border-color: var(--color-border-focus); box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-background-action) 18%, transparent); }
   .dt-rule-search-icon { color: var(--color-foreground-muted); flex-shrink: 0; }
   .dt-rule-search-input { flex: 1; min-width: 0; background: transparent; border: none; outline: none; font: var(--font-label-small); letter-spacing: var(--letter-spacing-label); color: var(--color-foreground-default); }
@@ -160,6 +167,8 @@ select option { background-color: var(--color-background-elevated); color: var(-
   .dt-thead-row th { padding-top: var(--space-xs) !important; padding-bottom: var(--space-xs) !important; }
   .dt-tbody-row { border-bottom: 1px solid var(--color-border-muted); background-color: var(--color-background-elevated); transition: background-color var(--duration-fast) var(--easing-default); }
   .dt-tbody-row td, .dt-child-row td { vertical-align: middle; }
+  /* Standard table cell padding — token-driven replacement for Tailwind px-3 py-2.5 */
+  .dt-td { padding: var(--space-sm) var(--space-md); }
   /* Row rail intensities — three semantically distinct states get distinct visual weight:
      - hover (transient): semi-transparent action, only on rows that aren't selected/expanded
      - expanded (structural state): medium-blue accent-subtle-border, signals "this group is open"
@@ -186,6 +195,9 @@ select option { background-color: var(--color-background-elevated); color: var(-
   .dt-toolbar-name { font: var(--font-label-medium); letter-spacing: var(--letter-spacing-tight); color: var(--color-foreground-default); margin: 0; }
   /* Title edit input — matches h1 display size exactly (token is 1.5rem but h1 is pinned to 18px) */
   .dt-toolbar-name-input { font: var(--font-title-small); font-size: 18px; letter-spacing: var(--letter-spacing-tight); color: var(--color-foreground-default); background-color: var(--color-background-default); border: 0; outline: none; border-radius: var(--radius-sm); padding: 2px 6px; margin: -2px -6px; box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-background-action) 18%, transparent); }
+  .dt-desc-input { font: var(--font-body-small); color: var(--color-foreground-muted); background-color: var(--color-background-default); border: 0; outline: none; border-radius: var(--radius-sm); padding: 1px 4px; margin: -2px calc(-4px - 1px); box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-background-action) 18%, transparent); }
+  .dt-editable-meta { cursor: text; border-radius: var(--radius-sm); border: 1px solid transparent; padding: 1px 4px; margin: -2px calc(-4px - 1px); transition: border-color var(--duration-fast) var(--easing-default); }
+  .dt-editable-meta:hover { border-color: var(--color-border-default); }
   .dt-rule-count { font-size: var(--font-size-xs); line-height: var(--font-line-height-snug); color: var(--color-foreground-muted); background-color: var(--color-background-alt); border: 1px solid var(--color-border-default); border-radius: var(--radius-pill); padding: 1px var(--space-sm); font-variant-numeric: tabular-nums; }
   /* Metric utility — inline numeric callouts using tabular figures (sans-serif per decision-table no-mono rule). */
   .dt-metric { font-variant-numeric: tabular-nums; }
@@ -202,9 +214,12 @@ select option { background-color: var(--color-background-elevated); color: var(-
   .dt-tab-item:focus-visible { outline: none; color: var(--color-foreground-on-action-alt); background-color: var(--color-background-action-alt); box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-background-action) 18%, transparent); }
   .dt-tab-item-active { color: var(--color-foreground-action); border-top-color: var(--color-foreground-action); font-weight: var(--font-weight-semibold); background-color: var(--color-background-elevated); }
   .dt-tab-item-editing { gap: var(--space-xs); padding: var(--space-xs) var(--space-sm); }
-  .dt-tab-edit-btn { display: inline-flex; align-items: center; color: var(--color-foreground-muted); background: none; border: none; cursor: pointer; padding: 0; line-height: 0; border-radius: var(--radius-sm); transition: color var(--duration-fast) var(--easing-default), box-shadow var(--duration-fast) var(--easing-default); }
+  /* Tab overflow button — hidden at rest, revealed on tab hover or when menu is open */
+  .dt-tab-edit-btn { display: inline-flex; align-items: center; color: var(--color-foreground-muted); background: none; border: none; cursor: pointer; padding: 0; line-height: 0; border-radius: var(--radius-sm); opacity: 0; transition: color var(--duration-fast) var(--easing-default), opacity var(--duration-fast) var(--easing-default), box-shadow var(--duration-fast) var(--easing-default); }
+  .dt-tab-item:hover .dt-tab-edit-btn,
+  .dt-tab-edit-btn.dt-tab-edit-btn-open { opacity: 1; }
   .dt-tab-edit-btn:hover { color: var(--color-foreground-secondary); }
-  .dt-tab-edit-btn:focus-visible { outline: none; color: var(--color-foreground-action); box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-background-action) 18%, transparent); }
+  .dt-tab-edit-btn:focus-visible { outline: none; opacity: 1; color: var(--color-foreground-action); box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-background-action) 18%, transparent); }
   .dt-tab-input { font: var(--font-label-medium); font-weight: var(--font-weight-semibold); letter-spacing: var(--letter-spacing-label); color: var(--color-foreground-action); background: transparent; border: none; outline: none; width: 10ch; min-width: 4ch; padding: 0; }
   .dt-confirm-btn-sm { width: 22px; height: 22px; }
 
@@ -220,7 +235,7 @@ select option { background-color: var(--color-background-elevated); color: var(-
      scrolls the text naturally — ellipsis only applies to unfocused state. */
   /* Rule name reads as the row identifier — semibold + bordered to match the
      other input controls (selects, conditional inputs, amount cell). */
-  .dt-rule-name-input { font: var(--font-body-medium); color: var(--color-foreground-default); background-color: var(--color-background-default); border: 1px solid var(--color-border-default); outline: none; flex: 1; min-width: 0; min-height: var(--control-height-md); box-sizing: border-box; text-overflow: ellipsis; border-radius: var(--radius-sm); padding: 0 var(--space-sm); transition: background-color var(--duration-fast) var(--easing-default), border-color var(--duration-fast) var(--easing-default), box-shadow var(--duration-fast) var(--easing-default); }
+  .dt-rule-name-input { font: var(--font-body-medium); font-weight: var(--font-weight-semibold); color: var(--color-foreground-default); background-color: var(--color-background-default); border: 1px solid var(--color-border-default); outline: none; flex: 1; min-width: 0; min-height: var(--control-height-md); box-sizing: border-box; text-overflow: ellipsis; border-radius: var(--radius-sm); padding: 0 var(--space-sm); transition: background-color var(--duration-fast) var(--easing-default), border-color var(--duration-fast) var(--easing-default), box-shadow var(--duration-fast) var(--easing-default); }
   .dt-rule-name-input::placeholder { color: var(--color-foreground-muted); }
   .dt-rule-name-input:hover { background-color: var(--color-background-alt); box-shadow: 0 0 0 1px var(--color-border-default); }
   .dt-rule-name-input:focus-visible { background-color: var(--color-background-elevated); border-color: var(--color-border-focus); box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-background-action) 18%, transparent); }
@@ -234,7 +249,7 @@ select option { background-color: var(--color-background-elevated); color: var(-
 
   /* Actions menu */
   .dt-menu { background-color: var(--color-background-elevated); border: 1px solid var(--color-border-default); border-radius: var(--radius-md); box-shadow: var(--shadow-md); padding: var(--space-xs) 0; min-width: 160px; }
-  .dt-menu-item { display: block; width: 100%; font: var(--font-label-medium); letter-spacing: var(--letter-spacing-label); color: var(--color-foreground-default); background: none; border: none; cursor: pointer; padding: 7px var(--space-md); transition: background-color var(--duration-fast) var(--easing-default); text-align: left; }
+  .dt-menu-item { display: flex; align-items: center; gap: var(--space-xs); width: 100%; font: var(--font-label-medium); letter-spacing: var(--letter-spacing-label); color: var(--color-foreground-default); background: none; border: none; cursor: pointer; padding: 7px var(--space-md); transition: background-color var(--duration-fast) var(--easing-default); text-align: left; }
   .dt-menu-item:hover,
   .dt-menu-item[data-highlighted] { background-color: var(--color-background-alt); }
   .dt-menu-item:focus-visible { outline: none; background-color: var(--color-background-alt); box-shadow: inset 0 0 0 2px var(--color-border-focus); }
@@ -242,7 +257,7 @@ select option { background-color: var(--color-background-elevated); color: var(-
   .dt-menu-item:disabled { color: var(--color-foreground-disabled); cursor: not-allowed; background-color: transparent; }
   .dt-menu-item:disabled:hover { background-color: transparent; }
   .dt-menu-divider { border: none; border-top: 1px solid var(--color-border-muted); margin: var(--space-xs) 0; }
-  .dt-menu-item-danger { display: block; width: 100%; font: var(--font-label-medium); letter-spacing: var(--letter-spacing-label); color: var(--color-foreground-danger); background: none; border: none; cursor: pointer; padding: 7px var(--space-md); transition: background-color var(--duration-fast) var(--easing-default); text-align: left; }
+  .dt-menu-item-danger { display: flex; align-items: center; gap: var(--space-xs); width: 100%; font: var(--font-label-medium); letter-spacing: var(--letter-spacing-label); color: var(--color-foreground-danger); background: none; border: none; cursor: pointer; padding: 7px var(--space-md); transition: background-color var(--duration-fast) var(--easing-default); text-align: left; }
   .dt-menu-item-danger:hover,
   .dt-menu-item-danger[data-highlighted] { background-color: var(--color-background-danger-subtle); }
   .dt-menu-item-danger:focus-visible { outline: none; background-color: var(--color-background-danger-subtle); box-shadow: inset 0 0 0 2px var(--color-foreground-danger); }
@@ -303,8 +318,8 @@ select option { background-color: var(--color-background-elevated); color: var(-
   .dt-drag-handle-cell { cursor: grab; }
   .dt-drag-handle-cell:active { cursor: grabbing; }
   .dt-drag-handle-inner { display: flex; align-items: center; justify-content: space-between; gap: var(--space-xs); }
-  .dt-drag-grip { display: inline-block; color: var(--color-foreground-muted); opacity: 0; transition: opacity var(--duration-fast) var(--easing-default); }
-  tr:hover .dt-drag-grip { opacity: 1; }
+  .dt-drag-grip { display: inline-block; color: var(--color-foreground-muted); opacity: 0.25; transition: opacity var(--duration-fast) var(--easing-default); }
+  tr:hover .dt-drag-grip { opacity: 0.8; }
 
   /* Icon buttons */
   .dt-confirm-btn { display: inline-flex; align-items: center; justify-content: center; width: 28px; height: 28px; color: var(--color-foreground-action); background-color: var(--color-accent-subtle); border: 1px solid var(--color-accent-subtle-border); border-radius: var(--radius-md); cursor: pointer; line-height: 0; flex-shrink: 0; transition: background-color var(--duration-fast) var(--easing-default), border-color var(--duration-fast) var(--easing-default); }
@@ -375,12 +390,15 @@ select option { background-color: var(--color-background-elevated); color: var(-
      selects, text inputs, etc.) — only the text color is muted to signal "no value yet". */
   .dt-badge-empty { color: var(--color-foreground-muted); background-color: var(--color-background-default); }
   .dt-badge-empty:hover { color: var(--color-foreground-action); border-color: var(--color-foreground-action); background-color: var(--color-background-accent-blue); filter: none; }
+  .dt-badge-empty:focus-visible { outline: none; box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-background-action) 18%, transparent); border-color: var(--color-border-focus); }
   .dt-select-trigger-empty { color: var(--color-foreground-muted); }
   .dt-select-trigger-empty:hover { color: var(--color-foreground-action); border-color: var(--color-foreground-action); background-color: var(--color-background-accent-blue); }
+  .dt-select-trigger-empty:focus-visible { outline: none; box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-background-action) 18%, transparent); border-color: var(--color-border-focus); }
   /* Compound selector (specificity 0,2,0) ensures these win against the base .dt-conditional-operator
      rule defined later in the file — without depending on source order. */
   .dt-conditional-operator.dt-conditional-operator-empty { font-family: var(--font-family-sans); color: var(--color-foreground-muted); }
-  .dt-conditional-operator.dt-conditional-operator-empty:hover { color: var(--color-foreground-action); background-color: var(--color-background-accent-blue); }
+  .dt-conditional-operator.dt-conditional-operator-empty:hover { color: var(--color-foreground-action); border-color: var(--color-foreground-action); background-color: var(--color-background-accent-blue); }
+  .dt-conditional-operator.dt-conditional-operator-empty:focus-visible { outline: none; box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-background-action) 18%, transparent); border-color: var(--color-border-focus); }
 
   /* Validation banner — light amber strip (Polaris notice style), icon + inline text + underlined CTA */
   .dt-validation-banner { display: flex; align-items: center; gap: var(--space-sm); padding: var(--space-sm) var(--space-lg); background-color: var(--color-background-warning-alt); border-bottom: 1px solid color-mix(in srgb, var(--color-foreground-warning-dark) 20%, transparent); color: var(--color-foreground-warning-dark); }
@@ -707,6 +725,8 @@ select option { background-color: var(--color-background-elevated); color: var(-
   .ob-unselect-all-btn { background: none; border: none; padding: 0; cursor: pointer; font: var(--font-label-small); letter-spacing: var(--letter-spacing-label); color: var(--color-foreground-action); text-decoration: underline; }
   .ob-unselect-all-btn:hover { text-decoration: none; }
 
+  /* Spacer reserves height for the sticky footer so content scrolls above it */
+  .ob-footer-spacer { height: 88px; flex-shrink: 0; }
   /* Sticky footer */
   .ob-footer { flex-shrink: 0; background-color: var(--color-background-elevated); border-top: 1px solid var(--color-border-default); box-shadow: var(--shadow-footer-up); }
   .ob-footer-inner { display: flex; align-items: center; justify-content: flex-end; padding: var(--space-md) var(--space-lg); }

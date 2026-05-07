@@ -1,12 +1,32 @@
 export function AppIcon({ size = 20 }: { size?: number }) {
   return (
-    <svg width={size} height={size} viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
-      <rect width="20" height="20" rx="3" fill="#2456E4" />
-      <rect x="2" y="2" width="16" height="5" rx="1" fill="#3D6BF0" />
-      <line x1="6.5" y1="2" x2="6.5" y2="18" stroke="rgba(255,255,255,0.3)" strokeWidth="0.75" />
-      <line x1="12" y1="2" x2="12" y2="18" stroke="rgba(255,255,255,0.3)" strokeWidth="0.75" />
-      <line x1="2" y1="7" x2="18" y2="7" stroke="rgba(255,255,255,0.3)" strokeWidth="0.75" />
-      <line x1="2" y1="12.5" x2="18" y2="12.5" stroke="rgba(255,255,255,0.3)" strokeWidth="0.75" />
+    <svg width={size} height={size} viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
+      <defs>
+        <linearGradient id="appIconBlueGradient" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stopColor="#4D9BFF"/>
+          <stop offset="100%" stopColor="#1565F9"/>
+        </linearGradient>
+      </defs>
+      {/* Document shape */}
+      <path d="M120 70C120 58.954 128.954 50 140 50H300L392 142V372C392 383.046 383.046 392 372 392H140C128.954 392 120 383.046 120 372V70Z" fill="url(#appIconBlueGradient)"/>
+      {/* Folded corner */}
+      <path d="M300 50L392 142H320C308.954 142 300 133.046 300 122V50Z" fill="#0E56E8"/>
+      {/* Grid — left column */}
+      <rect x="170" y="165" width="55" height="55" rx="6" fill="#BFE0FF"/>
+      <rect x="170" y="225" width="55" height="55" rx="6" fill="#BFE0FF"/>
+      <rect x="170" y="285" width="55" height="55" rx="6" fill="#BFE0FF"/>
+      {/* Grid — right column */}
+      <rect x="230" y="165" width="120" height="55" rx="6" fill="#D8ECFF"/>
+      <rect x="230" y="225" width="120" height="55" rx="6" fill="#D8ECFF"/>
+      <rect x="230" y="285" width="120" height="55" rx="6" fill="#D8ECFF"/>
+      {/* Decision node connector line */}
+      <path d="M255 252H330" stroke="#1565F9" strokeWidth="10" strokeLinecap="round"/>
+      {/* Nodes */}
+      <circle cx="255" cy="252" r="14" fill="#1565F9"/>
+      <circle cx="292" cy="215" r="14" fill="#1565F9"/>
+      <circle cx="330" cy="252" r="14" fill="#1565F9"/>
+      {/* Connector */}
+      <path d="M292 215V240C292 247 286 252 279 252H255" stroke="#1565F9" strokeWidth="10" strokeLinecap="round" strokeLinejoin="round"/>
     </svg>
   )
 }

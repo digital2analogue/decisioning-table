@@ -161,8 +161,8 @@ const PAIRINGS = [
   { text: '--color-foreground-default',        bg: '--color-background-hover',          label: 'Add-rule row btn (hover)' },
   // Row-level warning indicator — icon + number sit on normal row background (no tint)
   { text: '--color-foreground-warning',       bg: WHITE,                               label: 'Invalid-row warning icon + number' },
-  // Validation banner — light amber strip (Polaris notice style)
-  { text: '--color-foreground-warning-dark',  bg: '--color-background-warning-alt',    label: 'Validation banner text + CTA on light amber' },
+  // Validation banner — bright yellow strip
+  { text: '--color-foreground-warning-dark',  bg: '--color-background-warning-alt',    label: 'Validation banner text + CTA on yellow' },
   // AND/OR logic chip — dark navy text on blue-tinted bg (matches tree connector line color)
   { text: '--color-foreground-on-inverted', bg: LOGIC_CHIP_BG,                         label: 'AND/OR logic chip text' },
   // Conditional operator chip — dark navy text on very light gray bg

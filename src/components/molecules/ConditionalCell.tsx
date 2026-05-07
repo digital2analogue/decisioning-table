@@ -5,9 +5,8 @@ import { dataElements } from '../../data'
 import { cn } from '../../lib/utils'
 import { Picker, type PickerOption } from '../atoms/Picker'
 import { AmountCell } from '../atoms/AmountCell'
+import { computePortalPos, type PortalPos } from '../../lib/portalPosition'
 import '../../index.css'
-
-interface DropdownPos { top: number; left: number; width?: number }
 
 const CONDITIONAL_OPERATOR_OPTIONS: PickerOption<ConditionalOperator>[] = [
   { value: '==', label: '==' },
@@ -41,7 +40,7 @@ export function ConditionalCell({
 }: ConditionalCellProps) {
   const [isVariableOpen, setIsVariableOpen] = useState(false)
   const [variableSearch, setVariableSearch] = useState('')
-  const [variablePos, setVariablePos] = useState<DropdownPos | null>(null)
+  const [variablePos, setVariablePos] = useState<PortalPos | null>(null)
   const variableRef = useRef<HTMLDivElement>(null)
   const variableInputRef = useRef<HTMLInputElement>(null)
 
@@ -54,8 +53,7 @@ export function ConditionalCell({
 
   const openVariable = useCallback(() => {
     if (variableRef.current) {
-      const r = variableRef.current.getBoundingClientRect()
-      setVariablePos({ top: r.bottom + 4, left: r.left, width: r.width })
+      setVariablePos(computePortalPos(variableRef.current, 'below-left'))
     }
     setIsVariableOpen(true)
   }, [])
@@ -126,10 +124,10 @@ export function ConditionalCell({
             position: 'fixed',
             top: variablePos.top,
             left: variablePos.left,
-            width: variablePos.width,
-            maxHeight: 192,
+            width: variablePos.width ?? undefined,
+            maxHeight: 192,   // --dropdown-max-height
             overflowY: 'auto',
-            zIndex: 9999,
+            zIndex: 9999,     // --z-dropdown
           }}
         >
           {filteredVariables.map((el) => (

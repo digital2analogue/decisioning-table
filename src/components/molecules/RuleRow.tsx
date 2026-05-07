@@ -150,7 +150,7 @@ export function RuleRow({
       )}
     >
       {/* Checkbox */}
-      <td className="px-3 py-2.5 text-center">
+      <td className="dt-td text-center">
         <Checkbox
           checked={rule.selected}
           onChange={(checked) => onUpdate(rule.id, { selected: checked })}
@@ -190,7 +190,7 @@ export function RuleRow({
       </td>
 
       {/* Rule Name */}
-      <td className="dt-col-sticky px-3 py-2.5">
+      <td className="dt-col-sticky dt-td">
         <div className="dt-parent-name-wrap">
           <input
             ref={nameInputRef}
@@ -206,7 +206,7 @@ export function RuleRow({
       </td>
 
       {/* Data Attribute — hidden via .dt-col-data-attribute (kept in JSX for easy re-enable) */}
-      <td className="dt-col-data-attribute px-3 py-2.5">
+      <td className="dt-col-data-attribute dt-td">
         <AttributeSelectBadge
           value={rule.dataAttribute}
           onChange={(v) => onUpdate(rule.id, { dataAttribute: v })}
@@ -215,7 +215,7 @@ export function RuleRow({
       </td>
 
       {/* Existing Account — account type picker, no operator */}
-      <td className="px-3 py-2.5 min-w-[200px]">
+      <td className="dt-td min-w-[200px]">
         <AccountTypeCell
           value={rule.existingAccountVariable}
           onChange={(v) => onUpdate(rule.id, { existingAccountVariable: v })}
@@ -223,7 +223,7 @@ export function RuleRow({
       </td>
 
       {/* Annual Income — operator + dollar amount */}
-      <td className="px-3 py-2.5 min-w-[220px]">
+      <td className="dt-td min-w-[220px]">
         <ConditionalCell
           operator={rule.annualIncomeOperator}
           variable={rule.annualIncomeVariable}
@@ -237,18 +237,15 @@ export function RuleRow({
       {/* Outcome — always visible. Renders the segmented control regardless of
           validity so the user can toggle Approve/Deny independently of filling
           the rest of the row. */}
-      <td className="px-3 py-2.5">
+      <td className="dt-td">
         <OutcomeBadge
           value={rule.outcome}
           onChange={(v) => onUpdate(rule.id, { outcome: v })}
         />
       </td>
 
-      {/* Spacer — absorbs remaining viewport width so Outcome stays compact */}
-      <td className="dt-col-spacer"></td>
-
       {/* Actions */}
-      <td className="px-3 py-2.5 dt-col-actions" data-menu-open={openMenuId === rule.id || undefined}>
+      <td className="dt-td dt-col-actions" data-menu-open={openMenuId === rule.id || undefined}>
         <div ref={actionsAnchorRef} className="relative inline-block">
           <IconButton
             onClick={() => onMenuToggle(rule.id)}

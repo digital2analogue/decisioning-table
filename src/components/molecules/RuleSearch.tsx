@@ -8,6 +8,8 @@ export interface RuleSearchProps {
   /** Debounce window in ms before propagating typed input upstream. */
   debounceMs?: number
   placeholder?: string
+  /** Extra classes forwarded to the wrapper div (e.g. ml-auto for layout). */
+  className?: string
 }
 
 /**
@@ -20,6 +22,7 @@ export function RuleSearch({
   onChange,
   debounceMs = 150,
   placeholder = 'Filter rules',
+  className,
 }: RuleSearchProps) {
   const [draft, setDraft] = useState(value)
   const timer = useRef<number | null>(null)
@@ -42,7 +45,7 @@ export function RuleSearch({
   }
 
   return (
-    <div className="dt-rule-search">
+    <div className={`dt-rule-search${className ? ` ${className}` : ''}`}>
       <SearchIcon size={12} className="dt-rule-search-icon" aria-hidden="true" />
       <input
         type="search"

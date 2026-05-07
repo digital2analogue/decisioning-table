@@ -1,8 +1,8 @@
 const AVATARS = [
-  { initials: 'JT', bg: '#6366f1', color: '#fff' },
-  { initials: 'MR', bg: '#0ea5e9', color: '#fff' },
-  { initials: 'AS', bg: '#10b981', color: '#fff' },
-  { initials: 'DK', bg: '#f59e0b', color: '#fff' },
+  { initials: 'JT', bg: 'var(--color-avatar-indigo)', color: '#fff' },
+  { initials: 'MR', bg: 'var(--color-avatar-sky)', color: '#fff' },
+  { initials: 'AS', bg: 'var(--color-avatar-emerald)', color: '#fff' },
+  { initials: 'DK', bg: 'var(--color-avatar-amber)', color: '#fff' },
 ]
 
 const VISIBLE = 3

@@ -62,7 +62,7 @@ export function ChildRuleRow({
       className={cn('dt-tbody-row dt-child-row', isLast && 'dt-child-row-last')}
     >
       {/* Checkbox column — empty for children */}
-      <td className="dt-child-cell-bare px-3 py-2.5"></td>
+      <td className="dt-child-cell-bare dt-td"></td>
 
       {/* Drag handle / # column — warning marker when invalid */}
       <td className="dt-child-cell-bare dt-child-connector-cell dt-col-sticky-num px-2 py-2.5">
@@ -90,7 +90,7 @@ export function ChildRuleRow({
       </td>
 
       {/* Data Attribute — hidden via .dt-col-data-attribute (kept in JSX for easy re-enable) */}
-      <td className="dt-col-data-attribute px-3 py-2.5">
+      <td className="dt-col-data-attribute dt-td">
         <AttributeSelectBadge
           value={rule.dataAttribute}
           onChange={(v) => onUpdate(parentId, rule.id, { dataAttribute: v })}
@@ -99,7 +99,7 @@ export function ChildRuleRow({
       </td>
 
       {/* Existing Account — account type picker, no operator */}
-      <td className="px-3 py-2.5 min-w-[200px]">
+      <td className="dt-td min-w-[200px]">
         <AccountTypeCell
           value={rule.existingAccountVariable}
           onChange={(v) => onUpdate(parentId, rule.id, { existingAccountVariable: v })}
@@ -107,7 +107,7 @@ export function ChildRuleRow({
       </td>
 
       {/* Annual Income — operator + dollar amount */}
-      <td className="px-3 py-2.5 min-w-[220px]">
+      <td className="dt-td min-w-[220px]">
         <ConditionalCell
           operator={rule.annualIncomeOperator}
           variable={rule.annualIncomeVariable}
@@ -119,10 +119,10 @@ export function ChildRuleRow({
       </td>
 
       {/* Outcome — children inherit the parent outcome implicitly; cell stays empty to keep column alignment */}
-      <td className="px-3 py-2.5"></td>
+      <td className="dt-td"></td>
 
       {/* Actions */}
-      <td className="px-3 py-2.5 dt-col-actions" data-menu-open={menuOpen || undefined}>
+      <td className="dt-td dt-col-actions" data-menu-open={menuOpen || undefined}>
         <div ref={actionsAnchorRef} className="relative inline-block">
           <IconButton
             onClick={onMenuToggle}

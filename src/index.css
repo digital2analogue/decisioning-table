@@ -69,7 +69,7 @@ select option { background-color: var(--color-background-elevated); color: var(-
   .dt-status-dot { width: 6px; height: 6px; border-radius: 50%; background-color: currentColor; flex-shrink: 0; }
 
   /* Page meta line */
-  .dt-page-meta { font: var(--font-body-small); color: var(--color-foreground-muted); margin: 1px 0 0; }
+  .dt-page-meta { font: var(--font-body-medium); color: var(--color-foreground-muted); margin: 1px 0 0; }
   .dt-meta-link { font: inherit; color: inherit; background: none; border: none; padding: 0; cursor: pointer; text-decoration: underline; text-underline-offset: 2px; border-radius: var(--radius-sm); transition: color var(--duration-fast) var(--easing-default); }
   .dt-meta-link:hover { color: var(--color-foreground-default); }
   .dt-meta-link:focus-visible { outline: none; box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-background-action) 18%, transparent); }
@@ -195,7 +195,7 @@ select option { background-color: var(--color-background-elevated); color: var(-
   .dt-toolbar-name { font: var(--font-label-medium); letter-spacing: var(--letter-spacing-tight); color: var(--color-foreground-default); margin: 0; }
   /* Title edit input — matches h1 display size exactly (token is 1.5rem but h1 is pinned to 18px) */
   .dt-toolbar-name-input { font: var(--font-title-small); font-size: 18px; letter-spacing: var(--letter-spacing-tight); color: var(--color-foreground-default); background-color: var(--color-background-default); border: 0; outline: none; border-radius: var(--radius-sm); padding: 2px 6px; margin: -2px -6px; box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-background-action) 18%, transparent); }
-  .dt-desc-input { font: var(--font-body-small); color: var(--color-foreground-muted); background-color: var(--color-background-default); border: 0; outline: none; border-radius: var(--radius-sm); padding: 1px 4px; margin: -2px calc(-4px - 1px); box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-background-action) 18%, transparent); }
+  .dt-desc-input { font: var(--font-body-medium); color: var(--color-foreground-muted); background-color: var(--color-background-default); border: 0; outline: none; border-radius: var(--radius-sm); padding: 1px 4px; margin: -2px calc(-4px - 1px); box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-background-action) 18%, transparent); }
   .dt-editable-meta { cursor: text; border-radius: var(--radius-sm); border: 1px solid transparent; padding: 1px 4px; margin: -2px calc(-4px - 1px); transition: border-color var(--duration-fast) var(--easing-default); }
   .dt-editable-meta:hover { border-color: var(--color-border-default); }
   .dt-rule-count { font-size: var(--font-size-xs); line-height: var(--font-line-height-snug); color: var(--color-foreground-muted); background-color: var(--color-background-alt); border: 1px solid var(--color-border-default); border-radius: var(--radius-pill); padding: 1px var(--space-sm); font-variant-numeric: tabular-nums; }

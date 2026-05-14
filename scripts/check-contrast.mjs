@@ -168,11 +168,11 @@ const PAIRINGS = [
   { text: '--color-foreground-on-inverted', bg: '--color-background-inverted',          label: 'AND/OR logic chip text' },
   // Conditional operator chip — dark navy text on very light gray bg
   { text: '--color-foreground-on-inverted', bg: '--color-background-hover',             label: 'Conditional operator chip text' },
-  // Avatar stack — white initials on each avatar background color (darkened to -700 variants for AA)
-  { text: '#ffffff', bg: '--color-avatar-indigo',  label: 'Avatar: indigo (JT)' },
-  { text: '#ffffff', bg: '--color-avatar-sky',     label: 'Avatar: sky (MR)' },
-  { text: '#ffffff', bg: '--color-avatar-emerald', label: 'Avatar: emerald (AS)' },
-  { text: '#ffffff', bg: '--color-avatar-amber',   label: 'Avatar: amber (DK)' },
+  // Avatar stack — white initials on each accent-bold background (from brand-tokens)
+  { text: '--color-foreground-accent-on-indigo', bg: '--color-background-accent-indigo-bold', label: 'Avatar: indigo (JT)' },
+  { text: '--color-foreground-accent-on-sky',    bg: '--color-background-accent-sky-bold',    label: 'Avatar: sky (MR)' },
+  { text: '--color-foreground-accent-on-green',  bg: '--color-background-accent-green-bold',  label: 'Avatar: emerald (AS)' },
+  { text: '#ffffff',                             bg: '--color-background-accent-amber-bold',  label: 'Avatar: amber (DK)' }, /* DS-debt: accent-on-amber is dark for tints; hardcode white for bold fill */
 ]
 
 // ─── Run ───────────────────────────────────────────────────────────────────────

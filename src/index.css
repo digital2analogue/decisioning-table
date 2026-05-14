@@ -63,8 +63,7 @@ select option { background-color: var(--color-background-elevated); color: var(-
   /* Template */
   .dt-page { background-color: var(--color-background-default); color: var(--color-foreground-default); }
   .dt-page-header { background: linear-gradient(to bottom, var(--color-background-default), var(--color-background-default)); }
-  /* TODO: design system debt — font-title-small should resolve to 18px; shift title scale in brand-tokens */
-  .dt-page-title { font: var(--font-title-small); font-size: 18px; letter-spacing: var(--letter-spacing-tight); color: var(--color-foreground-default); margin: 0; }
+  .dt-page-title { font: var(--font-title-small); letter-spacing: var(--letter-spacing-tight); color: var(--color-foreground-default); margin: 0; }
   .dt-page-subtitle { font: var(--font-body-medium); color: var(--color-foreground-muted); margin: var(--space-xs) 0 0; cursor: text; }
   .dt-page-subtitle--empty { color: var(--color-foreground-muted); font-style: italic; }
   .dt-page-subtitle-input { font: var(--font-body-medium); color: var(--color-foreground-default); background-color: var(--color-background-default); border: 0; outline: none; border-radius: var(--radius-sm); padding: 2px 6px; margin: -2px -6px; box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-background-action) 18%, transparent); margin-top: var(--space-xs); width: 280px; }
@@ -117,7 +116,7 @@ select option { background-color: var(--color-background-elevated); color: var(-
   .dt-avatar {
     display: inline-flex; align-items: center; justify-content: center;
     width: 28px; height: 28px; border-radius: 50%;
-    font-size: 10px; font-weight: 600; letter-spacing: 0.02em;
+    font-size: 10px; /* DS-debt: no --font-size-2xs token in DE yet */ font-weight: var(--font-weight-semibold); letter-spacing: 0.02em;
     border: 2px solid var(--color-background-elevated); box-sizing: border-box;
     position: relative; flex-shrink: 0;
     /* Collapsed: -20px = slight peek, edges visible behind the one in front */
@@ -128,7 +127,7 @@ select option { background-color: var(--color-background-elevated); color: var(-
   .dt-avatar-stack .dt-avatar:first-child { margin-left: 0; }
   /* Hover: spring out to the left, generous overlap */
   .dt-avatar-stack:hover .dt-avatar:not(:first-child) { margin-left: -8px; }
-  .dt-avatar-overflow { background-color: var(--color-foreground-default); color: var(--color-background-elevated); font-size: 9px; }
+  .dt-avatar-overflow { background-color: var(--color-foreground-default); color: var(--color-background-elevated); font-size: 9px; /* DS-debt: micro avatar overflow, outside token scale */ }
 
   /* Collab cluster — avatars + "Edited Xh ago" inline */
   .dt-collab-cluster { display: flex; align-items: center; gap: var(--space-sm); }
@@ -155,7 +154,7 @@ select option { background-color: var(--color-background-elevated); color: var(-
   .dt-table-edge thead { position: sticky; top: 0; z-index: var(--z-child); backdrop-filter: blur(10px) saturate(160%); }
   .dt-thead-row {
     background-color: color-mix(in srgb, var(--color-background-alt) 85%, transparent);
-    box-shadow: 0 1px 0 var(--color-border-default), 0 4px 16px rgba(20, 30, 50, 0.07);
+    box-shadow: 0 1px 0 var(--color-border-default), 0 4px 16px color-mix(in srgb, var(--color-foreground-default) 7%, transparent);
   }
 
   /* Column separators on every column boundary (skips child rows so the indented region reads as continuous, not segmented) */
@@ -230,8 +229,7 @@ select option { background-color: var(--color-background-elevated); color: var(-
   /* Toolbar */
   .dt-toolbar { border-bottom: 1px solid var(--color-border-default); }
   .dt-toolbar-name { font: var(--font-label-medium); letter-spacing: var(--letter-spacing-tight); color: var(--color-foreground-default); margin: 0; }
-  /* Title edit input — matches h1 display size exactly (token is 1.5rem but h1 is pinned to 18px) */
-  .dt-toolbar-name-input { font: var(--font-title-small); font-size: 18px; letter-spacing: var(--letter-spacing-tight); color: var(--color-foreground-default); background-color: var(--color-background-default); border: 0; outline: none; border-radius: var(--radius-sm); padding: 2px 6px; margin: -2px -6px; box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-background-action) 18%, transparent); }
+  .dt-toolbar-name-input { font: var(--font-title-small); letter-spacing: var(--letter-spacing-tight); color: var(--color-foreground-default); background-color: var(--color-background-default); border: 0; outline: none; border-radius: var(--radius-sm); padding: 2px 6px; margin: -2px -6px; box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-background-action) 18%, transparent); }
   .dt-desc-input { font: var(--font-body-medium); color: var(--color-foreground-muted); background-color: var(--color-background-default); border: 0; outline: none; border-radius: var(--radius-sm); padding: 1px 4px; margin: -2px calc(-4px - 1px); box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-background-action) 18%, transparent); }
   .dt-editable-meta { cursor: text; border-radius: var(--radius-sm); border: 1px solid transparent; padding: 1px 4px; margin: -2px calc(-4px - 1px); transition: border-color var(--duration-fast) var(--easing-default); }
   .dt-editable-meta:hover { border-color: var(--color-border-default); }
@@ -523,7 +521,7 @@ select option { background-color: var(--color-background-elevated); color: var(-
     right: -12px;
     width: 12px;
     pointer-events: none;
-    background: linear-gradient(to right, rgba(15, 26, 46, 0.07), rgba(15, 26, 46, 0));
+    background: linear-gradient(to right, color-mix(in srgb, var(--color-foreground-default) 7%, transparent), transparent);
     z-index: 1;
   }
   .dt-tbody-row-selected .dt-col-sticky,
@@ -612,14 +610,14 @@ select option { background-color: var(--color-background-elevated); color: var(-
     font: var(--font-label-small); font-weight: var(--font-weight-semibold);
     letter-spacing: 0.04em; text-transform: uppercase;
     border-radius: var(--radius-sm); padding: 0 var(--space-xs);
-    background-color: rgba(36, 86, 228, 0.07); /* glass-chip */
+    background-color: color-mix(in srgb, var(--color-background-action) 7%, transparent); /* glass-chip */
     color: var(--color-foreground-action);
-    border: 1px solid rgba(36, 86, 228, 0.15); /* glass-chip */
+    border: 1px solid color-mix(in srgb, var(--color-background-action) 15%, transparent); /* glass-chip */
     cursor: pointer;
     transition: border-color var(--duration-fast) var(--easing-default), background-color var(--duration-fast) var(--easing-default), box-shadow var(--duration-fast) var(--easing-default);
   }
-  .dt-logic-chip:hover { border-color: rgba(36, 86, 228, 0.25); background-color: rgba(36, 86, 228, 0.12); } /* glass-chip hover */
-  .dt-logic-chip:active { border-color: rgba(36, 86, 228, 0.35); background-color: rgba(36, 86, 228, 0.16); }
+  .dt-logic-chip:hover { border-color: color-mix(in srgb, var(--color-background-action) 25%, transparent); background-color: color-mix(in srgb, var(--color-background-action) 12%, transparent); } /* glass-chip hover */
+  .dt-logic-chip:active { border-color: color-mix(in srgb, var(--color-background-action) 35%, transparent); background-color: color-mix(in srgb, var(--color-background-action) 16%, transparent); }
   .dt-logic-chip:focus-visible { outline: none; box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-background-action) 18%, transparent); }
   .dt-logic-chip-chevron { opacity: 0.45; flex-shrink: 0; }
 

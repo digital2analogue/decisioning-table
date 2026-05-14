@@ -1,8 +1,8 @@
 const AVATARS = [
-  { initials: 'JT', bg: 'var(--color-avatar-indigo)', color: '#fff' },
-  { initials: 'MR', bg: 'var(--color-avatar-sky)', color: '#fff' },
-  { initials: 'AS', bg: 'var(--color-avatar-emerald)', color: '#fff' },
-  { initials: 'DK', bg: 'var(--color-avatar-amber)', color: '#fff' },
+  { initials: 'JT', bg: 'var(--color-background-accent-indigo-bold)', color: 'var(--color-foreground-accent-on-indigo)' },
+  { initials: 'MR', bg: 'var(--color-background-accent-sky-bold)', color: 'var(--color-foreground-accent-on-sky)' },
+  { initials: 'AS', bg: 'var(--color-background-accent-green-bold)', color: 'var(--color-foreground-accent-on-green)' },
+  { initials: 'DK', bg: 'var(--color-background-accent-amber-bold)', color: '#fff' }, /* DS-debt: accent-on-amber is dark for tints; hardcode white for bold fill */
 ]
 
 const VISIBLE = 3
@@ -10,7 +10,7 @@ const OVERFLOW = AVATARS.length - VISIBLE
 
 export function AvatarStack() {
   return (
-    <div className="dt-avatar-stack" aria-label={`${AVATARS.length} collaborators`} title={`${AVATARS.length} collaborators`}>
+    <div className="dt-avatar-stack" role="img" aria-label={`${AVATARS.length} collaborators`} title={`${AVATARS.length} collaborators`}>
       {AVATARS.slice(0, VISIBLE).map((a, i) => (
         <span
           key={i}

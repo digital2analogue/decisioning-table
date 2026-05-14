@@ -84,11 +84,13 @@
   /* Accent tints */
   --color-accent-subtle: #E0E7FB;
   --color-accent-subtle-border: #92AAF2;
-  /* Avatar palette — collaborator stack colors (TODO: move to brand-tokens) */
-  --color-avatar-indigo: #4338ca;  /* indigo-700 — 7.98:1 vs #fff ✅ AA */
-  --color-avatar-sky: #0369a1;     /* sky-700    — 5.90:1 vs #fff ✅ AA */
-  --color-avatar-emerald: #047857; /* emerald-700 — 5.47:1 vs #fff ✅ AA */
-  --color-avatar-amber: #b45309;   /* amber-700  — 5.02:1 vs #fff ✅ AA */
+  /* Accent-bold fills — saturated accent surfaces (avatars, identity badges). From brand-tokens. */
+  --color-background-accent-indigo-bold: #4338ca;  /* indigo-700 — 7.98:1 vs #fff ✅ AAA */
+  --color-background-accent-sky-bold: #0369a1;     /* sky-700    — 5.90:1 vs #fff ✅ AA */
+  --color-background-accent-green-bold: #047857;   /* emerald-700 — 5.47:1 vs #fff ✅ AA */
+  --color-background-accent-amber-bold: #b45309;   /* amber-600  — 5.02:1 vs #fff ✅ AA */
+  --color-foreground-accent-on-indigo: #ffffff;
+  --color-foreground-accent-on-sky: #ffffff;
   /* Spacing */
   --space-2xs: 2px;
   --space-xs: 4px;
@@ -178,4 +180,11 @@
   --letter-spacing-label: 0.01em;
   --letter-spacing-wide: 0.03em;
   --letter-spacing-all-caps: 0.1em;
+  /* Column widths — decisioning table (TODO: move to brand-tokens once stabilized) */
+  --col-width-name: 260px;        /* Rule name — sticky column */
+  --col-width-attr: 140px;        /* Data attribute */
+  --col-width-existing-acct: 200px; /* Existing Account picker */
+  --col-width-annual-income: 220px; /* Annual Income operator + amount */
+  --col-width-credit-score: 200px;  /* Credit Score operator + number */
+  --col-width-outcome: 190px;     /* Outcome segmented control */
 }

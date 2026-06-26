@@ -8,50 +8,62 @@ Decision Model Table — a data-dense light-mode UI for building and managing de
 npm run dev            # Vite dev server
 npm run build          # contrast check → tsc → vite build (contrast gate blocks on failure)
 npm run check-contrast # Run WCAG AA check in isolation
-npm run sync-tokens    # Compare local variables.css against brand-tokens build output
+npm run sync-tokens    # Compare local variables.css against the installed @digital2analogue2/parsimony package
 npm run screenshots    # Puppeteer screenshot capture
 ```
 
 ## Token System
 
-This repo consumes tokens from the **brand-tokens** repo (`../brand-tokens`). It does not define its own color values.
+This repo consumes the decision-engine brand tokens from the published **`@digital2analogue2/parsimony`** npm package (built and published from the **brand-tokens** repo). It does not define its own color values.
 
 ### Source of truth hierarchy
 
 ```
-brand-tokens/tokens/brands/decision-engine.tokens.json  ← edit here first
-  ↓ build (node scripts/build-brands.mjs in brand-tokens)
-brand-tokens/build/css/decision-engine.css              ← built output
+brand-tokens/tokens/brands/decision-engine.tokens.json         ← edit here first
+  ↓ build + publish (brand-tokens → @digital2analogue2/parsimony on npm)
+node_modules/@digital2analogue2/parsimony/decision-engine.css  ← installed brand build
   ↓ sync-tokens compares against
-src/tokens/variables.css                                ← local flat CSS, consumed by Tailwind + components
+src/tokens/variables.css                                       ← local flat CSS, consumed by Tailwind + components
 ```
 
 **Hard rule: `variables.css` is a sync target, not a place to define tokens.**
 
-The flow is always: **brand-tokens → build → variables.css**. Never the reverse.
+The flow is always: **brand-tokens → publish parsimony → npm install → variables.css**. Never the reverse.
 
-- **Never define a new color token in `variables.css` directly.** If you need a new token, add it to `brand-tokens/tokens/brands/decision-engine.tokens.json`, rebuild brand-tokens, then copy the resolved value into `variables.css`.
+- **Never define a new color token in `variables.css` directly.** If you need a new token, add it to `brand-tokens/tokens/brands/decision-engine.tokens.json`, publish a new `@digital2analogue2/parsimony` version, `npm install` it, then copy the resolved value into `variables.css`.
 - **Never write a hex value, `color-mix()`, or `var()` expression into `variables.css` for a new token.** If it's not in brand-tokens first, it doesn't exist.
 - If a token is needed urgently mid-session, you may add it locally with `/* TODO: move to brand-tokens */` — but treat this as a debt marker, not a pattern. The next thing you do is add it properly to brand-tokens and remove the comment.
-- After any token work, run `npm run sync-tokens`. The only acceptable output is the 6 known drifts listed below. Any additional local-only token is a bug.
+- After any token work, run `npm run sync-tokens` (it diffs `variables.css` against the installed `@digital2analogue2/parsimony` package). The expected output is the drift set documented below; anything outside it is a bug.
 
-### Known intentional drifts (do not fix these)
+### Known drifts vs the published brand
 
-brand-tokens ships a **dark theme only**. This repo is a **light-mode** sub-brand, so a small set of tokens are deliberately overridden locally. Do not "fix" these by syncing them back to brand-tokens values — that would break the light theme.
+`sync-tokens` diffs `variables.css` against the published `@digital2analogue2/parsimony`
+decision-engine build. The brand has drifted from this live prototype; the broad
+reconciliation (brand should adopt the prototype's light-mode values) is tracked in
+**brand-tokens#70**. Until that lands, the drifts below are expected. Do not "fix" the
+intentional ones by syncing them to brand values — that would break the light theme.
 
-Bluer-tint surface/border palette (hand-tuned for DE light mode, not yet backported):
-- `--color-background-alt`
-- `--color-background-default`
-- `--color-border-default`
-- `--color-border-elevated` — local `#c6cad1` vs brand `#c0c4ce`. Slightly cooler-gray border for elevated surfaces in light mode.
-- `--color-border-muted` — local `#eaecef` vs brand `#e8eaed`. Same intent — bluer cast for the light theme's row separators.
+**Arctic light-mode surfaces (bluer tint — intentional):**
+- `--color-background-default` — local `#f5f8fc` vs brand `#ffffff`
+- `--color-background-alt` — local `#ebf0f8` vs brand `#f5f6f7`
+- `--color-background-elevated` — local `#f0f4fa` vs brand `#ffffff`
 
-Light-mode contrast overrides (brand-tokens values are correct for dark theme but unreadable in light mode):
-- `--color-foreground-on-warning` — `#1A1A2E` locally (dark navy) vs `#ffffff` in brand-tokens. White-on-amber would fail AA in this context.
+**Cooler-gray borders (intentional):**
+- `--color-border-default` — local `#c8d6ea` vs brand `#d8dce0`
+- `--color-border-elevated` — local `#b0c4d8` vs brand `#c0c4ce`
+- `--color-border-muted` — local `#d8e4f0` vs brand `#e8eaed`
 
-(Cosmetic-only, not counted: `--shadow-none` differs syntactically — `0 0 0 0 transparent` locally vs `0 0 0 0 rgba(0,0,0,0)` upstream — but resolves to the same paint. No fix needed.)
+**Light-mode contrast override (intentional):**
+- `--color-foreground-on-warning` — local `#1a1a2e` (dark navy) vs brand `#ffffff`. White-on-amber would fail AA here.
 
-Everything else should match. If `sync-tokens` reports new drifts outside this list, investigate.
+**Stale — prototype is behind the brand (fix forward, NOT a keep):**
+- `--color-background-danger` — local `#d03027` vs brand `#c8002e`. Brand was intentionally moved to red.600 for DE button contrast; `variables.css` should adopt `#c8002e` (brand-tokens#70 §B).
+
+(Cosmetic-only, not counted: `--shadow-none` differs syntactically — `0 0 0 0 transparent` locally vs `0 0 0 0 rgba(0,0,0,0)` upstream — but resolves to the same paint.)
+
+`sync-tokens` also lists local-only color tokens (not yet in the brand) and brand-only
+tokens (unused here) as informational — these are catalogued in brand-tokens#70 (§D/§E).
+If `sync-tokens` reports drifts outside this list, investigate.
 
 ## Contrast Gate
 
@@ -82,7 +94,7 @@ All color is via CSS custom properties from `src/tokens/variables.css`. Componen
 
 ## Sub-Brand Reference
 
-For decision-engine token values, read `../brand-tokens/build/css/decision-engine.css` directly. The brand-tokens `ai/DESIGN.md` covers the base dark theme only.
+For decision-engine token values, read the installed `node_modules/@digital2analogue2/parsimony/decision-engine.css` directly (or the source in `brand-tokens/build/css/decision-engine.css`). The brand-tokens `ai/DESIGN.md` covers the base dark theme only.
 
 ## Patterns & Conventions
 

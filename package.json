@@ -59,6 +59,6 @@
     "vitest": "^3.0.0"
   },
   "lint-staged": {
-    "*.{ts,tsx,js,jsx}": "eslint --fix"
+    "src/**/*.{ts,tsx,js,jsx}": "eslint --fix"
   }
 }

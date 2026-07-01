@@ -1,21 +1,24 @@
-import { test, expect } from '@playwright/test'
+import { test, expect, type Page } from '@playwright/test'
 
-test.describe('Decisioning Table App', () => {
-  test('loads and matches snapshot', async ({ page }) => {
-    await page.goto('/')
-    await page.waitForLoadState('networkidle')
-    await expect(page).toHaveScreenshot('app-initial.png')
-  })
+async function settle(page: Page, path: string) {
+  await page.goto(path)
+  await page.waitForLoadState('networkidle')
+  await page.evaluate(() => document.fonts.ready)
+}
 
-  test('table renders with expected structure', async ({ page }) => {
-    await page.goto('/')
-    await page.waitForLoadState('networkidle')
+test('onboarding flow matches baseline', async ({ page }) => {
+  await settle(page, '/')
+  await expect(page).toHaveScreenshot('onboarding.png', { fullPage: true })
+})
 
-    // Check for table element
-    const table = await page.locator('table')
-    await expect(table).toBeVisible()
+test('populated table (demo) matches baseline', async ({ page }) => {
+  await settle(page, '/?demo=1')
+  await expect(page.locator('table').first()).toBeVisible()
+  await expect(page).toHaveScreenshot('table-demo.png', { fullPage: true })
+})
 
-    // Take snapshot of table
-    await expect(table).toHaveScreenshot('table-structure.png')
-  })
+test('validation state (banner + invalid rows) matches baseline', async ({ page }) => {
+  await settle(page, '/?demo=validation')
+  await expect(page.locator('table').first()).toBeVisible()
+  await expect(page).toHaveScreenshot('table-validation.png', { fullPage: true })
 })

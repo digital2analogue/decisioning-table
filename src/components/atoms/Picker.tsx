@@ -80,7 +80,7 @@ export function Picker<T extends string>({
   const [focusedIdx, setFocusedIdx] = useState<number>(-1)
   // True only when focus movement came from keyboard — prevents mouse-hover
   // from painting the inset focus ring (CSS :hover already handles background).
-  const focusFromKeyboard = useRef(false)
+  const [focusFromKeyboard, setFocusFromKeyboard] = useState(false)
   const typeaheadBuffer = useRef<{ str: string; timer: number | null }>({
     str: '',
     timer: null,
@@ -105,7 +105,7 @@ export function Picker<T extends string>({
         focusFirst === 'selected' && selectedOption
           ? options.findIndex((o) => o.value === selectedOption.value)
           : 0
-      focusFromKeyboard.current = focusFirst !== undefined
+      setFocusFromKeyboard(focusFirst !== undefined)
       setFocusedIdx(focusFirst ? Math.max(0, startIdx) : -1)
     },
     [options, selectedOption],
@@ -194,7 +194,7 @@ export function Picker<T extends string>({
 
   function cycleFocus(dir: 1 | -1) {
     if (options.length === 0) return
-    focusFromKeyboard.current = true
+    setFocusFromKeyboard(true)
     setFocusedIdx((idx) => {
       const next = idx === -1 ? (dir === 1 ? 0 : options.length - 1) : idx + dir
       if (next < 0) return options.length - 1
@@ -278,7 +278,7 @@ export function Picker<T extends string>({
                 aria-selected={isActive}
                 tabIndex={-1}
                 data-focused={isFocused || undefined}
-                onMouseEnter={() => { focusFromKeyboard.current = false; setFocusedIdx(idx) }}
+                onMouseEnter={() => { setFocusFromKeyboard(false); setFocusedIdx(idx) }}
                 onMouseDown={(e) => {
                   e.preventDefault()
                   select(opt.value)
@@ -286,7 +286,7 @@ export function Picker<T extends string>({
                 className={cn(
                   'dt-conditional-dropdown-item',
                   isActive && 'dt-conditional-dropdown-item-active',
-                  isFocused && focusFromKeyboard.current && 'dt-conditional-dropdown-item-focused',
+                  isFocused && focusFromKeyboard && 'dt-conditional-dropdown-item-focused',
                 )}
               >
                 {renderOption ? (

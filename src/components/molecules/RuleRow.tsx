@@ -132,11 +132,19 @@ export function RuleRow({
     [drag],
   )
 
-  dragPreview(drop(rowRef))
+  // Attach the dnd connectors from a callback ref — connector calls read
+  // refs, which react-hooks/refs forbids during render.
+  const rowDndRef = useCallback(
+    (el: HTMLTableRowElement | null) => {
+      rowRef.current = el
+      dragPreview(drop(el))
+    },
+    [dragPreview, drop],
+  )
 
   return (
     <tr
-      ref={rowRef}
+      ref={rowDndRef}
       data-rule-id={rule.id}
       data-rule-invalid={isInvalid ? 'true' : undefined}
       aria-invalid={isInvalid || undefined}

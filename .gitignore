@@ -30,3 +30,7 @@ screenshots/
 .claude/worktrees/
 .claude/settings.local.json
 .claire/
+
+# playwright artifacts
+/test-results/
+/playwright-report/

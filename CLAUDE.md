@@ -47,31 +47,29 @@ The flow is always: **brand-tokens → publish parsimony → npm install → var
 ### Known drifts vs the published brand
 
 `sync-tokens` diffs `variables.css` against the published `@digital2analogue2/parsimony`
-decision-engine build. The brand has drifted from this live prototype; the broad
-reconciliation (brand should adopt the prototype's light-mode values) is tracked in
-**brand-tokens#70**. Until that lands, the drifts below are expected. Do not "fix" the
-intentional ones by syncing them to brand values — that would break the light theme.
+decision-engine build.
 
-**Arctic light-mode surfaces (bluer tint — intentional):**
-- `--color-background-default` — local `#f5f8fc` vs brand `#ffffff`
-- `--color-background-alt` — local `#ebf0f8` vs brand `#f5f6f7`
-- `--color-background-elevated` — local `#f0f4fa` vs brand `#ffffff`
+**Status 2026-07-02:** the broad reconciliation (parsimony#70) has **landed in the brand
+source** — the arctic surfaces/borders, the `#1a1a2e` on-warning override (parsimony#66),
+and the 10 formerly-local color tokens (`background-hover`, `background-action-alt`,
+`background-inverted`, `background-warning-subtle`, `background-warning-vivid`,
+`foreground-inactive`, `foreground-on-action-alt`, `foreground-on-inverted`,
+`foreground-warning-dark`, `foreground-warning-icon`) are now defined in
+`tokens/brands/decision-engine.tokens.json`. The reverse case (§B) is applied here:
+`--color-background-danger` now carries the brand's `#c8002e` (red.600), and the unused
+`--color-background-accent` (`#4ade6e` phosphor green — dead in this light theme) was
+deleted rather than backported.
 
-**Cooler-gray borders (intentional):**
-- `--color-border-default` — local `#c8d6ea` vs brand `#d8dce0`
-- `--color-border-elevated` — local `#b0c4d8` vs brand `#c0c4ce`
-- `--color-border-muted` — local `#d8e4f0` vs brand `#e8eaed`
+Until a new `@digital2analogue2/parsimony` version is **published and installed**,
+`sync-tokens` still diffs against the old package, so the arctic surface/border values and
+the on-warning override will keep showing as drifts — that is expected and temporary. After
+the publish + `npm install`, re-run `sync-tokens`; the color drift set should be empty, and
+this section should be re-derived from whatever small residual remains (app-local
+layout/z-index/control-height/composite-shadow tokens stay local by design).
 
-**Light-mode contrast override (intentional):**
-- `--color-foreground-on-warning` — local `#1a1a2e` (dark navy) vs brand `#ffffff`. White-on-amber would fail AA here.
+(Cosmetic-only, not counted: `--shadow-none` differs syntactically — `0 0 0 0 transparent`
+locally vs `0 0 0 0 rgba(0,0,0,0)` upstream — but resolves to the same paint.)
 
-**Stale — prototype is behind the brand (fix forward, NOT a keep):**
-- `--color-background-danger` — local `#d03027` vs brand `#c8002e`. Brand was intentionally moved to red.600 for DE button contrast; `variables.css` should adopt `#c8002e` (brand-tokens#70 §B).
-
-(Cosmetic-only, not counted: `--shadow-none` differs syntactically — `0 0 0 0 transparent` locally vs `0 0 0 0 rgba(0,0,0,0)` upstream — but resolves to the same paint.)
-
-`sync-tokens` also lists local-only color tokens (not yet in the brand) and brand-only
-tokens (unused here) as informational — these are catalogued in brand-tokens#70 (§D/§E).
 If `sync-tokens` reports drifts outside this list, investigate.
 
 ## Contrast Gate

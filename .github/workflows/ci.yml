@@ -4,6 +4,7 @@ on:
   push:
     branches: ['**']
   pull_request:
+  workflow_dispatch:
 
 permissions:
   contents: read
@@ -32,12 +33,11 @@ jobs:
       - name: Build
         run: npm run build
 
-  # Advisory while the committed linux baselines settle in — font rendering
-  # can differ slightly between machines. Flip continue-on-error to false
-  # once this job has run green a few times.
+  # Blocking. Baselines are generated ON the CI runner via the
+  # "Update visual baselines" workflow — regenerate there after
+  # intentional visual changes, not locally.
   visual:
     runs-on: ubuntu-latest
-    continue-on-error: true
     steps:
       - uses: actions/checkout@v4
 

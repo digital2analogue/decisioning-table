@@ -1,0 +1,32 @@
+# Auto-merges Dependabot PRs once required status checks pass.
+# Inert until two one-time repo settings are enabled:
+#   1. Settings → General → Pull Requests → "Allow auto-merge"
+#   2. A branch protection rule on the default branch requiring the CI
+#      status checks — without required checks, --auto merges immediately
+#      instead of waiting for CI.
+# Major npm bumps are deliberately left for a human to review.
+name: Dependabot auto-merge
+
+on: pull_request
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  auto-merge:
+    if: github.event.pull_request.user.login == 'dependabot[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Fetch update metadata
+        id: meta
+        uses: dependabot/fetch-metadata@v2
+        with:
+          github-token: "${{ secrets.GITHUB_TOKEN }}"
+
+      - name: Queue auto-merge (skips major npm bumps)
+        if: steps.meta.outputs.package-ecosystem != 'npm_and_yarn' || steps.meta.outputs.update-type != 'version-update:semver-major'
+        run: gh pr merge --auto --squash "$PR_URL"
+        env:
+          PR_URL: ${{ github.event.pull_request.html_url }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -1,0 +1,20 @@
+version: 2
+updates:
+  # Weekly npm bumps, grouped into a single PR to keep the noise down.
+  # Security advisories still arrive as separate, immediate PRs.
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+    groups:
+      npm-dependencies:
+        patterns:
+          - "*"
+
+  # Keep the actions used in .github/workflows fresh too.
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday

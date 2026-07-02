@@ -6,14 +6,13 @@
   /* Ghost-button hover bg */
   --color-background-hover: #E2EAF5;
   --color-background-action: #2456E4;
-  --color-background-accent: #4ade6e;
   --color-background-accent-subtle: #E5EBFC;
   --color-background-accent-hover: #9CB3F3;
   --color-background-accent-blue: #e5ebfc;
   --color-background-accent-green: #ecfdf5;
   --color-background-accent-violet: #f5f3ff;
   --color-background-accent-amber: #fffbeb;
-  --color-background-danger: #d03027;
+  --color-background-danger: #c8002e; /* red.600 — adopted from the brand per parsimony#70 §B (was stale #d03027) */
   --color-background-danger-alt: #fef2f2;
   --color-background-danger-subtle: #FBEBEE;
   --color-background-selected: #E5EBFC;
@@ -67,7 +66,7 @@
   --color-foreground-warning: #92400e;
   --color-foreground-warning-icon: #b45309; /* TODO: move to brand-tokens — amber-700, 4.75:1 on light rows */
   --color-foreground-warning-dark: #78350f; /* TODO: move to brand-tokens — OR logic chip foreground (deeper amber for chip-on-tint contrast) */
-  --color-foreground-on-warning: #1A1A2E; /* DE light-mode override; brand-tokens ships #fff for dark theme */
+  --color-foreground-on-warning: #1A1A2E; /* matches the brand as of parsimony#66 — the DE brand now ships gray.900 here too */
   --color-foreground-info: #2456e4;
   --color-foreground-on-info: #ffffff;
   --color-feedback-success: #00875A;

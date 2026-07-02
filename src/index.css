@@ -102,7 +102,7 @@ select option { background-color: var(--color-background-elevated); color: var(-
   .dt-test-model-btn:focus-visible { outline: none; color: var(--color-foreground-default); border-color: var(--color-border-focus); box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-background-action) 18%, transparent); }
 
   /* Header divider — vertical hairline between header CTA groups (e.g., between "Test model" and the add-rule split button). */
-  .dt-header-divider { display: inline-block; width: 1px; height: 20px; background-color: var(--color-border-default); flex-shrink: 0; }
+  .dt-header-divider { display: inline-block; width: 1px; height: 20px; background-color: var(--color-border-alt); flex-shrink: 0; }
 
   /* Split button — primary action with a chevron-trigger menu of related variants. */
   .dt-outline-btn { display: inline-flex; align-items: center; gap: var(--space-xs); font: var(--font-label-medium); letter-spacing: var(--letter-spacing-label); color: var(--color-foreground-default); background-color: var(--color-background-elevated); border: 1px solid var(--color-border-default); border-radius: var(--radius-md); padding: var(--space-sm) var(--space-md); cursor: pointer; box-shadow: var(--shadow-sm); transition: background-color var(--duration-fast) var(--easing-default), border-color var(--duration-fast) var(--easing-default); }
@@ -132,7 +132,7 @@ select option { background-color: var(--color-background-elevated); color: var(-
   /* Collab cluster — avatars + "Edited Xh ago" inline */
   .dt-collab-cluster { display: flex; align-items: center; gap: var(--space-sm); }
   .dt-last-edited { font: var(--font-body-small); color: var(--color-foreground-muted); white-space: nowrap; }
-  .dt-header-sep { width: 1px; height: 20px; background-color: var(--color-border-default); flex-shrink: 0; }
+  .dt-header-sep { width: 1px; height: 20px; background-color: var(--color-border-alt); flex-shrink: 0; }
   .dt-split-btn { position: relative; display: inline-flex; align-items: stretch; box-shadow: var(--shadow-sm); border-radius: var(--radius-md); }
   .dt-split-btn-main { display: inline-flex; align-items: center; gap: var(--space-6); font: var(--font-label-medium); letter-spacing: var(--letter-spacing-label); color: var(--color-foreground-on-action); background-color: var(--color-background-action); border: 1px solid var(--color-background-action); border-right: none; border-radius: var(--radius-md) 0 0 var(--radius-md); padding: var(--space-sm) var(--space-md); cursor: pointer; transition: background-color var(--duration-fast) var(--easing-default); }
   .dt-split-btn-main:hover { background-color: var(--color-background-action-hover); border-color: var(--color-background-action-hover); }
@@ -140,7 +140,7 @@ select option { background-color: var(--color-background-elevated); color: var(-
   .dt-split-btn-chevron { display: inline-flex; align-items: center; color: var(--color-foreground-on-action); background-color: var(--color-background-action); border: 1px solid var(--color-background-action); border-left: 1px solid color-mix(in srgb, var(--color-foreground-on-action) 28%, transparent); border-radius: 0 var(--radius-md) var(--radius-md) 0; padding: var(--space-xs) var(--space-sm); cursor: pointer; transition: background-color var(--duration-fast) var(--easing-default); }
   .dt-split-btn-chevron:hover { background-color: var(--color-background-action-hover); border-color: var(--color-background-action-hover); }
   .dt-split-btn-chevron:focus-visible { outline: none; box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-background-action) 25%, transparent); }
-  .dt-split-btn-menu { position: absolute; right: 0; top: calc(100% + 4px); z-index: var(--z-menu-local); background-color: var(--color-background-elevated); border: 1px solid var(--color-border-default); border-radius: var(--radius-md); box-shadow: var(--shadow-menu); padding: var(--space-xs) 0; min-width: 168px; }
+  .dt-split-btn-menu { position: absolute; right: 0; top: calc(100% + 4px); z-index: var(--z-menu-local); background-color: var(--color-background-elevated); border: 1px solid var(--color-border-alt); border-radius: var(--radius-md); box-shadow: var(--shadow-menu); padding: var(--space-xs) 0; min-width: 168px; }
   .dt-split-btn-menu-item { display: flex; align-items: center; gap: var(--space-sm); width: 100%; font: var(--font-label-medium); letter-spacing: var(--letter-spacing-label); color: var(--color-foreground-secondary); background: none; border: none; cursor: pointer; padding: var(--space-6) var(--space-sm); transition: background-color var(--duration-fast) var(--easing-default), color var(--duration-fast) var(--easing-default); text-align: left; white-space: nowrap; }
   .dt-split-btn-menu-item:hover { background-color: var(--color-background-alt); color: var(--color-foreground-default); }
   .dt-split-btn-menu-item:focus-visible { outline: none; background-color: var(--color-background-alt); color: var(--color-foreground-default); box-shadow: inset 0 0 0 2px var(--color-border-focus); }
@@ -154,12 +154,12 @@ select option { background-color: var(--color-background-elevated); color: var(-
   .dt-table-edge thead { position: sticky; top: 0; z-index: var(--z-child); backdrop-filter: blur(10px) saturate(160%); }
   .dt-thead-row {
     background-color: color-mix(in srgb, var(--color-background-alt) 85%, transparent);
-    box-shadow: 0 1px 0 var(--color-border-default), 0 4px 16px color-mix(in srgb, var(--color-foreground-default) 7%, transparent);
+    box-shadow: 0 1px 0 var(--color-border-alt), 0 4px 16px color-mix(in srgb, var(--color-foreground-default) 7%, transparent);
   }
 
   /* Column separators on every column boundary (skips child rows so the indented region reads as continuous, not segmented) */
   .dt-table-edge th + th,
-  .dt-table-edge tr:not(.dt-child-row) td + td { border-left: 1px solid var(--color-border-default); }
+  .dt-table-edge tr:not(.dt-child-row) td + td { border-left: 1px solid var(--color-border-alt); }
   /* No separator on checkbox→#→name — keeps that identity cluster visually unified */
   .dt-table-edge tr:not(.dt-child-row) td.dt-col-sticky-num,
   .dt-table-edge tr:not(.dt-child-row) td.dt-col-sticky,
@@ -183,7 +183,7 @@ select option { background-color: var(--color-background-elevated); color: var(-
   /* Table sub-nav — compact filter strip between the alert banner and the
      column headers. Sits on bg-alt so it reads as scoped table chrome
      (not page surface) and the search input pops as a control on top of it. */
-  .dt-table-subnav { position: relative; display: flex; align-items: center; justify-content: flex-start; gap: var(--space-sm); padding: var(--space-sm) var(--space-md); background-color: var(--color-background-default); border-top: 1px solid var(--color-border-default); border-bottom: 1px solid var(--color-border-default); }
+  .dt-table-subnav { position: relative; display: flex; align-items: center; justify-content: flex-start; gap: var(--space-sm); padding: var(--space-sm) var(--space-md); background-color: var(--color-background-default); border-top: 1px solid var(--color-border-alt); border-bottom: 1px solid var(--color-border-alt); }
 
   /* Rule search — sub-nav-level filter input. One step smaller than the
      standard 32px control (24px high, label-small font) so it reads as a
@@ -227,13 +227,13 @@ select option { background-color: var(--color-background-elevated); color: var(-
   .dt-empty-subtitle { font: var(--font-body-small); color: var(--color-foreground-muted); margin: 0; }
 
   /* Toolbar */
-  .dt-toolbar { border-bottom: 1px solid var(--color-border-default); }
+  .dt-toolbar { border-bottom: 1px solid var(--color-border-alt); }
   .dt-toolbar-name { font: var(--font-label-medium); letter-spacing: var(--letter-spacing-tight); color: var(--color-foreground-default); margin: 0; }
   .dt-toolbar-name-input { font: var(--font-title-small); letter-spacing: var(--letter-spacing-tight); color: var(--color-foreground-default); background-color: var(--color-background-default); border: 0; outline: none; border-radius: var(--radius-sm); padding: 2px 6px; margin: -2px -6px; box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-background-action) 18%, transparent); }
   .dt-desc-input { font: var(--font-body-medium); color: var(--color-foreground-muted); background-color: var(--color-background-default); border: 0; outline: none; border-radius: var(--radius-sm); padding: 1px 4px; margin: -2px calc(-4px - 1px); box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-background-action) 18%, transparent); }
   .dt-editable-meta { cursor: text; border-radius: var(--radius-sm); border: 1px solid transparent; padding: 1px 4px; margin: -2px calc(-4px - 1px); transition: border-color var(--duration-fast) var(--easing-default); }
-  .dt-editable-meta:hover { border-color: var(--color-border-default); }
-  .dt-rule-count { font-size: var(--font-size-xs); line-height: var(--font-line-height-snug); color: var(--color-foreground-muted); background-color: var(--color-background-alt); border: 1px solid var(--color-border-default); border-radius: var(--radius-pill); padding: 1px var(--space-sm); font-variant-numeric: tabular-nums; }
+  .dt-editable-meta:hover { border-color: var(--color-border-alt); }
+  .dt-rule-count { font-size: var(--font-size-xs); line-height: var(--font-line-height-snug); color: var(--color-foreground-muted); background-color: var(--color-background-alt); border: 1px solid var(--color-border-alt); border-radius: var(--radius-pill); padding: 1px var(--space-sm); font-variant-numeric: tabular-nums; }
   /* Metric utility — inline numeric callouts using tabular figures (sans-serif per decision-table no-mono rule). */
   .dt-metric { font-variant-numeric: tabular-nums; }
   .dt-delete-selected { display: inline-flex; align-items: center; gap: var(--space-xs); font: var(--font-label-small); letter-spacing: var(--letter-spacing-label); color: var(--color-foreground-danger); background: none; border: none; cursor: pointer; transition: opacity var(--duration-fast) var(--easing-default), box-shadow var(--duration-fast) var(--easing-default); padding: var(--space-2xs) var(--space-xs); margin: calc(-1 * var(--space-2xs)) calc(-1 * var(--space-xs)); border-radius: var(--radius-sm); opacity: 0.65; }
@@ -259,7 +259,7 @@ select option { background-color: var(--color-background-elevated); color: var(-
   .dt-confirm-btn-sm { width: 22px; height: 22px; }
 
   /* Ruleset tabs bar */
-  .dt-tabs-bar { background-color: var(--color-background-alt); border-top: 1px solid var(--color-border-default); }
+  .dt-tabs-bar { background-color: var(--color-background-alt); border-top: 1px solid var(--color-border-alt); }
   .dt-add-ruleset-btn { display: inline-flex; align-items: center; justify-content: center; width: 28px; height: 28px; padding: 0; color: var(--color-foreground-muted); background: none; border: none; cursor: pointer; border-radius: var(--radius-md); flex-shrink: 0; transition: color var(--duration-fast) var(--easing-default), background-color var(--duration-fast) var(--easing-default); }
   .dt-add-ruleset-btn:hover { color: var(--color-foreground-default); background-color: var(--color-background-hover); }
   .dt-add-ruleset-btn:focus-visible { outline: none; color: var(--color-foreground-default); background-color: var(--color-background-hover); box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-background-action) 18%, transparent); }
@@ -270,9 +270,9 @@ select option { background-color: var(--color-background-elevated); color: var(-
      scrolls the text naturally — ellipsis only applies to unfocused state. */
   /* Rule name reads as the row identifier — semibold + bordered to match the
      other input controls (selects, conditional inputs, amount cell). */
-  .dt-rule-name-input { font: var(--font-body-medium); font-weight: var(--font-weight-semibold); color: var(--color-foreground-default); background-color: var(--color-background-default); border: 1px solid var(--color-border-default); outline: none; flex: 1; min-width: 0; min-height: var(--control-height-md); box-sizing: border-box; text-overflow: ellipsis; border-radius: var(--radius-sm); padding: 0 var(--space-sm); transition: background-color var(--duration-fast) var(--easing-default), border-color var(--duration-fast) var(--easing-default), box-shadow var(--duration-fast) var(--easing-default); }
+  .dt-rule-name-input { font: var(--font-body-medium); font-weight: var(--font-weight-semibold); color: var(--color-foreground-default); background-color: var(--color-background-default); border: 1px solid var(--color-border-alt); outline: none; flex: 1; min-width: 0; min-height: var(--control-height-md); box-sizing: border-box; text-overflow: ellipsis; border-radius: var(--radius-sm); padding: 0 var(--space-sm); transition: background-color var(--duration-fast) var(--easing-default), border-color var(--duration-fast) var(--easing-default), box-shadow var(--duration-fast) var(--easing-default); }
   .dt-rule-name-input::placeholder { color: var(--color-foreground-muted); }
-  .dt-rule-name-input:hover { background-color: var(--color-background-alt); box-shadow: 0 0 0 1px var(--color-border-default); }
+  .dt-rule-name-input:hover { background-color: var(--color-background-alt); box-shadow: 0 0 0 1px var(--color-border-alt); }
   .dt-rule-name-input:focus-visible { background-color: var(--color-background-elevated); border-color: var(--color-border-focus); box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-background-action) 18%, transparent); }
 
   /* Amount cell — bordered wrapper with the $ prefix INSIDE so the cell reads
@@ -291,7 +291,7 @@ select option { background-color: var(--color-background-elevated); color: var(-
     from { opacity: 0; transform: scale(0.95); }
     to   { opacity: 1; transform: scale(1); }
   }
-  .dt-menu { background-color: var(--color-background-elevated); border: 1px solid var(--color-border-default); border-radius: var(--radius-md); box-shadow: var(--shadow-brand-tint); padding: var(--space-xs) 0; min-width: 160px; transform-origin: top right; animation: dt-menu-in var(--duration-fast) var(--easing-out) both; }
+  .dt-menu { background-color: var(--color-background-elevated); border: 1px solid var(--color-border-alt); border-radius: var(--radius-md); box-shadow: var(--shadow-brand-tint); padding: var(--space-xs) 0; min-width: 160px; transform-origin: top right; animation: dt-menu-in var(--duration-fast) var(--easing-out) both; }
   .dt-menu-item { display: flex; align-items: center; gap: var(--space-xs); width: 100%; font: var(--font-label-medium); letter-spacing: var(--letter-spacing-label); color: var(--color-foreground-default); background: none; border: none; cursor: pointer; padding: 7px var(--space-md); transition: background-color var(--duration-fast) var(--easing-default); text-align: left; }
   .dt-menu-item:hover,
   .dt-menu-item[data-highlighted] { background-color: var(--color-background-alt); }
@@ -325,19 +325,19 @@ select option { background-color: var(--color-background-elevated); color: var(-
      - Inactive segments are flat / muted; active segment lifts via bg-elevated +
        shadow + ring, with its semantic color carried only on the icon
      - Animated transitions on bg, color, and shadow keep state changes fluid */
-  .dt-outcome-seg { position: relative; display: inline-flex; gap: 2px; padding: 2px; border-radius: var(--radius-md); background-color: var(--color-background-alt); border: 1px solid var(--color-border-default); }
+  .dt-outcome-seg { position: relative; display: inline-flex; gap: 2px; padding: 2px; border-radius: var(--radius-md); background-color: var(--color-background-alt); border: 1px solid var(--color-border-alt); }
   /* Sliding pill — renders below buttons (z-index: 0) and translates to the active segment */
-  .dt-outcome-seg-indicator { position: absolute; top: 2px; left: 2px; width: calc(50% - 3px); height: calc(100% - 4px); background-color: var(--color-background-elevated); border: 1px solid var(--color-border-default); box-shadow: var(--shadow-sm); border-radius: var(--radius-sm); transition: transform var(--duration-normal) var(--easing-in-out); pointer-events: none; z-index: 0; }
+  .dt-outcome-seg-indicator { position: absolute; top: 2px; left: 2px; width: calc(50% - 3px); height: calc(100% - 4px); background-color: var(--color-background-elevated); border: 1px solid var(--color-border-alt); box-shadow: var(--shadow-sm); border-radius: var(--radius-sm); transition: transform var(--duration-normal) var(--easing-in-out); pointer-events: none; z-index: 0; }
   .dt-outcome-seg-indicator-right { transform: translateX(calc(100% + 2px)); }
   /* Semantic tint on the active pill — scannable at a glance across many rows */
   .dt-outcome-seg:has(.dt-outcome-seg-approve) .dt-outcome-seg-indicator {
     background-color: color-mix(in srgb, var(--color-feedback-success) 12%, var(--color-background-elevated));
-    border-color: color-mix(in srgb, var(--color-feedback-success) 30%, var(--color-border-default));
+    border-color: color-mix(in srgb, var(--color-feedback-success) 30%, var(--color-border-alt));
     box-shadow: var(--shadow-sm), 0 0 0 0 transparent;
   }
   .dt-outcome-seg:has(.dt-outcome-seg-deny) .dt-outcome-seg-indicator {
     background-color: color-mix(in srgb, var(--color-foreground-danger) 8%, var(--color-background-elevated));
-    border-color: color-mix(in srgb, var(--color-foreground-danger) 20%, var(--color-border-default));
+    border-color: color-mix(in srgb, var(--color-foreground-danger) 20%, var(--color-border-alt));
   }
   /* Inactive segment uses --color-foreground-inactive (WCAG-exempt; reads as recessed against the active states; not in contrast manifest by design). */
   .dt-outcome-seg-btn { position: relative; z-index: 1; display: inline-flex; align-items: center; justify-content: center; min-width: 84px; gap: var(--space-2xs); font: var(--font-label-small); letter-spacing: var(--letter-spacing-label); padding: 3px var(--space-sm); border: 1px solid transparent; background: transparent; border-radius: var(--radius-sm); cursor: pointer; color: var(--color-foreground-inactive); transition: color var(--duration-normal) var(--easing-default); }
@@ -399,7 +399,7 @@ select option { background-color: var(--color-background-elevated); color: var(-
     margin: -3px calc(-1 * var(--space-xs) - 1px);
     transition: border-color var(--duration-fast) var(--easing-default);
   }
-  .dt-editable-label:hover { border-color: var(--color-border-default); }
+  .dt-editable-label:hover { border-color: var(--color-border-alt); }
   .dt-editable-label:focus-visible { outline: none; border-color: var(--color-border-focus); box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-background-action) 18%, transparent); }
 
   /* Operator trigger — shares font/colors/padding with .dt-conditional-operator
@@ -421,7 +421,7 @@ select option { background-color: var(--color-background-elevated); color: var(-
   .dt-add-rule-row-btn:hover { color: var(--color-foreground-default); background-color: var(--color-background-hover); }
   .dt-add-rule-row-btn[aria-expanded="true"] { color: var(--color-foreground-default); background-color: var(--color-background-hover); }
   .dt-add-rule-row-btn:focus-visible { outline: none; color: var(--color-foreground-default); background-color: var(--color-background-hover); box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-background-action) 18%, transparent); }
-  .dt-add-rule-row-menu { position: absolute; left: 0; bottom: calc(100% + 4px); z-index: var(--z-menu-local); background-color: var(--color-background-elevated); border: 1px solid var(--color-border-default); border-radius: var(--radius-md); box-shadow: var(--shadow-menu); padding: var(--space-xs) 0; min-width: 168px; }
+  .dt-add-rule-row-menu { position: absolute; left: 0; bottom: calc(100% + 4px); z-index: var(--z-menu-local); background-color: var(--color-background-elevated); border: 1px solid var(--color-border-alt); border-radius: var(--radius-md); box-shadow: var(--shadow-menu); padding: var(--space-xs) 0; min-width: 168px; }
 
 
   /* Row-level "incomplete rule" warning — replaces the row number for invalid rules; sits inside the # column */
@@ -473,7 +473,7 @@ select option { background-color: var(--color-background-elevated); color: var(-
   .dt-conditional-cell .dt-conditional-operator { border-right: none; border-top-right-radius: 0; border-bottom-right-radius: 0; width: 100px; }
   .dt-conditional-cell .dt-amount-cell { border-top-left-radius: 0; border-bottom-left-radius: 0; background-color: var(--color-background-elevated); border-color: var(--color-border-default); }
   .dt-conditional-cell .dt-conditional-variable { border-top-left-radius: 0; border-bottom-left-radius: 0; }
-  .dt-conditional-variable { font: var(--font-label-medium); font-family: var(--font-family-mono); font-variant-numeric: tabular-nums; letter-spacing: 0; color: var(--color-foreground-default); background-color: var(--color-background-default); border: 1px solid var(--color-border-default); border-radius: var(--radius-sm); padding: 0 var(--space-sm); width: 100%; min-width: 0; min-height: var(--control-height-md); box-sizing: border-box; transition: background-color var(--duration-fast) var(--easing-default), box-shadow var(--duration-fast) var(--easing-default); }
+  .dt-conditional-variable { font: var(--font-label-medium); font-family: var(--font-family-mono); font-variant-numeric: tabular-nums; letter-spacing: 0; color: var(--color-foreground-default); background-color: var(--color-background-default); border: 1px solid var(--color-border-alt); border-radius: var(--radius-sm); padding: 0 var(--space-sm); width: 100%; min-width: 0; min-height: var(--control-height-md); box-sizing: border-box; transition: background-color var(--duration-fast) var(--easing-default), box-shadow var(--duration-fast) var(--easing-default); }
   .dt-conditional-variable::placeholder { font-family: var(--font-family-sans); color: var(--color-foreground-muted); }
   /* When a variable IS selected, its label shows via the ::placeholder slot
      (so the input doubles as a search-filter on focus). Override the muted
@@ -482,7 +482,7 @@ select option { background-color: var(--color-background-elevated); color: var(-
   .dt-conditional-variable--filled::placeholder { color: var(--color-foreground-default); opacity: 1; }
   .dt-conditional-variable:hover { background-color: color-mix(in srgb, var(--color-background-hover) 80%, var(--color-border-elevated) 20%); }
   .dt-conditional-variable:focus-visible { outline: none; box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-background-action) 18%, transparent); background-color: var(--color-background-elevated); color: var(--color-foreground-default); }
-  .dt-conditional-dropdown { background-color: var(--color-background-elevated); border: 1px solid var(--color-border-default); border-radius: var(--radius-sm); box-shadow: var(--shadow-brand-tint); z-index: 50; min-width: 160px; overflow: hidden; }
+  .dt-conditional-dropdown { background-color: var(--color-background-elevated); border: 1px solid var(--color-border-alt); border-radius: var(--radius-sm); box-shadow: var(--shadow-brand-tint); z-index: 50; min-width: 160px; overflow: hidden; }
   .dt-conditional-dropdown-item { display: block; width: 100%; padding: var(--space-xs) var(--space-sm); text-align: left; font: var(--font-label-medium); color: var(--color-foreground-default); background: none; border: none; border-bottom: 1px solid var(--color-border-subtle); cursor: pointer; transition: background-color var(--duration-fast) var(--easing-default), box-shadow var(--duration-fast) var(--easing-default); }
   .dt-conditional-dropdown-item:last-child { border-bottom: none; }
   .dt-conditional-dropdown-item:hover { background-color: var(--color-background-alt); }
@@ -562,7 +562,7 @@ select option { background-color: var(--color-background-elevated); color: var(-
   .dt-child-row:hover .dt-col-sticky,
   .dt-child-row:hover .dt-col-sticky-num { background-color: color-mix(in srgb, var(--color-background-hover) 88%, var(--color-background-action) 12%); }
   /* Last child carries the group's closing border */
-  .dt-child-row-last { border-bottom: 1px solid var(--color-border-default); }
+  .dt-child-row-last { border-bottom: 1px solid var(--color-border-alt); }
   /* Children's leading cells (legacy marker class — kept for semantic clarity in JSX; column-separator borders are excluded at the table-level rule) */
   .dt-child-cell-bare { border-left: none; }
 
@@ -700,7 +700,7 @@ select option { background-color: var(--color-background-elevated); color: var(-
   .ob-page { display: flex; flex-direction: column; height: 100vh; background-color: var(--color-background-default); color: var(--color-foreground-default); overflow: hidden; }
 
   /* Header */
-  .ob-header { display: flex; align-items: center; justify-content: space-between; padding: 0 var(--space-lg); height: 52px; background-color: var(--color-background-elevated); border-bottom: 1px solid var(--color-border-default); box-shadow: var(--shadow-sm); flex-shrink: 0; }
+  .ob-header { display: flex; align-items: center; justify-content: space-between; padding: 0 var(--space-lg); height: 52px; background-color: var(--color-background-elevated); border-bottom: 1px solid var(--color-border-alt); box-shadow: var(--shadow-sm); flex-shrink: 0; }
   .ob-nav-back { display: inline-flex; align-items: center; gap: var(--space-xs); font: var(--font-label-medium); letter-spacing: var(--letter-spacing-label); color: var(--color-foreground-action); background: none; border: none; cursor: pointer; padding: 0; transition: opacity var(--duration-fast) var(--easing-default); }
   .ob-nav-back:hover { color: var(--color-foreground-action); opacity: 0.8; }
   .ob-header-title { font: var(--font-label-medium); letter-spacing: var(--letter-spacing-tight); color: var(--color-foreground-default); }
@@ -728,7 +728,7 @@ select option { background-color: var(--color-background-elevated); color: var(-
 
   /* Outcome radio cards */
   .ob-outcome-list { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-sm); }
-  .ob-outcome-item { display: flex; align-items: flex-start; gap: var(--space-md); padding: var(--space-md); background-color: var(--color-background-elevated); border: 1px solid var(--color-border-default); border-radius: var(--radius-lg); cursor: pointer; transition: border-color var(--duration-fast) var(--easing-default), box-shadow var(--duration-fast) var(--easing-default), background-color var(--duration-fast) var(--easing-default); }
+  .ob-outcome-item { display: flex; align-items: flex-start; gap: var(--space-md); padding: var(--space-md); background-color: var(--color-background-elevated); border: 1px solid var(--color-border-alt); border-radius: var(--radius-lg); cursor: pointer; transition: border-color var(--duration-fast) var(--easing-default), box-shadow var(--duration-fast) var(--easing-default), background-color var(--duration-fast) var(--easing-default); }
   .ob-outcome-item:hover { border-color: var(--color-foreground-muted); background-color: var(--color-background-alt); }
   .ob-outcome-item:focus-visible { outline: 2px solid var(--color-foreground-action); outline-offset: 2px; }
   .ob-outcome-item--selected { border-color: var(--color-foreground-action); background-color: color-mix(in srgb, var(--color-background-elevated) 92%, var(--color-background-action) 8%); box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-background-action) 18%, transparent); }
@@ -751,10 +751,10 @@ select option { background-color: var(--color-background-elevated); color: var(-
   .ob-field-error { font: var(--font-body-small); color: var(--color-foreground-danger); margin: 0; }
 
   /* Data element selector split panel */
-  .ob-selector { display: grid; grid-template-columns: 1fr 280px; gap: 0; margin-top: var(--space-md); border: 1px solid var(--color-border-default); border-radius: var(--radius-lg); overflow: hidden; background-color: var(--color-background-elevated); }
+  .ob-selector { display: grid; grid-template-columns: 1fr 280px; gap: 0; margin-top: var(--space-md); border: 1px solid var(--color-border-alt); border-radius: var(--radius-lg); overflow: hidden; background-color: var(--color-background-elevated); }
 
   /* Left: searchable list */
-  .ob-selector-list { display: flex; flex-direction: column; border-right: 1px solid var(--color-border-default); max-height: 400px; overflow-y: auto; }
+  .ob-selector-list { display: flex; flex-direction: column; border-right: 1px solid var(--color-border-alt); max-height: 400px; overflow-y: auto; }
   .ob-search-wrap { display: flex; align-items: center; gap: var(--space-sm); padding: var(--space-sm) var(--space-md); border-bottom: 1px solid var(--color-border-muted); position: sticky; top: 0; background-color: var(--color-background-elevated); z-index: 1; }
   .ob-search-icon { color: var(--color-foreground-muted); flex-shrink: 0; }
   .ob-search-input { flex: 1; font: var(--font-body-medium); color: var(--color-foreground-default); background: transparent; border: none; outline: none; }
@@ -765,7 +765,7 @@ select option { background-color: var(--color-background-elevated); color: var(-
   /* Category groups */
   .ob-category { display: flex; flex-direction: column; }
   .ob-category-checkbox { width: 13px; height: 13px; accent-color: var(--color-foreground-action); flex-shrink: 0; cursor: pointer; margin: 0; }
-  .ob-category-label { font: var(--font-label-small); letter-spacing: var(--letter-spacing-all-caps); text-transform: uppercase; color: var(--color-foreground-secondary); padding: var(--space-xs) var(--space-md); background-color: var(--color-background-alt); border-bottom: 1px solid var(--color-border-default); display: flex; align-items: center; gap: var(--space-sm); }
+  .ob-category-label { font: var(--font-label-small); letter-spacing: var(--letter-spacing-all-caps); text-transform: uppercase; color: var(--color-foreground-secondary); padding: var(--space-xs) var(--space-md); background-color: var(--color-background-alt); border-bottom: 1px solid var(--color-border-alt); display: flex; align-items: center; gap: var(--space-sm); }
   .ob-element-row { display: flex; align-items: center; gap: var(--space-sm); padding: var(--space-sm) var(--space-md) var(--space-sm) var(--space-xl); cursor: pointer; transition: background-color var(--duration-fast) var(--easing-default); border-left: 2px solid transparent; }
   .ob-element-row:hover { background-color: var(--color-background-alt); }
   .ob-element-row--focused { background-color: var(--color-accent-subtle); border-left-color: var(--color-foreground-action); }
@@ -776,7 +776,7 @@ select option { background-color: var(--color-background-elevated); color: var(-
   /* Data type badges */
   .ob-type-badge { font: var(--font-label-small); letter-spacing: var(--letter-spacing-label); border-radius: var(--radius-pill); padding: 1px var(--space-sm); border: 1px solid transparent; white-space: nowrap; flex-shrink: 0; }
   .ob-type-badge--number { background-color: var(--color-accent-subtle); color: var(--color-foreground-action); border-color: var(--color-accent-subtle-border); }
-  .ob-type-badge--string { background-color: var(--color-background-alt); color: var(--color-foreground-secondary); border-color: var(--color-border-default); }
+  .ob-type-badge--string { background-color: var(--color-background-alt); color: var(--color-foreground-secondary); border-color: var(--color-border-alt); }
   .ob-type-badge--boolean { background-color: color-mix(in srgb, var(--color-background-elevated) 88%, var(--color-feedback-success) 12%); color: var(--color-feedback-success); border-color: color-mix(in srgb, var(--color-background-elevated) 55%, var(--color-feedback-success) 45%); }
   .ob-type-badge--enum { background-color: var(--color-background-accent-violet); color: var(--color-foreground-accent-purple); border-color: color-mix(in srgb, var(--color-background-accent-violet) 40%, var(--color-foreground-accent-purple) 60%); }
 
@@ -786,7 +786,7 @@ select option { background-color: var(--color-background-elevated); color: var(-
   .ob-preview-header { display: flex; align-items: center; gap: var(--space-sm); flex-wrap: wrap; }
   .ob-preview-label { font: var(--font-label-medium); letter-spacing: var(--letter-spacing-label); color: var(--color-foreground-default); font-family: var(--font-family-mono); }
   .ob-preview-description { font: var(--font-body-medium); color: var(--color-foreground-secondary); line-height: var(--font-line-height-relaxed); margin: 0; }
-  .ob-preview-meta { display: flex; flex-direction: column; gap: var(--space-sm); background-color: var(--color-background-elevated); border: 1px solid var(--color-border-default); border-radius: var(--radius-md); padding: var(--space-sm) var(--space-md); }
+  .ob-preview-meta { display: flex; flex-direction: column; gap: var(--space-sm); background-color: var(--color-background-elevated); border: 1px solid var(--color-border-alt); border-radius: var(--radius-md); padding: var(--space-sm) var(--space-md); }
   .ob-preview-meta-row { display: flex; justify-content: space-between; align-items: baseline; gap: var(--space-sm); }
   .ob-preview-meta-key { font: var(--font-label-small); letter-spacing: var(--letter-spacing-label); color: var(--color-foreground-secondary); white-space: nowrap; }
   .ob-preview-meta-val { font: var(--font-body-small); color: var(--color-foreground-default); text-align: right; }
@@ -807,7 +807,7 @@ select option { background-color: var(--color-background-elevated); color: var(-
   /* Spacer reserves height for the sticky footer so content scrolls above it */
   .ob-footer-spacer { height: 88px; flex-shrink: 0; }
   /* Sticky footer */
-  .ob-footer { flex-shrink: 0; background-color: var(--color-background-elevated); border-top: 1px solid var(--color-border-default); box-shadow: var(--shadow-footer-up); }
+  .ob-footer { flex-shrink: 0; background-color: var(--color-background-elevated); border-top: 1px solid var(--color-border-alt); box-shadow: var(--shadow-footer-up); }
   .ob-footer-inner { display: flex; align-items: center; justify-content: flex-end; padding: var(--space-md) var(--space-lg); }
   .ob-footer-progress { font: var(--font-body-medium); color: var(--color-foreground-secondary); }
   .ob-next-btn { font: var(--font-label-medium); letter-spacing: var(--letter-spacing-label); color: var(--color-foreground-on-action); background-color: var(--color-background-action); border: 1px solid var(--color-background-action); border-radius: var(--radius-md); padding: var(--space-sm) var(--space-xl); min-width: 140px; cursor: pointer; transition: background-color var(--duration-fast) var(--easing-default), box-shadow var(--duration-fast) var(--easing-default); box-shadow: var(--shadow-sm); }

@@ -49,11 +49,14 @@ The flow is always: **brand-tokens → publish parsimony → npm install → var
 `sync-tokens` diffs `variables.css` against the published `@digital2analogue2/parsimony`
 decision-engine build.
 
-**Status: CLEAN as of `@digital2analogue2/parsimony@0.2.0` (2026-07-02).** The parsimony#70
+**Status: CLEAN as of `@digital2analogue2/parsimony@0.3.0` (2026-07-02).** The parsimony#70
 reconciliation landed and published: the arctic surfaces/borders, the `#1a1a2e` on-warning
 override (parsimony#66), and the 10 formerly-local color tokens are now in the brand source,
 and this repo adopted the brand's `#c8002e` danger (§B) and deleted the unused
-`--color-background-accent`. `sync-tokens` reports **zero value drifts**.
+`--color-background-accent`. 0.3.0 adds the border split (parsimony#28): `border-default`
+is the legible functional edge (`#7A8FA9`, interactive-control outlines), `border-alt`
+(`#C8D6EA`) is the quiet decorative edge — this repo's structural/decorative usages were
+migrated to `border-alt` in the same change. `sync-tokens` reports **zero value drifts**.
 
 Expected residual output, all informational:
 - **3 brand-only tokens** not in `variables.css` (fine — unused here for now):

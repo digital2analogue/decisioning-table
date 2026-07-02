@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useRef, useState } from 'react'
 import { SearchIcon, XIcon } from 'lucide-react'
 
 export interface RuleSearchProps {
@@ -25,12 +25,16 @@ export function RuleSearch({
   className,
 }: RuleSearchProps) {
   const [draft, setDraft] = useState(value)
+  const [prevValue, setPrevValue] = useState(value)
   const timer = useRef<number | null>(null)
 
-  // Keep local draft in sync if parent clears externally
-  useEffect(() => {
+  // Keep local draft in sync if parent clears externally. Render-time sync
+  // (not an effect): avoids the extra re-render cycle and satisfies
+  // react-hooks/set-state-in-effect.
+  if (prevValue !== value) {
+    setPrevValue(value)
     setDraft(value)
-  }, [value])
+  }
 
   function commit(next: string) {
     setDraft(next)

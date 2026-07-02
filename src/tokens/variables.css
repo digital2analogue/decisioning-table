@@ -45,7 +45,8 @@
   --color-foreground-on-danger: #ffffff;
   --color-foreground-inverse: #FFFFFF;
   /* Borders */
-  --color-border-default: #C8D6EA;
+  --color-border-default: #7A8FA9; /* arctic.600 — legible functional edge, 3.11:1 on canvas (parsimony#28) */
+  --color-border-alt: #C8D6EA;     /* quiet decorative edge — the previous border-default value */
   --color-border-elevated: #B0C4D8;
   --color-border-muted: #D8E4F0;
   --color-border-accent: #2456E4;

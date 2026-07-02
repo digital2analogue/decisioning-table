@@ -10,7 +10,16 @@ npm run build          # contrast check → tsc → vite build (contrast gate bl
 npm run check-contrast # Run WCAG AA check in isolation
 npm run sync-tokens    # Compare local variables.css against the installed @digital2analogue2/parsimony package
 npm run screenshots    # Puppeteer screenshot capture
+npm run test           # Vitest unit tests (tests/unit — covers the src/types.ts validation helpers)
+npm run test:visual    # Playwright visual regression (tests/visual; onboarding, ?demo=1 table, ?demo=validation states)
+npm run test:visual:update # Regenerate baselines after intentional visual changes (prefer the CI workflow — see below)
 ```
+
+## Testing & Automation
+
+Vitest unit tests + Playwright visual regression run in CI (`.github/workflows/ci.yml`, jobs `checks` + `visual`, both blocking) and the pre-commit hook runs lint-staged + unit tests + the contrast gate.
+
+**Visual baselines are generated ON the CI runner, never locally** — font rasterization differs across machines, so locally-generated baselines fail in CI. After an intentional visual change, run the "Update visual baselines" workflow from the Actions tab. `main` has branch protection requiring the `checks` and `visual` status checks; Dependabot files weekly grouped bumps and the `dependabot-automerge` workflow merges them once CI passes (major npm bumps stay manual).
 
 ## Token System
 

@@ -49,28 +49,22 @@ The flow is always: **brand-tokens → publish parsimony → npm install → var
 `sync-tokens` diffs `variables.css` against the published `@digital2analogue2/parsimony`
 decision-engine build.
 
-**Status 2026-07-02:** the broad reconciliation (parsimony#70) has **landed in the brand
-source** — the arctic surfaces/borders, the `#1a1a2e` on-warning override (parsimony#66),
-and the 10 formerly-local color tokens (`background-hover`, `background-action-alt`,
-`background-inverted`, `background-warning-subtle`, `background-warning-vivid`,
-`foreground-inactive`, `foreground-on-action-alt`, `foreground-on-inverted`,
-`foreground-warning-dark`, `foreground-warning-icon`) are now defined in
-`tokens/brands/decision-engine.tokens.json`. The reverse case (§B) is applied here:
-`--color-background-danger` now carries the brand's `#c8002e` (red.600), and the unused
-`--color-background-accent` (`#4ade6e` phosphor green — dead in this light theme) was
-deleted rather than backported.
+**Status: CLEAN as of `@digital2analogue2/parsimony@0.2.0` (2026-07-02).** The parsimony#70
+reconciliation landed and published: the arctic surfaces/borders, the `#1a1a2e` on-warning
+override (parsimony#66), and the 10 formerly-local color tokens are now in the brand source,
+and this repo adopted the brand's `#c8002e` danger (§B) and deleted the unused
+`--color-background-accent`. `sync-tokens` reports **zero value drifts**.
 
-Until a new `@digital2analogue2/parsimony` version is **published and installed**,
-`sync-tokens` still diffs against the old package, so the arctic surface/border values and
-the on-warning override will keep showing as drifts — that is expected and temporary. After
-the publish + `npm install`, re-run `sync-tokens`; the color drift set should be empty, and
-this section should be re-derived from whatever small residual remains (app-local
-layout/z-index/control-height/composite-shadow tokens stay local by design).
+Expected residual output, all informational:
+- **3 brand-only tokens** not in `variables.css` (fine — unused here for now):
+  `--color-border-action` (`#4ade6e`, base-theme ghost-button outline that DE never renders),
+  `--color-foreground-accent-on-amber-bold` / `--color-foreground-accent-on-green-bold`
+  (`#ffffff` — adopt these if the avatar stack's hardcoded white is ever tokenized).
+- **App-local tokens** (layout, z-index, control heights, column widths, composite shadows)
+  stay local by design — they are not brand material.
 
-(Cosmetic-only, not counted: `--shadow-none` differs syntactically — `0 0 0 0 transparent`
-locally vs `0 0 0 0 rgba(0,0,0,0)` upstream — but resolves to the same paint.)
-
-If `sync-tokens` reports drifts outside this list, investigate.
+If `sync-tokens` reports any *value drift*, investigate — that state is a bug now, not a
+documented exception.
 
 ## Contrast Gate
 

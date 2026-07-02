@@ -18,14 +18,43 @@ jobs:
     if: github.event.pull_request.user.login == 'dependabot[bot]'
     runs-on: ubuntu-latest
     steps:
+      # fetch-metadata calls the GitHub API, which occasionally returns a
+      # truncated response ("invalid json … Unexpected end of JSON input",
+      # observed 2026-07-02, run 28573239981) — that stranded a green PR and
+      # emailed a failure for pure infrastructure noise. One retry absorbs it.
       - name: Fetch update metadata
         id: meta
+        continue-on-error: true
         uses: dependabot/fetch-metadata@v2
         with:
           github-token: "${{ secrets.GITHUB_TOKEN }}"
 
+      - name: Fetch update metadata (retry after transient failure)
+        id: meta-retry
+        if: steps.meta.outcome == 'failure'
+        uses: dependabot/fetch-metadata@v2
+        with:
+          github-token: "${{ secrets.GITHUB_TOKEN }}"
+
+      - name: Resolve metadata from whichever attempt succeeded
+        id: resolved
+        run: |
+          eco="${ECO_FIRST:-$ECO_RETRY}"
+          typ="${TYPE_FIRST:-$TYPE_RETRY}"
+          if [ -z "$eco" ]; then
+            echo "::error::fetch-metadata failed twice — re-run this workflow from the Actions tab"
+            exit 1
+          fi
+          echo "package-ecosystem=$eco" >> "$GITHUB_OUTPUT"
+          echo "update-type=$typ" >> "$GITHUB_OUTPUT"
+        env:
+          ECO_FIRST: ${{ steps.meta.outputs.package-ecosystem }}
+          ECO_RETRY: ${{ steps.meta-retry.outputs.package-ecosystem }}
+          TYPE_FIRST: ${{ steps.meta.outputs.update-type }}
+          TYPE_RETRY: ${{ steps.meta-retry.outputs.update-type }}
+
       - name: Queue auto-merge (skips major npm bumps)
-        if: steps.meta.outputs.package-ecosystem != 'npm_and_yarn' || steps.meta.outputs.update-type != 'version-update:semver-major'
+        if: steps.resolved.outputs.package-ecosystem != 'npm_and_yarn' || steps.resolved.outputs.update-type != 'version-update:semver-major'
         run: gh pr merge --auto --squash "$PR_URL"
         env:
           PR_URL: ${{ github.event.pull_request.html_url }}

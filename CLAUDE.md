@@ -19,7 +19,7 @@ npm run test:visual:update # Regenerate baselines after intentional visual chang
 
 Vitest unit tests + Playwright visual regression run in CI (`.github/workflows/ci.yml`, jobs `checks` + `visual`, both blocking) and the pre-commit hook runs lint-staged + unit tests + the contrast gate.
 
-**Visual baselines are generated ON the CI runner, never locally** — font rasterization differs across machines, so locally-generated baselines fail in CI. After an intentional visual change, run the "Update visual baselines" workflow from the Actions tab. `main` has branch protection requiring the `checks` and `visual` status checks; Dependabot files weekly grouped bumps and the `dependabot-automerge` workflow merges them once CI passes (major npm bumps stay manual).
+**Visual baselines are generated ON the CI runner, never locally** — font rasterization differs across machines, so locally-generated baselines fail in CI. After an intentional visual change, run the "Update visual baselines" workflow from the Actions tab — **after your final push to the branch**: the workflow commits back to the branch it ran on, so pushing mid-run races its push (it now rebases + retries, but the run it raced on 2026-07-02 failed; dispatch it last and let it finish). `main` has branch protection requiring the `checks` and `visual` status checks; Dependabot files weekly grouped bumps and the `dependabot-automerge` workflow merges them once CI passes (major npm bumps stay manual — and note `@dependabot` commands posted via API integrations are ignored; use the GitHub UI).
 
 ## Token System
 

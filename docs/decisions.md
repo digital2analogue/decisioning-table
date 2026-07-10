@@ -6,6 +6,41 @@ feed the Capital One case study (and so future sessions don't re-litigate settle
 
 ---
 
+## 2026-07-10 — Fix: drag had no live visual movement — DragOverlay (sticky-cell vs transform)
+
+**What.** Right after the dnd-kit migration, reorder was *functionally* correct but *visually* broken:
+pressing a row activated the drag (drop-shadow appeared) but dragging didn't move the row or part its
+neighbours — on release the row **jumped** to its new slot. Switched the drag visual to a **`DragOverlay`**
+(a floating clone of the row that follows the pointer), dimmed the source row to a ghost, and added a
+drop-indicator line for the landing slot. Also removed the extraneous `restrictToParentElement` modifier.
+
+**Why.** dnd-kit moves a sortable item with a CSS `transform` on the element — here the `<tr>`. Every
+parent row has **two `position: sticky` cells** (the `#` and rule-name columns, kept visible while the
+wide table scrolls horizontally). A `position: sticky` child inside a `transform`ed ancestor is a
+spec-level conflict: the sticky cells anchor to the scroll container and browsers **drop the row's
+transform**, so the `<tr>` never visibly translated. Collision detection runs off the **pointer**, so the
+reorder still computed the right index → the "magic jump."
+
+**Alternatives weighed (the tradeoffs).**
+- **Neutralise sticky during drag** (`position: static` so the `<tr>` transform renders) — **rejected**:
+  on mobile the grip is always reachable via the sticky `#` column *even when horizontally scrolled*, so
+  dropping sticky mid-drag would snap the pinned columns and cause a worse jump.
+- **`DragOverlay`** is the canonical, scroll-safe fix — a fixed-position portal, no `<tr>` transform, so
+  sticky columns are irrelevant to it. **Chosen.**
+- **Faithful clone** via captured `outerHTML` + measured column widths (`table-layout: fixed` + a
+  `<colgroup>`), with controlled `<input>` values serialized into attributes so the clone isn't blank. A
+  condensed/simplified preview was the lighter alternative; chose faithful for craft.
+- **Neighbours can't part** (same sticky reason), so a transform-free **drop-indicator line** marks the
+  landing slot instead of an opening gap.
+- **Verification lesson**: the migration was "verified" only by final row order — which passed even
+  though nothing moved visually. Now verified with **mid-drag screenshots** (mouse + CDP touch) asserting
+  the overlay's on-screen position tracks the pointer.
+
+**Status.** Implemented on `claude/portfolio-design-system-audit-c8kb32` (PR #35). Motion-only vs rest
+frames — the three visual baselines are unchanged.
+
+---
+
 ## 2026-07-10 — Rule-row drag-and-drop: react-dnd → dnd-kit (touch + keyboard support)
 
 **What.** Replaced `react-dnd` (`HTML5Backend`) with **dnd-kit** (`@dnd-kit/core` + `/sortable` +

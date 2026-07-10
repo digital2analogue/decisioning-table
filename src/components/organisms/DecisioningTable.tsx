@@ -2,6 +2,7 @@ import { Fragment, useEffect, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 import {
   DndContext,
+  DragOverlay,
   MouseSensor,
   TouchSensor,
   KeyboardSensor,
@@ -9,13 +10,13 @@ import {
   useSensors,
   closestCenter,
 } from '@dnd-kit/core'
-import type { DragEndEvent } from '@dnd-kit/core'
+import type { DragEndEvent, DragStartEvent } from '@dnd-kit/core'
 import {
   SortableContext,
   sortableKeyboardCoordinates,
   verticalListSortingStrategy,
 } from '@dnd-kit/sortable'
-import { restrictToVerticalAxis, restrictToParentElement } from '@dnd-kit/modifiers'
+import { restrictToVerticalAxis } from '@dnd-kit/modifiers'
 import { MoreHorizontalIcon, PlusIcon, TableIcon } from 'lucide-react'
 import type { Rule, Ruleset } from '../../types'
 import { isRuleTouched } from '../../types'
@@ -242,18 +243,59 @@ export function DecisioningTable({
     useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates }),
   )
 
-  function handleDragStart() {
+  // A `transform` on a <tr> is dropped by the browser when the row has sticky
+  // cells (# and rule-name columns), so dnd-kit's default in-place row transform
+  // never renders. Instead we capture a static snapshot of the picked-up row and
+  // render it in a DragOverlay — a fixed-position portal dnd-kit moves with the
+  // pointer, immune to the sticky-cell conflict. See docs/decisions.md.
+  const [activeDrag, setActiveDrag] = useState<{
+    id: string
+    html: string
+    colWidths: number[]
+    tableWidth: number
+  } | null>(null)
+
+  const prefersReducedMotion =
+    typeof window !== 'undefined' &&
+    window.matchMedia('(prefers-reduced-motion: reduce)').matches
+
+  function handleDragStart(event: DragStartEvent) {
     // Close any open overflow menu so its portaled popover doesn't dangle mid-drag.
     setOpenMenuId(null)
+    const row = document.querySelector<HTMLTableRowElement>(
+      `tr[data-rule-id="${event.active.id}"]`,
+    )
+    if (!row) return
+    const colWidths = Array.from(row.children).map(
+      (cell) => (cell as HTMLElement).getBoundingClientRect().width,
+    )
+    const tableWidth = row.closest('table')?.getBoundingClientRect().width ?? 0
+    // Clone the row and bake the controlled <input> values (rule name, amounts) into
+    // attributes — they live as DOM properties, so a raw outerHTML would serialize empty.
+    const clone = row.cloneNode(true) as HTMLTableRowElement
+    const liveFields = row.querySelectorAll<HTMLInputElement | HTMLTextAreaElement>('input, textarea')
+    const cloneFields = clone.querySelectorAll<HTMLInputElement | HTMLTextAreaElement>('input, textarea')
+    liveFields.forEach((live, i) => {
+      const c = cloneFields[i]
+      if (!c) return
+      c.setAttribute('value', live.value)
+      if (c instanceof HTMLTextAreaElement) c.textContent = live.value
+    })
+    setActiveDrag({ id: String(event.active.id), html: clone.outerHTML, colWidths, tableWidth })
   }
 
   function handleDragEnd(event: DragEndEvent) {
+    setActiveDrag(null)
     const { active, over } = event
     if (!over || active.id === over.id) return
     const from = ruleset.rules.findIndex((r) => r.id === active.id)
     const to = ruleset.rules.findIndex((r) => r.id === over.id)
     if (from === -1 || to === -1) return
     moveRow(from, to)
+  }
+
+  function handleDragCancel() {
+    setActiveDrag(null)
   }
 
   function moveRow(dragIndex: number, hoverIndex: number) {
@@ -309,9 +351,10 @@ export function DecisioningTable({
       <DndContext
         sensors={sensors}
         collisionDetection={closestCenter}
-        modifiers={[restrictToVerticalAxis, restrictToParentElement]}
+        modifiers={[restrictToVerticalAxis]}
         onDragStart={handleDragStart}
         onDragEnd={handleDragEnd}
+        onDragCancel={handleDragCancel}
       >
       <table className="w-full">
         <thead>
@@ -497,6 +540,20 @@ export function DecisioningTable({
           </SortableContext>
         </tbody>
       </table>
+      <DragOverlay dropAnimation={prefersReducedMotion ? null : undefined}>
+        {activeDrag ? (
+          <div className="dt-drag-overlay">
+            <table className="w-full dt-drag-overlay-table" style={{ width: activeDrag.tableWidth }}>
+              <colgroup>
+                {activeDrag.colWidths.map((w, i) => (
+                  <col key={i} style={{ width: w }} />
+                ))}
+              </colgroup>
+              <tbody dangerouslySetInnerHTML={{ __html: activeDrag.html }} />
+            </table>
+          </div>
+        ) : null}
+      </DragOverlay>
       </DndContext>
       {toast && (
         <Toast

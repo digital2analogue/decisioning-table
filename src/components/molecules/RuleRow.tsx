@@ -117,7 +117,17 @@ export function RuleRow({
     transform,
     transition,
     isDragging,
+    isOver,
+    activeIndex,
+    overIndex,
   } = useSortable({ id: rule.id, disabled: !dndEnabled })
+
+  // The picked-up row is drawn by the DragOverlay (a floating clone), because a
+  // transform on a <tr> with sticky cells doesn't render. So here we only mark the
+  // source row as a ghost and show a drop-indicator line on the row the pointer is
+  // over (neighbour rows can't part for the same sticky reason).
+  const showDropBefore = isOver && !isDragging && activeIndex > overIndex
+  const showDropAfter = isOver && !isDragging && activeIndex < overIndex
 
   // Merge dnd-kit's sortable node ref with our own rowRef (used for focus + DOM reads).
   const setRowRef = useCallback(
@@ -128,14 +138,8 @@ export function RuleRow({
     [setNodeRef],
   )
 
-  // Compose dnd-kit's positional translate with the pickup "lift" (scale + tilt).
-  // CSS.Translate (translate only) keeps the scale/rotate from being overridden by
-  // dnd-kit's default transform string; neighbours reflow via `transition`.
   const rowStyle: React.CSSProperties = {
-    transform:
-      [CSS.Translate.toString(transform), isDragging ? 'scale(1.008) rotate(0.2deg)' : null]
-        .filter(Boolean)
-        .join(' ') || undefined,
+    transform: CSS.Translate.toString(transform) ?? undefined,
     transition: prefersReducedMotion ? undefined : (transition ?? undefined),
   }
 
@@ -150,6 +154,8 @@ export function RuleRow({
       className={cn(
         'dt-tbody-row group',
         isDragging ? 'dt-tbody-row-dragging' : '',
+        showDropBefore ? 'dt-tbody-row-drop-before' : '',
+        showDropAfter ? 'dt-tbody-row-drop-after' : '',
         rule.selected && !isDragging ? 'dt-tbody-row-selected' : '',
         hasChildren && isExpanded ? 'dt-parent-row-expanded' : '',
       )}

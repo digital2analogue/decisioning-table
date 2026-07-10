@@ -61,6 +61,42 @@ export function DecisioningTable({
   const creditScoreBtnRef = useRef<HTMLButtonElement>(null)
   const [toast, setToast] = useState<ToastState | null>(null)
 
+  // Scroll-shadow affordance: cast a shadow off the sticky columns' right edge once
+  // content scrolls under them, and under the sticky header once rows scroll beneath —
+  // the hallmark "there's more here" cue of a polished data table.
+  const edgeRef = useRef<HTMLDivElement>(null)
+  useEffect(() => {
+    const edge = edgeRef.current
+    if (!edge) return
+    let raf = 0
+    const update = () => {
+      raf = 0
+      edge.classList.toggle('dt-scrolled-x', edge.scrollLeft > 0)
+      edge.classList.toggle('dt-scrolled-y', edge.scrollTop > 0)
+    }
+    const onScroll = () => {
+      if (!raf) raf = requestAnimationFrame(update)
+    }
+    update()
+    edge.addEventListener('scroll', onScroll, { passive: true })
+    window.addEventListener('resize', onScroll, { passive: true })
+    return () => {
+      edge.removeEventListener('scroll', onScroll)
+      window.removeEventListener('resize', onScroll)
+      if (raf) cancelAnimationFrame(raf)
+    }
+  }, [])
+
+  // Drop-settle: briefly highlight a row after it's reordered (drag, keyboard, or
+  // menu) so the eye confirms where it landed — neighbours don't part here.
+  const [settledRuleId, setSettledRuleId] = useState<string | null>(null)
+  const settleTimer = useRef<number | undefined>(undefined)
+  function flashSettle(id: string) {
+    setSettledRuleId(id)
+    window.clearTimeout(settleTimer.current)
+    settleTimer.current = window.setTimeout(() => setSettledRuleId(null), 500)
+  }
+
   const normalizedQuery = ruleNameQuery.trim().toLowerCase()
   const filterActive = normalizedQuery.length > 0
   const visibleCount = filterActive
@@ -303,6 +339,7 @@ export function DecisioningTable({
     const [removed] = next.splice(dragIndex, 1)
     next.splice(hoverIndex, 0, removed)
     onUpdate({ ...ruleset, rules: next })
+    flashSettle(removed.id)
   }
 
   function moveChild(parentId: string, fromIdx: number, toIdx: number) {
@@ -347,7 +384,7 @@ export function DecisioningTable({
   const someSelected = ruleset.rules.some((r) => r.selected)
 
   return (
-    <div className="dt-table-edge">
+    <div className="dt-table-edge" ref={edgeRef}>
       <DndContext
         sensors={sensors}
         collisionDetection={closestCenter}
@@ -462,6 +499,7 @@ export function DecisioningTable({
                     index={index}
                     totalRules={ruleset.rules.length}
                     dndEnabled={!filterActive}
+                    isSettled={settledRuleId === rule.id}
                     openMenuId={openMenuId}
                     onMenuToggle={(id) => setOpenMenuId(openMenuId === id ? null : id)}
                     onMenuClose={() => setOpenMenuId(null)}

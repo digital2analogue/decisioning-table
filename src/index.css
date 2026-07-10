@@ -221,13 +221,22 @@ select option { background-color: var(--color-background-elevated); color: var(-
   .dt-tbody-row-drop-before td { box-shadow: inset 0 2px 0 0 var(--color-foreground-action); }
   .dt-tbody-row-drop-after td { box-shadow: inset 0 -2px 0 0 var(--color-foreground-action); }
   /* DragOverlay clone — the floating row that follows the pointer. A fixed-position
-     portal (not a <tr> transform), so the sticky-cell conflict can't touch it. */
-  .dt-drag-overlay { box-shadow: var(--shadow-xl); border-radius: var(--radius-md); background-color: var(--color-background-elevated); overflow: hidden; cursor: grabbing; }
+     portal (not a <tr> transform), so the sticky-cell conflict can't touch it.
+     A hair of scale + tilt reads as "picked up"; the entrance grows it in. */
+  @keyframes dt-overlay-pickup { from { transform: scale(0.985); } to { transform: scale(1.02) rotate(0.3deg); } }
+  .dt-drag-overlay { box-shadow: var(--shadow-xl); border-radius: var(--radius-md); background-color: var(--color-background-elevated); overflow: hidden; cursor: grabbing; transform: scale(1.02) rotate(0.3deg); animation: dt-overlay-pickup 160ms var(--easing-out); }
   .dt-drag-overlay-table { table-layout: fixed; border-collapse: separate; border-spacing: 0; }
   .dt-drag-overlay-table .dt-tbody-row { border-bottom: none; }
   .dt-drag-overlay-table .dt-tbody-row-dragging { opacity: 1; }
   .dt-drag-overlay-table .dt-col-sticky,
   .dt-drag-overlay-table .dt-col-sticky-num { position: static; }
+  /* Drop-settle — a brief accent wash on the row after it lands, so the eye
+     confirms where it went (neighbours don't part). Fades to nothing. */
+  @keyframes dt-row-settle {
+    from { box-shadow: inset 0 0 0 9999px color-mix(in srgb, var(--color-background-action) 15%, transparent); }
+    to { box-shadow: inset 0 0 0 9999px transparent; }
+  }
+  .dt-tbody-row-settled td { animation: dt-row-settle 500ms var(--easing-out); }
   .dt-parent-row-expanded td:first-child { box-shadow: inset 3px 0 0 color-mix(in srgb, var(--color-foreground-action) 70%, transparent); }
   .dt-tbody-row-selected td:first-child { box-shadow: inset 3px 0 0 var(--color-foreground-action); }
   .dt-tbody-row-selected { background-color: color-mix(in srgb, var(--color-background-elevated) 82%, var(--color-background-action)); }
@@ -545,7 +554,21 @@ select option { background-color: var(--color-background-elevated); color: var(-
     pointer-events: none;
     background: linear-gradient(to right, color-mix(in srgb, var(--color-foreground-default) 7%, transparent), transparent);
     z-index: 1;
+    transition: right var(--duration-normal) var(--easing-default),
+                width var(--duration-normal) var(--easing-default),
+                background var(--duration-normal) var(--easing-default);
   }
+  /* Scroll-shadow affordance — the sticky edge deepens once content scrolls under
+     it, and the sticky header casts a shadow once rows scroll beneath. Absent at
+     rest (baseline-safe); the `dt-scrolled-*` classes are toggled by a scroll
+     listener on .dt-table-edge. */
+  .dt-scrolled-x .dt-col-sticky::after,
+  .dt-scrolled-x .dt-col-sticky-head::after {
+    right: -18px;
+    width: 18px;
+    background: linear-gradient(to right, color-mix(in srgb, var(--color-foreground-default) 16%, transparent), transparent);
+  }
+  .dt-scrolled-y .dt-thead-row th { box-shadow: 0 8px 12px -8px color-mix(in srgb, var(--color-foreground-default) 22%, transparent); }
   .dt-tbody-row-selected .dt-col-sticky,
   .dt-tbody-row-selected .dt-col-sticky-num { background-color: color-mix(in srgb, var(--color-background-elevated) 82%, var(--color-background-action)); }
   .dt-tbody-row-selected:hover .dt-col-sticky,
@@ -675,9 +698,13 @@ select option { background-color: var(--color-background-elevated); color: var(-
     .dt-conditional-dropdown,
     .dt-row-warning:not(.dt-child-row-warning),
     .dt-selection-bar,
+    .dt-drag-overlay,
+    .dt-tbody-row-settled td,
     .dt-toast { animation: none; }
     .dt-outcome-seg-indicator,
     .dt-tbody-row-dragging,
+    .dt-col-sticky::after,
+    .dt-col-sticky-head::after,
     .dt-expand-toggle { transition: none; }
   }
 

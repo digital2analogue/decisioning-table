@@ -54,6 +54,8 @@ export interface RuleRowProps {
   /** Drag-and-drop reorder enable flag. Suppressed while a filter is active
       to avoid the visible-vs-absolute-index mismatch. */
   dndEnabled?: boolean
+  /** Briefly true right after this row is reordered — plays a settle highlight. */
+  isSettled?: boolean
   /** When true, focus the rule-name input on mount. */
   autoFocus?: boolean
   /** Called once autofocus has been applied so the parent can clear the marker. */
@@ -75,6 +77,7 @@ export function RuleRow({
   isExpanded,
   onToggleExpand,
   dndEnabled = true,
+  isSettled,
   autoFocus,
   onAutoFocusConsumed,
 }: RuleRowProps) {
@@ -154,6 +157,7 @@ export function RuleRow({
       className={cn(
         'dt-tbody-row group',
         isDragging ? 'dt-tbody-row-dragging' : '',
+        isSettled && !isDragging ? 'dt-tbody-row-settled' : '',
         showDropBefore ? 'dt-tbody-row-drop-before' : '',
         showDropAfter ? 'dt-tbody-row-drop-after' : '',
         rule.selected && !isDragging ? 'dt-tbody-row-selected' : '',

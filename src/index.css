@@ -212,8 +212,22 @@ select option { background-color: var(--color-background-elevated); color: var(-
   .dt-tbody-row:not(.dt-tbody-row-selected):not(.dt-parent-row-expanded):not(.dt-add-child-row):hover td:first-child {
     box-shadow: inset 3px 0 0 color-mix(in srgb, var(--color-foreground-action) 50%, transparent);
   }
-  .dt-tbody-row-dragging { opacity: 0.4; background-color: var(--color-background-elevated); }
-  .dt-tbody-row-over { border-top: 2px solid var(--color-foreground-action); }
+  /* Picked-up row — the native drag ghost is suppressed (getEmptyImage), so this
+     in-place row IS the lifted element: opaque, raised, scaled a hair with a
+     subtle tilt + depth shadow. The other rows FLIP-reflow around it (JS). */
+  .dt-tbody-row-dragging {
+    position: relative;
+    z-index: 3;
+    opacity: 1;
+    background-color: var(--color-background-elevated);
+    box-shadow: var(--shadow-md);
+    transform: scale(1.008) rotate(0.2deg);
+    transition: transform var(--duration-fast) var(--easing-spring),
+                box-shadow var(--duration-fast) var(--easing-out);
+    cursor: grabbing;
+  }
+  /* Landing slot — a soft accent edge where the row will drop, not a hard rule. */
+  .dt-tbody-row-over { box-shadow: inset 0 2px 0 0 color-mix(in srgb, var(--color-foreground-action) 55%, transparent); }
   .dt-parent-row-expanded td:first-child { box-shadow: inset 3px 0 0 color-mix(in srgb, var(--color-foreground-action) 70%, transparent); }
   .dt-tbody-row-selected td:first-child { box-shadow: inset 3px 0 0 var(--color-foreground-action); }
   .dt-tbody-row-selected { background-color: color-mix(in srgb, var(--color-background-elevated) 82%, var(--color-background-action)); }
@@ -327,7 +341,7 @@ select option { background-color: var(--color-background-elevated); color: var(-
      - Animated transitions on bg, color, and shadow keep state changes fluid */
   .dt-outcome-seg { position: relative; display: inline-flex; gap: 2px; padding: 2px; border-radius: var(--radius-md); background-color: var(--color-background-alt); border: 1px solid var(--color-border-alt); }
   /* Sliding pill — renders below buttons (z-index: 0) and translates to the active segment */
-  .dt-outcome-seg-indicator { position: absolute; top: 2px; left: 2px; width: calc(50% - 3px); height: calc(100% - 4px); background-color: var(--color-background-elevated); border: 1px solid var(--color-border-alt); box-shadow: var(--shadow-sm); border-radius: var(--radius-sm); transition: transform var(--duration-normal) var(--easing-in-out); pointer-events: none; z-index: 0; }
+  .dt-outcome-seg-indicator { position: absolute; top: 2px; left: 2px; width: calc(50% - 3px); height: calc(100% - 4px); background-color: var(--color-background-elevated); border: 1px solid var(--color-border-alt); box-shadow: var(--shadow-sm); border-radius: var(--radius-sm); transition: transform var(--duration-normal) var(--easing-spring), background-color var(--duration-normal) var(--easing-default), border-color var(--duration-normal) var(--easing-default); pointer-events: none; z-index: 0; }
   .dt-outcome-seg-indicator-right { transform: translateX(calc(100% + 2px)); }
   /* Semantic tint on the active pill — scannable at a glance across many rows */
   .dt-outcome-seg:has(.dt-outcome-seg-approve) .dt-outcome-seg-indicator {
@@ -425,7 +439,11 @@ select option { background-color: var(--color-background-elevated); color: var(-
 
 
   /* Row-level "incomplete rule" warning — replaces the row number for invalid rules; sits inside the # column */
+  @keyframes dt-warning-in { from { opacity: 0; transform: scale(0.4) rotate(-12deg); } to { opacity: 1; transform: none; } }
   .dt-row-warning { display: inline-flex; align-items: center; justify-content: center; color: var(--color-foreground-warning-icon); cursor: help; margin-right: var(--space-xs); }
+  /* Draw-in on the parent-row triangle only — the child variant relies on a
+     centering transform (below), which this animation would clobber. */
+  .dt-row-warning:not(.dt-child-row-warning) { animation: dt-warning-in var(--duration-normal) var(--easing-spring) both; }
   .dt-child-row-warning { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background-color: var(--color-background-alt); padding: 0 2px; z-index: 1; }
 
   /* Empty / placeholder states for inline pickers (badge, select trigger, conditional operator).
@@ -482,7 +500,7 @@ select option { background-color: var(--color-background-elevated); color: var(-
   .dt-conditional-variable--filled::placeholder { color: var(--color-foreground-default); opacity: 1; }
   .dt-conditional-variable:hover { background-color: color-mix(in srgb, var(--color-background-hover) 80%, var(--color-border-elevated) 20%); }
   .dt-conditional-variable:focus-visible { outline: none; box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-background-action) 18%, transparent); background-color: var(--color-background-elevated); color: var(--color-foreground-default); }
-  .dt-conditional-dropdown { background-color: var(--color-background-elevated); border: 1px solid var(--color-border-alt); border-radius: var(--radius-sm); box-shadow: var(--shadow-brand-tint); z-index: 50; min-width: 160px; overflow: hidden; }
+  .dt-conditional-dropdown { background-color: var(--color-background-elevated); border: 1px solid var(--color-border-alt); border-radius: var(--radius-sm); box-shadow: var(--shadow-brand-tint); z-index: 50; min-width: 160px; overflow: hidden; transform-origin: top left; animation: dt-menu-in var(--duration-fast) var(--easing-out) both; }
   .dt-conditional-dropdown-item { display: block; width: 100%; padding: var(--space-xs) var(--space-sm); text-align: left; font: var(--font-label-medium); color: var(--color-foreground-default); background: none; border: none; border-bottom: 1px solid var(--color-border-subtle); cursor: pointer; transition: background-color var(--duration-fast) var(--easing-default), box-shadow var(--duration-fast) var(--easing-default); }
   .dt-conditional-dropdown-item:last-child { border-bottom: none; }
   .dt-conditional-dropdown-item:hover { background-color: var(--color-background-alt); }
@@ -650,9 +668,12 @@ select option { background-color: var(--color-background-elevated); color: var(-
     .dt-tab-content,
     .dt-validation-banner,
     .dt-menu,
+    .dt-conditional-dropdown,
+    .dt-row-warning:not(.dt-child-row-warning),
     .dt-selection-bar,
     .dt-toast { animation: none; }
     .dt-outcome-seg-indicator,
+    .dt-tbody-row-dragging,
     .dt-expand-toggle { transition: none; }
   }
 

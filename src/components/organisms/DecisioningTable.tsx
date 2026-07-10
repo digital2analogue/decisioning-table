@@ -1,4 +1,4 @@
-import { Fragment, useEffect, useRef, useState } from 'react'
+import { Fragment, useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 import { MoreHorizontalIcon, PlusIcon, TableIcon } from 'lucide-react'
 import type { Rule, Ruleset } from '../../types'
@@ -216,7 +216,51 @@ export function DecisioningTable({
     setOpenMenuId(null)
   }
 
+  // FLIP reorder — snapshot each row's position BEFORE a reorder mutates the
+  // list, then (in a layout effect, once React has re-rendered the new order)
+  // invert the delta and transition it to zero so rows *slide* into place
+  // instead of snapping. Keyed by data-rule-id; covers parent and child rows.
+  const tbodyRef = useRef<HTMLTableSectionElement>(null)
+  const flipFirst = useRef<Map<string, number> | null>(null)
+
+  function captureFlip() {
+    const tb = tbodyRef.current
+    if (!tb) return
+    const first = new Map<string, number>()
+    tb.querySelectorAll<HTMLElement>('tr[data-rule-id]').forEach((row) => {
+      if (row.dataset.ruleId) first.set(row.dataset.ruleId, row.getBoundingClientRect().top)
+    })
+    flipFirst.current = first
+  }
+
+  useLayoutEffect(() => {
+    const first = flipFirst.current
+    if (!first) return
+    flipFirst.current = null
+    const tb = tbodyRef.current
+    if (!tb) return
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
+    tb.querySelectorAll<HTMLElement>('tr[data-rule-id]').forEach((row) => {
+      // The picked-up row tracks the pointer directly — let it snap; only the
+      // rows making room animate.
+      if (row.classList.contains('dt-tbody-row-dragging')) return
+      const id = row.dataset.ruleId
+      if (!id) return
+      const prevTop = first.get(id)
+      if (prevTop == null) return
+      const delta = prevTop - row.getBoundingClientRect().top
+      if (!delta) return
+      row.style.transition = 'none'
+      row.style.transform = `translateY(${delta}px)`
+      requestAnimationFrame(() => {
+        row.style.transition = 'transform var(--duration-normal) var(--easing-spring)'
+        row.style.transform = ''
+      })
+    })
+  })
+
   function moveRow(dragIndex: number, hoverIndex: number) {
+    captureFlip()
     const next = [...ruleset.rules]
     const [removed] = next.splice(dragIndex, 1)
     next.splice(hoverIndex, 0, removed)
@@ -224,6 +268,7 @@ export function DecisioningTable({
   }
 
   function moveChild(parentId: string, fromIdx: number, toIdx: number) {
+    captureFlip()
     onUpdate({
       ...ruleset,
       rules: ruleset.rules.map((r) => {
@@ -331,7 +376,7 @@ export function DecisioningTable({
             <th className="dt-col-actions-head w-10 dt-td"></th>
           </tr>
         </thead>
-        <tbody>
+        <tbody ref={tbodyRef}>
           {ruleset.rules.length === 0 ? (
             <tr>
               <td colSpan={9} className="dt-empty-cell">

@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef } from 'react'
 import { useDrag, useDrop } from 'react-dnd'
+import { getEmptyImage } from 'react-dnd-html5-backend'
 import { AlertTriangleIcon, MoreHorizontalIcon, ChevronRightIcon } from 'lucide-react'
 
 /**
@@ -132,15 +133,23 @@ export function RuleRow({
     [drag],
   )
 
-  // Attach the dnd connectors from a callback ref — connector calls read
+  // Attach the drop connector from a callback ref — connector calls read
   // refs, which react-hooks/refs forbids during render.
   const rowDndRef = useCallback(
     (el: HTMLTableRowElement | null) => {
       rowRef.current = el
-      dragPreview(drop(el))
+      drop(el)
     },
-    [dragPreview, drop],
+    [drop],
   )
+
+  // Suppress the browser's native drag ghost (a flat bitmap snapshot). With it
+  // hidden, the in-place row IS the picked-up element — so `.dt-tbody-row-dragging`
+  // gets full CSS control of the "lift" (scale, shadow, tilt), and the other rows
+  // FLIP-reflow around it (see DecisioningTable). Linear/Notion-style reorder.
+  useEffect(() => {
+    dragPreview(getEmptyImage(), { captureDraggingState: true })
+  }, [dragPreview])
 
   return (
     <tr

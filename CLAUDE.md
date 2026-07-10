@@ -87,7 +87,10 @@ Format:
 - **React 19 + Vite 8** — no framework router, single-page app
 - **Tailwind CSS v4** — utility layer; design tokens bridged via `@theme inline` in CSS
 - **Radix UI primitives** — Dialog, Dropdown, Select, Tabs, Checkbox (in deps; not all wired up)
-- **react-dnd** — drag-and-drop for rule row reordering
+- **dnd-kit** (`@dnd-kit/core` + `/sortable` + `/utilities` + `/modifiers`) — rule-row reorder with
+  pointer + touch + keyboard sensors (migrated from react-dnd, whose HTML5 backend was mouse-only and
+  broke on mobile — see `docs/decisions.md`). Sensors, `DndContext`/`SortableContext`, and `onDragEnd`
+  live in `DecisioningTable.tsx`; each `RuleRow` is a `useSortable` item with the grip as activator.
 - CSS namespace conventions: `dt-` (decisioning table), `ob-` (onboarding flow)
 
 ## Design Tokens in CSS
@@ -157,4 +160,7 @@ Three semantically distinct states with three visual weights, all on `td:first-c
 - **TODO-marked local tokens.** Three tokens in [src/tokens/variables.css](src/tokens/variables.css) are flagged `/* TODO: move to brand-tokens */`: `--color-background-warning-subtle`, `--color-foreground-warning-dark`, `--shadow-md`, `--color-foreground-inactive`. Plus three composite shadow tokens (`--shadow-inset-trough`, `--shadow-segment-raised`, `--shadow-footer-up`). Backport when stable.
 - **Save-gating decision deferred.** Validation banner currently counts invalid rules but doesn't block the (nonexistent) save action. When a save flow lands, decide: block save with banner-only warning, or block save with a modal confirmation.
 - **No keyboard nav inside `ActionsMenu` dropdown.** Items have hover/focus-visible/active states but no arrow-key navigation, focus trap, or auto-focus first item on open. The audit recommended adopting Radix `DropdownMenu` (already in deps) for a clean fix — ~30 min vs ~4 hr to roll your own correctly. Same applies to the other portal-based pickers (`OperatorSelect`, `LogicOperatorSelect`, `ConditionalCell`).
-- **Drag-and-drop polish.** Drop indicator is a single 2px top border. Drag preview is `opacity: 0.4` with no "lift" effect. No edge auto-scroll. Out of scope for this work; its own session.
+- **Drag-and-drop edge auto-scroll.** dnd-kit's `AutoScroll` is on by default within the scroll
+  container; if long rulesets need window-level auto-scroll during a drag, tune the `autoScroll` prop
+  on `DndContext`. (The lift, spring reflow, and touch/keyboard support landed with the dnd-kit
+  migration — see `docs/decisions.md`.)

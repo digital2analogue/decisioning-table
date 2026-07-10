@@ -212,8 +212,31 @@ select option { background-color: var(--color-background-elevated); color: var(-
   .dt-tbody-row:not(.dt-tbody-row-selected):not(.dt-parent-row-expanded):not(.dt-add-child-row):hover td:first-child {
     box-shadow: inset 3px 0 0 color-mix(in srgb, var(--color-foreground-action) 50%, transparent);
   }
-  .dt-tbody-row-dragging { opacity: 0.4; background-color: var(--color-background-elevated); }
-  .dt-tbody-row-over { border-top: 2px solid var(--color-foreground-action); }
+  /* Source row while dragging — its clone rides the DragOverlay (a transform on a
+     <tr> with sticky cells doesn't render), so this leaves a dimmed "hole" showing
+     where the row was picked up from. */
+  .dt-tbody-row-dragging { opacity: 0.4; cursor: grabbing; }
+  /* Drop-indicator line — where the row will land. Neighbour rows can't part (same
+     sticky-cell reason), so a transform-free inset line on each cell marks the slot. */
+  .dt-tbody-row-drop-before td { box-shadow: inset 0 2px 0 0 var(--color-foreground-action); }
+  .dt-tbody-row-drop-after td { box-shadow: inset 0 -2px 0 0 var(--color-foreground-action); }
+  /* DragOverlay clone — the floating row that follows the pointer. A fixed-position
+     portal (not a <tr> transform), so the sticky-cell conflict can't touch it.
+     A hair of scale + tilt reads as "picked up"; the entrance grows it in. */
+  @keyframes dt-overlay-pickup { from { transform: scale(0.985); } to { transform: scale(1.02) rotate(0.3deg); } }
+  .dt-drag-overlay { box-shadow: var(--shadow-xl); border-radius: var(--radius-md); background-color: var(--color-background-elevated); overflow: hidden; cursor: grabbing; transform: scale(1.02) rotate(0.3deg); animation: dt-overlay-pickup 160ms var(--easing-out); }
+  .dt-drag-overlay-table { table-layout: fixed; border-collapse: separate; border-spacing: 0; }
+  .dt-drag-overlay-table .dt-tbody-row { border-bottom: none; }
+  .dt-drag-overlay-table .dt-tbody-row-dragging { opacity: 1; }
+  .dt-drag-overlay-table .dt-col-sticky,
+  .dt-drag-overlay-table .dt-col-sticky-num { position: static; }
+  /* Drop-settle — a brief accent wash on the row after it lands, so the eye
+     confirms where it went (neighbours don't part). Fades to nothing. */
+  @keyframes dt-row-settle {
+    from { box-shadow: inset 0 0 0 9999px color-mix(in srgb, var(--color-background-action) 15%, transparent); }
+    to { box-shadow: inset 0 0 0 9999px transparent; }
+  }
+  .dt-tbody-row-settled td { animation: dt-row-settle 500ms var(--easing-out); }
   .dt-parent-row-expanded td:first-child { box-shadow: inset 3px 0 0 color-mix(in srgb, var(--color-foreground-action) 70%, transparent); }
   .dt-tbody-row-selected td:first-child { box-shadow: inset 3px 0 0 var(--color-foreground-action); }
   .dt-tbody-row-selected { background-color: color-mix(in srgb, var(--color-background-elevated) 82%, var(--color-background-action)); }
@@ -327,7 +350,7 @@ select option { background-color: var(--color-background-elevated); color: var(-
      - Animated transitions on bg, color, and shadow keep state changes fluid */
   .dt-outcome-seg { position: relative; display: inline-flex; gap: 2px; padding: 2px; border-radius: var(--radius-md); background-color: var(--color-background-alt); border: 1px solid var(--color-border-alt); }
   /* Sliding pill — renders below buttons (z-index: 0) and translates to the active segment */
-  .dt-outcome-seg-indicator { position: absolute; top: 2px; left: 2px; width: calc(50% - 3px); height: calc(100% - 4px); background-color: var(--color-background-elevated); border: 1px solid var(--color-border-alt); box-shadow: var(--shadow-sm); border-radius: var(--radius-sm); transition: transform var(--duration-normal) var(--easing-in-out); pointer-events: none; z-index: 0; }
+  .dt-outcome-seg-indicator { position: absolute; top: 2px; left: 2px; width: calc(50% - 3px); height: calc(100% - 4px); background-color: var(--color-background-elevated); border: 1px solid var(--color-border-alt); box-shadow: var(--shadow-sm); border-radius: var(--radius-sm); transition: transform var(--duration-normal) var(--easing-spring), background-color var(--duration-normal) var(--easing-default), border-color var(--duration-normal) var(--easing-default); pointer-events: none; z-index: 0; }
   .dt-outcome-seg-indicator-right { transform: translateX(calc(100% + 2px)); }
   /* Semantic tint on the active pill — scannable at a glance across many rows */
   .dt-outcome-seg:has(.dt-outcome-seg-approve) .dt-outcome-seg-indicator {
@@ -358,9 +381,13 @@ select option { background-color: var(--color-background-elevated); color: var(-
      so the td keeps display:table-cell and participates correctly in row
      vertical alignment. Tailwind Preflight forces `svg { display: block }`,
      so pin the grip SVG back to inline-block. */
-  .dt-drag-handle-cell { cursor: grab; }
-  .dt-drag-handle-cell:active { cursor: grabbing; }
   .dt-drag-handle-inner { display: flex; align-items: center; justify-content: space-between; gap: var(--space-xs); }
+  /* Grip is the sortable activator (dnd-kit): touch-action:none lets a press-hold
+     start a drag instead of scrolling, user-select:none stops text selection, and
+     it takes keyboard focus (Space to lift, arrows to move). */
+  .dt-drag-grip-handle { display: inline-flex; align-items: center; cursor: grab; touch-action: none; -webkit-user-select: none; user-select: none; border-radius: var(--radius-sm); }
+  .dt-drag-grip-handle:active { cursor: grabbing; }
+  .dt-drag-grip-handle:focus-visible { outline: none; box-shadow: 0 0 0 2px var(--color-border-focus); }
   .dt-drag-grip { display: inline-block; color: var(--color-foreground-muted); opacity: 0.25; transition: opacity var(--duration-fast) var(--easing-default); }
   tr:hover .dt-drag-grip { opacity: 0.8; }
 
@@ -425,7 +452,11 @@ select option { background-color: var(--color-background-elevated); color: var(-
 
 
   /* Row-level "incomplete rule" warning — replaces the row number for invalid rules; sits inside the # column */
+  @keyframes dt-warning-in { from { opacity: 0; transform: scale(0.4) rotate(-12deg); } to { opacity: 1; transform: none; } }
   .dt-row-warning { display: inline-flex; align-items: center; justify-content: center; color: var(--color-foreground-warning-icon); cursor: help; margin-right: var(--space-xs); }
+  /* Draw-in on the parent-row triangle only — the child variant relies on a
+     centering transform (below), which this animation would clobber. */
+  .dt-row-warning:not(.dt-child-row-warning) { animation: dt-warning-in var(--duration-normal) var(--easing-spring) both; }
   .dt-child-row-warning { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background-color: var(--color-background-alt); padding: 0 2px; z-index: 1; }
 
   /* Empty / placeholder states for inline pickers (badge, select trigger, conditional operator).
@@ -482,7 +513,7 @@ select option { background-color: var(--color-background-elevated); color: var(-
   .dt-conditional-variable--filled::placeholder { color: var(--color-foreground-default); opacity: 1; }
   .dt-conditional-variable:hover { background-color: color-mix(in srgb, var(--color-background-hover) 80%, var(--color-border-elevated) 20%); }
   .dt-conditional-variable:focus-visible { outline: none; box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-background-action) 18%, transparent); background-color: var(--color-background-elevated); color: var(--color-foreground-default); }
-  .dt-conditional-dropdown { background-color: var(--color-background-elevated); border: 1px solid var(--color-border-alt); border-radius: var(--radius-sm); box-shadow: var(--shadow-brand-tint); z-index: 50; min-width: 160px; overflow: hidden; }
+  .dt-conditional-dropdown { background-color: var(--color-background-elevated); border: 1px solid var(--color-border-alt); border-radius: var(--radius-sm); box-shadow: var(--shadow-brand-tint); z-index: 50; min-width: 160px; overflow: hidden; transform-origin: top left; animation: dt-menu-in var(--duration-fast) var(--easing-out) both; }
   .dt-conditional-dropdown-item { display: block; width: 100%; padding: var(--space-xs) var(--space-sm); text-align: left; font: var(--font-label-medium); color: var(--color-foreground-default); background: none; border: none; border-bottom: 1px solid var(--color-border-subtle); cursor: pointer; transition: background-color var(--duration-fast) var(--easing-default), box-shadow var(--duration-fast) var(--easing-default); }
   .dt-conditional-dropdown-item:last-child { border-bottom: none; }
   .dt-conditional-dropdown-item:hover { background-color: var(--color-background-alt); }
@@ -523,7 +554,21 @@ select option { background-color: var(--color-background-elevated); color: var(-
     pointer-events: none;
     background: linear-gradient(to right, color-mix(in srgb, var(--color-foreground-default) 7%, transparent), transparent);
     z-index: 1;
+    transition: right var(--duration-normal) var(--easing-default),
+                width var(--duration-normal) var(--easing-default),
+                background var(--duration-normal) var(--easing-default);
   }
+  /* Scroll-shadow affordance — the sticky edge deepens once content scrolls under
+     it, and the sticky header casts a shadow once rows scroll beneath. Absent at
+     rest (baseline-safe); the `dt-scrolled-*` classes are toggled by a scroll
+     listener on .dt-table-edge. */
+  .dt-scrolled-x .dt-col-sticky::after,
+  .dt-scrolled-x .dt-col-sticky-head::after {
+    right: -18px;
+    width: 18px;
+    background: linear-gradient(to right, color-mix(in srgb, var(--color-foreground-default) 16%, transparent), transparent);
+  }
+  .dt-scrolled-y .dt-thead-row th { box-shadow: 0 8px 12px -8px color-mix(in srgb, var(--color-foreground-default) 22%, transparent); }
   .dt-tbody-row-selected .dt-col-sticky,
   .dt-tbody-row-selected .dt-col-sticky-num { background-color: color-mix(in srgb, var(--color-background-elevated) 82%, var(--color-background-action)); }
   .dt-tbody-row-selected:hover .dt-col-sticky,
@@ -650,9 +695,16 @@ select option { background-color: var(--color-background-elevated); color: var(-
     .dt-tab-content,
     .dt-validation-banner,
     .dt-menu,
+    .dt-conditional-dropdown,
+    .dt-row-warning:not(.dt-child-row-warning),
     .dt-selection-bar,
+    .dt-drag-overlay,
+    .dt-tbody-row-settled td,
     .dt-toast { animation: none; }
     .dt-outcome-seg-indicator,
+    .dt-tbody-row-dragging,
+    .dt-col-sticky::after,
+    .dt-col-sticky-head::after,
     .dt-expand-toggle { transition: none; }
   }
 

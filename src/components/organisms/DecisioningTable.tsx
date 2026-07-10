@@ -1,5 +1,22 @@
 import { Fragment, useEffect, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
+import {
+  DndContext,
+  DragOverlay,
+  MouseSensor,
+  TouchSensor,
+  KeyboardSensor,
+  useSensor,
+  useSensors,
+  closestCenter,
+} from '@dnd-kit/core'
+import type { DragEndEvent, DragStartEvent } from '@dnd-kit/core'
+import {
+  SortableContext,
+  sortableKeyboardCoordinates,
+  verticalListSortingStrategy,
+} from '@dnd-kit/sortable'
+import { restrictToVerticalAxis } from '@dnd-kit/modifiers'
 import { MoreHorizontalIcon, PlusIcon, TableIcon } from 'lucide-react'
 import type { Rule, Ruleset } from '../../types'
 import { isRuleTouched } from '../../types'
@@ -43,6 +60,42 @@ export function DecisioningTable({
   const annualIncomeBtnRef = useRef<HTMLButtonElement>(null)
   const creditScoreBtnRef = useRef<HTMLButtonElement>(null)
   const [toast, setToast] = useState<ToastState | null>(null)
+
+  // Scroll-shadow affordance: cast a shadow off the sticky columns' right edge once
+  // content scrolls under them, and under the sticky header once rows scroll beneath —
+  // the hallmark "there's more here" cue of a polished data table.
+  const edgeRef = useRef<HTMLDivElement>(null)
+  useEffect(() => {
+    const edge = edgeRef.current
+    if (!edge) return
+    let raf = 0
+    const update = () => {
+      raf = 0
+      edge.classList.toggle('dt-scrolled-x', edge.scrollLeft > 0)
+      edge.classList.toggle('dt-scrolled-y', edge.scrollTop > 0)
+    }
+    const onScroll = () => {
+      if (!raf) raf = requestAnimationFrame(update)
+    }
+    update()
+    edge.addEventListener('scroll', onScroll, { passive: true })
+    window.addEventListener('resize', onScroll, { passive: true })
+    return () => {
+      edge.removeEventListener('scroll', onScroll)
+      window.removeEventListener('resize', onScroll)
+      if (raf) cancelAnimationFrame(raf)
+    }
+  }, [])
+
+  // Drop-settle: briefly highlight a row after it's reordered (drag, keyboard, or
+  // menu) so the eye confirms where it landed — neighbours don't part here.
+  const [settledRuleId, setSettledRuleId] = useState<string | null>(null)
+  const settleTimer = useRef<number | undefined>(undefined)
+  function flashSettle(id: string) {
+    setSettledRuleId(id)
+    window.clearTimeout(settleTimer.current)
+    settleTimer.current = window.setTimeout(() => setSettledRuleId(null), 500)
+  }
 
   const normalizedQuery = ruleNameQuery.trim().toLowerCase()
   const filterActive = normalizedQuery.length > 0
@@ -216,11 +269,77 @@ export function DecisioningTable({
     setOpenMenuId(null)
   }
 
+  // dnd-kit sensors. Mouse needs a small drag distance so a click isn't a drag;
+  // touch needs a press-and-hold delay so a plain swipe still scrolls the page and
+  // only a deliberate hold on the grip starts a drag (the mobile fix); keyboard for
+  // accessible reordering. dnd-kit animates the reflow natively via SortableContext.
+  const sensors = useSensors(
+    useSensor(MouseSensor, { activationConstraint: { distance: 6 } }),
+    useSensor(TouchSensor, { activationConstraint: { delay: 180, tolerance: 6 } }),
+    useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates }),
+  )
+
+  // A `transform` on a <tr> is dropped by the browser when the row has sticky
+  // cells (# and rule-name columns), so dnd-kit's default in-place row transform
+  // never renders. Instead we capture a static snapshot of the picked-up row and
+  // render it in a DragOverlay — a fixed-position portal dnd-kit moves with the
+  // pointer, immune to the sticky-cell conflict. See docs/decisions.md.
+  const [activeDrag, setActiveDrag] = useState<{
+    id: string
+    html: string
+    colWidths: number[]
+    tableWidth: number
+  } | null>(null)
+
+  const prefersReducedMotion =
+    typeof window !== 'undefined' &&
+    window.matchMedia('(prefers-reduced-motion: reduce)').matches
+
+  function handleDragStart(event: DragStartEvent) {
+    // Close any open overflow menu so its portaled popover doesn't dangle mid-drag.
+    setOpenMenuId(null)
+    const row = document.querySelector<HTMLTableRowElement>(
+      `tr[data-rule-id="${event.active.id}"]`,
+    )
+    if (!row) return
+    const colWidths = Array.from(row.children).map(
+      (cell) => (cell as HTMLElement).getBoundingClientRect().width,
+    )
+    const tableWidth = row.closest('table')?.getBoundingClientRect().width ?? 0
+    // Clone the row and bake the controlled <input> values (rule name, amounts) into
+    // attributes — they live as DOM properties, so a raw outerHTML would serialize empty.
+    const clone = row.cloneNode(true) as HTMLTableRowElement
+    const liveFields = row.querySelectorAll<HTMLInputElement | HTMLTextAreaElement>('input, textarea')
+    const cloneFields = clone.querySelectorAll<HTMLInputElement | HTMLTextAreaElement>('input, textarea')
+    liveFields.forEach((live, i) => {
+      const c = cloneFields[i]
+      if (!c) return
+      c.setAttribute('value', live.value)
+      if (c instanceof HTMLTextAreaElement) c.textContent = live.value
+    })
+    setActiveDrag({ id: String(event.active.id), html: clone.outerHTML, colWidths, tableWidth })
+  }
+
+  function handleDragEnd(event: DragEndEvent) {
+    setActiveDrag(null)
+    const { active, over } = event
+    if (!over || active.id === over.id) return
+    const from = ruleset.rules.findIndex((r) => r.id === active.id)
+    const to = ruleset.rules.findIndex((r) => r.id === over.id)
+    if (from === -1 || to === -1) return
+    moveRow(from, to)
+  }
+
+  function handleDragCancel() {
+    setActiveDrag(null)
+  }
+
   function moveRow(dragIndex: number, hoverIndex: number) {
     const next = [...ruleset.rules]
     const [removed] = next.splice(dragIndex, 1)
     next.splice(hoverIndex, 0, removed)
     onUpdate({ ...ruleset, rules: next })
+    flashSettle(removed.id)
   }
 
   function moveChild(parentId: string, fromIdx: number, toIdx: number) {
@@ -265,7 +384,15 @@ export function DecisioningTable({
   const someSelected = ruleset.rules.some((r) => r.selected)
 
   return (
-    <div className="dt-table-edge">
+    <div className="dt-table-edge" ref={edgeRef}>
+      <DndContext
+        sensors={sensors}
+        collisionDetection={closestCenter}
+        modifiers={[restrictToVerticalAxis]}
+        onDragStart={handleDragStart}
+        onDragEnd={handleDragEnd}
+        onDragCancel={handleDragCancel}
+      >
       <table className="w-full">
         <thead>
           <tr className="dt-thead-row">
@@ -332,6 +459,10 @@ export function DecisioningTable({
           </tr>
         </thead>
         <tbody>
+          <SortableContext
+            items={ruleset.rules.map((r) => r.id)}
+            strategy={verticalListSortingStrategy}
+          >
           {ruleset.rules.length === 0 ? (
             <tr>
               <td colSpan={9} className="dt-empty-cell">
@@ -368,6 +499,7 @@ export function DecisioningTable({
                     index={index}
                     totalRules={ruleset.rules.length}
                     dndEnabled={!filterActive}
+                    isSettled={settledRuleId === rule.id}
                     openMenuId={openMenuId}
                     onMenuToggle={(id) => setOpenMenuId(openMenuId === id ? null : id)}
                     onMenuClose={() => setOpenMenuId(null)}
@@ -443,8 +575,24 @@ export function DecisioningTable({
               </div>
             </td>
           </tr>
+          </SortableContext>
         </tbody>
       </table>
+      <DragOverlay dropAnimation={prefersReducedMotion ? null : undefined}>
+        {activeDrag ? (
+          <div className="dt-drag-overlay">
+            <table className="w-full dt-drag-overlay-table" style={{ width: activeDrag.tableWidth }}>
+              <colgroup>
+                {activeDrag.colWidths.map((w, i) => (
+                  <col key={i} style={{ width: w }} />
+                ))}
+              </colgroup>
+              <tbody dangerouslySetInnerHTML={{ __html: activeDrag.html }} />
+            </table>
+          </div>
+        ) : null}
+      </DragOverlay>
+      </DndContext>
       {toast && (
         <Toast
           message={toast.message}

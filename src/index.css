@@ -213,21 +213,18 @@ select option { background-color: var(--color-background-elevated); color: var(-
     box-shadow: inset 3px 0 0 color-mix(in srgb, var(--color-foreground-action) 50%, transparent);
   }
   /* Picked-up row — the native drag ghost is suppressed (getEmptyImage), so this
-     in-place row IS the lifted element: opaque, raised, scaled a hair with a
-     subtle tilt + depth shadow. The other rows FLIP-reflow around it (JS). */
+     in-place row IS the lifted element: opaque, raised, with a depth shadow. The
+     scale/tilt of the lift and the positional translate come from dnd-kit's inline
+     transform on the row; dnd-kit also animates the neighbours' reflow. */
   .dt-tbody-row-dragging {
     position: relative;
     z-index: 3;
     opacity: 1;
     background-color: var(--color-background-elevated);
     box-shadow: var(--shadow-md);
-    transform: scale(1.008) rotate(0.2deg);
-    transition: transform var(--duration-fast) var(--easing-spring),
-                box-shadow var(--duration-fast) var(--easing-out);
+    transition: box-shadow var(--duration-fast) var(--easing-out);
     cursor: grabbing;
   }
-  /* Landing slot — a soft accent edge where the row will drop, not a hard rule. */
-  .dt-tbody-row-over { box-shadow: inset 0 2px 0 0 color-mix(in srgb, var(--color-foreground-action) 55%, transparent); }
   .dt-parent-row-expanded td:first-child { box-shadow: inset 3px 0 0 color-mix(in srgb, var(--color-foreground-action) 70%, transparent); }
   .dt-tbody-row-selected td:first-child { box-shadow: inset 3px 0 0 var(--color-foreground-action); }
   .dt-tbody-row-selected { background-color: color-mix(in srgb, var(--color-background-elevated) 82%, var(--color-background-action)); }
@@ -372,9 +369,13 @@ select option { background-color: var(--color-background-elevated); color: var(-
      so the td keeps display:table-cell and participates correctly in row
      vertical alignment. Tailwind Preflight forces `svg { display: block }`,
      so pin the grip SVG back to inline-block. */
-  .dt-drag-handle-cell { cursor: grab; }
-  .dt-drag-handle-cell:active { cursor: grabbing; }
   .dt-drag-handle-inner { display: flex; align-items: center; justify-content: space-between; gap: var(--space-xs); }
+  /* Grip is the sortable activator (dnd-kit): touch-action:none lets a press-hold
+     start a drag instead of scrolling, user-select:none stops text selection, and
+     it takes keyboard focus (Space to lift, arrows to move). */
+  .dt-drag-grip-handle { display: inline-flex; align-items: center; cursor: grab; touch-action: none; -webkit-user-select: none; user-select: none; border-radius: var(--radius-sm); }
+  .dt-drag-grip-handle:active { cursor: grabbing; }
+  .dt-drag-grip-handle:focus-visible { outline: none; box-shadow: 0 0 0 2px var(--color-border-focus); }
   .dt-drag-grip { display: inline-block; color: var(--color-foreground-muted); opacity: 0.25; transition: opacity var(--duration-fast) var(--easing-default); }
   tr:hover .dt-drag-grip { opacity: 0.8; }
 

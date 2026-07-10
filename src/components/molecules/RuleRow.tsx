@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef } from 'react'
-import { useDrag, useDrop } from 'react-dnd'
-import { getEmptyImage } from 'react-dnd-html5-backend'
+import { useSortable } from '@dnd-kit/sortable'
+import { CSS } from '@dnd-kit/utilities'
 import { AlertTriangleIcon, MoreHorizontalIcon, ChevronRightIcon } from 'lucide-react'
 
 /**
@@ -27,7 +27,7 @@ function DragGrip() {
     </svg>
   )
 }
-import type { Rule, DragItem } from '../../types'
+import type { Rule } from '../../types'
 import { isRuleValid, isRuleTouched, isEmptyDraft, missingFields } from '../../types'
 import { cn } from '../../lib/utils'
 import { Checkbox } from '../atoms/Checkbox'
@@ -36,8 +36,6 @@ import { IconButton } from '../atoms/IconButton'
 import { ActionsMenu } from './ActionsMenu'
 import { ConditionalCell } from './ConditionalCell'
 import { AccountTypeCell } from './AccountTypeCell'
-
-export const DND_TYPE = 'RULE_ROW'
 
 export interface RuleRowProps {
   rule: Rule
@@ -104,56 +102,47 @@ export function RuleRow({
     if (isEmptyDraft(rule)) onDelete(rule.id)
   }
 
-  const [{ isDragging }, drag, dragPreview] = useDrag<DragItem, unknown, { isDragging: boolean }>({
-    type: DND_TYPE,
-    // item is a function so it runs at drag-start — close any open overflow
-    // menu so the portaled popover doesn't dangle in the old viewport position.
-    item: () => {
-      onMenuClose()
-      return { index, id: rule.id }
-    },
-    canDrag: () => dndEnabled,
-    collect: (monitor) => ({ isDragging: monitor.isDragging() }),
-  })
+  const prefersReducedMotion =
+    typeof window !== 'undefined' &&
+    window.matchMedia('(prefers-reduced-motion: reduce)').matches
 
-  const [{ isOver }, drop] = useDrop<DragItem, unknown, { isOver: boolean }>({
-    accept: DND_TYPE,
-    canDrop: () => dndEnabled,
-    collect: (monitor) => ({ isOver: monitor.isOver() }),
-    hover(item) {
-      if (!dndEnabled) return
-      if (item.index === index) return
-      onMove(item.index, index)
-      item.index = index
-    },
-  })
+  // dnd-kit sortable — pointer + touch + keyboard (sensors + reorder live in
+  // DecisioningTable's DndContext). Disabled while a name filter is active so the
+  // visible order can't diverge from the absolute rules index.
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    setActivatorNodeRef,
+    transform,
+    transition,
+    isDragging,
+  } = useSortable({ id: rule.id, disabled: !dndEnabled })
 
-  const handleRef = useCallback(
-    (el: HTMLTableCellElement | null) => { drag(el) },
-    [drag],
-  )
-
-  // Attach the drop connector from a callback ref — connector calls read
-  // refs, which react-hooks/refs forbids during render.
-  const rowDndRef = useCallback(
+  // Merge dnd-kit's sortable node ref with our own rowRef (used for focus + DOM reads).
+  const setRowRef = useCallback(
     (el: HTMLTableRowElement | null) => {
       rowRef.current = el
-      drop(el)
+      setNodeRef(el)
     },
-    [drop],
+    [setNodeRef],
   )
 
-  // Suppress the browser's native drag ghost (a flat bitmap snapshot). With it
-  // hidden, the in-place row IS the picked-up element — so `.dt-tbody-row-dragging`
-  // gets full CSS control of the "lift" (scale, shadow, tilt), and the other rows
-  // FLIP-reflow around it (see DecisioningTable). Linear/Notion-style reorder.
-  useEffect(() => {
-    dragPreview(getEmptyImage(), { captureDraggingState: true })
-  }, [dragPreview])
+  // Compose dnd-kit's positional translate with the pickup "lift" (scale + tilt).
+  // CSS.Translate (translate only) keeps the scale/rotate from being overridden by
+  // dnd-kit's default transform string; neighbours reflow via `transition`.
+  const rowStyle: React.CSSProperties = {
+    transform:
+      [CSS.Translate.toString(transform), isDragging ? 'scale(1.008) rotate(0.2deg)' : null]
+        .filter(Boolean)
+        .join(' ') || undefined,
+    transition: prefersReducedMotion ? undefined : (transition ?? undefined),
+  }
 
   return (
     <tr
-      ref={rowDndRef}
+      ref={setRowRef}
+      style={rowStyle}
       data-rule-id={rule.id}
       data-rule-invalid={isInvalid ? 'true' : undefined}
       aria-invalid={isInvalid || undefined}
@@ -161,7 +150,6 @@ export function RuleRow({
       className={cn(
         'dt-tbody-row group',
         isDragging ? 'dt-tbody-row-dragging' : '',
-        isOver && !isDragging ? 'dt-tbody-row-over' : '',
         rule.selected && !isDragging ? 'dt-tbody-row-selected' : '',
         hasChildren && isExpanded ? 'dt-parent-row-expanded' : '',
       )}
@@ -174,10 +162,20 @@ export function RuleRow({
         />
       </td>
 
-      {/* Drag grip + expand toggle + Row # — grip at left edge, adjacent to checkbox */}
-      <td ref={handleRef} className="dt-drag-handle-cell dt-col-sticky-num px-2 py-2.5">
+      {/* Drag grip + expand toggle + Row # — grip at left edge, adjacent to checkbox.
+          The grip is the sortable activator (keyboard + pointer + touch); the rest of
+          the cell is not draggable, so the chevron and row number stay tappable. */}
+      <td className="dt-drag-handle-cell dt-col-sticky-num px-2 py-2.5">
         <div className="dt-drag-handle-inner">
-          <DragGrip />
+          <span
+            ref={setActivatorNodeRef}
+            className="dt-drag-grip-handle"
+            aria-label={`Reorder ${rule.ruleName || `rule ${index + 1}`}`}
+            {...attributes}
+            {...listeners}
+          >
+            <DragGrip />
+          </span>
           {hasChildren ? (
             <button
               type="button"

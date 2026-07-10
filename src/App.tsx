@@ -1,6 +1,4 @@
 import { useState } from 'react'
-import { DndProvider } from 'react-dnd'
-import { HTML5Backend } from 'react-dnd-html5-backend'
 import { OnboardingFlow } from './components/templates/OnboardingFlow'
 import { DecisioningEngine } from './components/templates/DecisioningEngine'
 import type { ModelConfig } from './types'
@@ -42,11 +40,9 @@ export default function App() {
   }
 
   return (
-    <DndProvider backend={HTML5Backend}>
-      <DecisioningEngine
-        modelConfig={modelConfig}
-        initialRulesets={isValidationDemo ? validationRulesets : isDemo ? demoRulesets : undefined}
-      />
-    </DndProvider>
+    <DecisioningEngine
+      modelConfig={modelConfig}
+      initialRulesets={isValidationDemo ? validationRulesets : isDemo ? demoRulesets : undefined}
+    />
   )
 }

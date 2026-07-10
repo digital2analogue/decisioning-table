@@ -1,5 +1,21 @@
-import { Fragment, useEffect, useLayoutEffect, useRef, useState } from 'react'
+import { Fragment, useEffect, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
+import {
+  DndContext,
+  MouseSensor,
+  TouchSensor,
+  KeyboardSensor,
+  useSensor,
+  useSensors,
+  closestCenter,
+} from '@dnd-kit/core'
+import type { DragEndEvent } from '@dnd-kit/core'
+import {
+  SortableContext,
+  sortableKeyboardCoordinates,
+  verticalListSortingStrategy,
+} from '@dnd-kit/sortable'
+import { restrictToVerticalAxis, restrictToParentElement } from '@dnd-kit/modifiers'
 import { MoreHorizontalIcon, PlusIcon, TableIcon } from 'lucide-react'
 import type { Rule, Ruleset } from '../../types'
 import { isRuleTouched } from '../../types'
@@ -216,51 +232,31 @@ export function DecisioningTable({
     setOpenMenuId(null)
   }
 
-  // FLIP reorder — snapshot each row's position BEFORE a reorder mutates the
-  // list, then (in a layout effect, once React has re-rendered the new order)
-  // invert the delta and transition it to zero so rows *slide* into place
-  // instead of snapping. Keyed by data-rule-id; covers parent and child rows.
-  const tbodyRef = useRef<HTMLTableSectionElement>(null)
-  const flipFirst = useRef<Map<string, number> | null>(null)
+  // dnd-kit sensors. Mouse needs a small drag distance so a click isn't a drag;
+  // touch needs a press-and-hold delay so a plain swipe still scrolls the page and
+  // only a deliberate hold on the grip starts a drag (the mobile fix); keyboard for
+  // accessible reordering. dnd-kit animates the reflow natively via SortableContext.
+  const sensors = useSensors(
+    useSensor(MouseSensor, { activationConstraint: { distance: 6 } }),
+    useSensor(TouchSensor, { activationConstraint: { delay: 180, tolerance: 6 } }),
+    useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates }),
+  )
 
-  function captureFlip() {
-    const tb = tbodyRef.current
-    if (!tb) return
-    const first = new Map<string, number>()
-    tb.querySelectorAll<HTMLElement>('tr[data-rule-id]').forEach((row) => {
-      if (row.dataset.ruleId) first.set(row.dataset.ruleId, row.getBoundingClientRect().top)
-    })
-    flipFirst.current = first
+  function handleDragStart() {
+    // Close any open overflow menu so its portaled popover doesn't dangle mid-drag.
+    setOpenMenuId(null)
   }
 
-  useLayoutEffect(() => {
-    const first = flipFirst.current
-    if (!first) return
-    flipFirst.current = null
-    const tb = tbodyRef.current
-    if (!tb) return
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
-    tb.querySelectorAll<HTMLElement>('tr[data-rule-id]').forEach((row) => {
-      // The picked-up row tracks the pointer directly — let it snap; only the
-      // rows making room animate.
-      if (row.classList.contains('dt-tbody-row-dragging')) return
-      const id = row.dataset.ruleId
-      if (!id) return
-      const prevTop = first.get(id)
-      if (prevTop == null) return
-      const delta = prevTop - row.getBoundingClientRect().top
-      if (!delta) return
-      row.style.transition = 'none'
-      row.style.transform = `translateY(${delta}px)`
-      requestAnimationFrame(() => {
-        row.style.transition = 'transform var(--duration-normal) var(--easing-spring)'
-        row.style.transform = ''
-      })
-    })
-  })
+  function handleDragEnd(event: DragEndEvent) {
+    const { active, over } = event
+    if (!over || active.id === over.id) return
+    const from = ruleset.rules.findIndex((r) => r.id === active.id)
+    const to = ruleset.rules.findIndex((r) => r.id === over.id)
+    if (from === -1 || to === -1) return
+    moveRow(from, to)
+  }
 
   function moveRow(dragIndex: number, hoverIndex: number) {
-    captureFlip()
     const next = [...ruleset.rules]
     const [removed] = next.splice(dragIndex, 1)
     next.splice(hoverIndex, 0, removed)
@@ -268,7 +264,6 @@ export function DecisioningTable({
   }
 
   function moveChild(parentId: string, fromIdx: number, toIdx: number) {
-    captureFlip()
     onUpdate({
       ...ruleset,
       rules: ruleset.rules.map((r) => {
@@ -311,6 +306,13 @@ export function DecisioningTable({
 
   return (
     <div className="dt-table-edge">
+      <DndContext
+        sensors={sensors}
+        collisionDetection={closestCenter}
+        modifiers={[restrictToVerticalAxis, restrictToParentElement]}
+        onDragStart={handleDragStart}
+        onDragEnd={handleDragEnd}
+      >
       <table className="w-full">
         <thead>
           <tr className="dt-thead-row">
@@ -376,7 +378,11 @@ export function DecisioningTable({
             <th className="dt-col-actions-head w-10 dt-td"></th>
           </tr>
         </thead>
-        <tbody ref={tbodyRef}>
+        <tbody>
+          <SortableContext
+            items={ruleset.rules.map((r) => r.id)}
+            strategy={verticalListSortingStrategy}
+          >
           {ruleset.rules.length === 0 ? (
             <tr>
               <td colSpan={9} className="dt-empty-cell">
@@ -488,8 +494,10 @@ export function DecisioningTable({
               </div>
             </td>
           </tr>
+          </SortableContext>
         </tbody>
       </table>
+      </DndContext>
       {toast && (
         <Toast
           message={toast.message}

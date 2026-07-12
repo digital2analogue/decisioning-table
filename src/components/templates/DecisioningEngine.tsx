@@ -170,9 +170,9 @@ export function DecisioningEngine({ modelConfig, initialRulesets }: DecisioningE
     <div className="dt-page h-screen flex flex-col">
       {/* Header */}
       <div className="dt-page-header pl-4 pr-6 pt-6 pb-5 flex items-start justify-between">
-        <div className="flex items-start gap-2">
+        <div className="flex items-start gap-2 min-w-0 flex-1">
           <AppIcon />
-          <div>
+          <div className="min-w-0">
             <div className="dt-page-title-row">
               {editingTitle ? (
                 <input

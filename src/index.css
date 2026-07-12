@@ -624,15 +624,25 @@ select option { background-color: var(--color-background-elevated); color: var(-
   /* Tree line lives in the name cell now so chip and line share the same stacking context */
   .dt-child-connector-cell.dt-col-sticky-num { position: sticky; left: 0; z-index: var(--z-sticky); background-color: var(--color-background-hover); }
   .dt-child-tree-line {
-    /* Vertical segment — runs the full row height; cropped on last child */
+    /* Full-cell-height reference box. The vertical line (::before) and the elbow
+       (::after) are drawn as separate pseudo-elements so cropping the line on the
+       last child does NOT move the elbow — the arm stays at the cell's vertical
+       center (= the badge center) on every row. */
     position: absolute; top: 0; bottom: 0;
     left: 0; /* left edge of the name cell (sticky boundary) */
+    width: 14px;
+  }
+  .dt-child-tree-line::before {
+    /* Vertical segment — runs the full row height; cropped to center on last child */
+    content: ''; position: absolute;
+    top: 0; bottom: 0; left: 0;
     width: 2px;
     background-color: color-mix(in srgb, var(--color-foreground-action) 40%, var(--color-border-elevated));
   }
   .dt-child-tree-line::after {
     /* Rounded L-elbow: border-left overlaps the vertical segment, border-bottom
-       forms the horizontal arm, border-bottom-left-radius softens the corner. */
+       forms the horizontal arm, border-bottom-left-radius softens the corner.
+       height: 50% of the full-height box → arm lands at the cell's vertical center. */
     content: ''; position: absolute;
     top: 0; left: 0;
     height: 50%; width: 14px;
@@ -640,8 +650,9 @@ select option { background-color: var(--color-background-elevated); color: var(-
     border-bottom: 2px solid color-mix(in srgb, var(--color-foreground-action) 40%, var(--color-border-elevated));
     border-bottom-left-radius: 5px;
   }
-  /* Last child: crop the continuation below the elbow */
-  .dt-child-row-last .dt-child-tree-line { bottom: 30%; }
+  /* Last child: stop the vertical line at the elbow (cell center) — no dangling tail.
+     The elbow's own border-left still draws the top-half vertical segment. */
+  .dt-child-row-last .dt-child-tree-line::before { bottom: 50%; }
 
   /* Child rule name layout: AND/OR chip inline-left of name input; left edge aligns with parent name input */
   /* position: relative + z-index: 1 ensures chip renders above the absolutely-positioned tree line */

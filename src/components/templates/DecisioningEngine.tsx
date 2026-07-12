@@ -29,7 +29,7 @@ export function DecisioningEngine({ modelConfig, initialRulesets }: DecisioningE
   const defaultTitle = modelConfig?.modelName ?? 'My Decision Model'
   const [titleDraft, setTitleDraft] = useState(defaultTitle)
   const [title, setTitle] = useState(defaultTitle)
-  const defaultDesc = 'Automated credit approval policy for consumer loans — evaluates income, account history, and risk indicators across all applicant segments.'
+  const defaultDesc = 'Automated credit approval policy for consumer loans.'
   const [descDraft, setDescDraft] = useState(defaultDesc)
   const [desc, setDesc] = useState(defaultDesc)
   const titleInputRef = useRef<HTMLInputElement>(null)

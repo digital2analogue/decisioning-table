@@ -75,7 +75,7 @@ select option { background-color: var(--color-background-elevated); color: var(-
   /* Description textarea — two-line edit mode; same visual weight as .dt-page-meta */
   /* Description area — fixed width locks the container so read↔edit swap causes no layout shift.
      width: 100% on the textarea fills this; max-width: 100% prevents overflow on narrow viewports. */
-  .dt-desc-area { width: 560px; max-width: 100%; }
+  .dt-desc-area { width: 100%; max-width: 560px; }
   .dt-desc-textarea { display: block; width: 100%; box-sizing: border-box; font: var(--font-body-medium); color: var(--color-foreground-default); background-color: var(--color-background-default); border: 1px solid var(--color-border-focus); outline: none; border-radius: var(--radius-sm); padding: 3px 6px; margin: 1px 0 0; box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-background-action) 18%, transparent); resize: none; line-height: 1.5; }
 
   /* Breadcrumb */

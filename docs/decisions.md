@@ -6,6 +6,40 @@ feed the Capital One case study (and so future sessions don't re-litigate settle
 
 ---
 
+## 2026-07-13 — Embed-driven fixes: page overflow, connector centering, header width, subtitle
+
+**What.** Four fixes surfaced by embedding the demo (`/?demo=1`) as a live iframe in the Capital One
+case study (portfolio-vercel #31), on phones and desktop. Shipped as PRs #36–#38 (all merged).
+
+- **Page never scrolls sideways (#36).** `.dt-page` gets `overflow-x: hidden` + `max-width: 100vw`, and
+  the header wraps under a new `@media (max-width: 640px)`. The wide rules table's own `.dt-table-edge`
+  is now the *only* horizontal scroller (sticky `#`/name columns pinned); the page/header stay clamped
+  to the frame instead of pushing controls off to the right.
+- **AND/OR connector elbow centered on every row (#36).** The tree connector drew the vertical line and
+  the L-elbow on one element with the elbow at `50%` of that element's height; the last-child crop
+  (`bottom: 30%`) shortened the element and dragged the elbow to ~35% — so single-child groups (and the
+  last row of any group) pointed above the badge. Split it: `::before` is the croppable vertical line,
+  `::after` is the elbow anchored to the now-always-full-height box → arm sits at the badge's vertical
+  center on first/middle/last/single-child rows alike.
+- **Description field stops clipping the toolbar (#38).** `.dt-desc-area` was a fixed `width: 560px`, so
+  it reserved 560px regardless of text/viewport and (with `.dt-page`'s overflow clip) shoved the
+  filter/avatars/Share/Add-rule off the right on narrow frames — visible in the desktop embed and when
+  editing the description. Now `width: 100%; max-width: 560px`, and the header's left block gets
+  `min-w-0 flex-1` so title/description can actually shrink. (It only behaved ≤640px before because the
+  responsive rule there already constrained the left block.)
+- **Shorter demo subtitle (#37).** Trimmed the default model description to one line
+  ("Automated credit approval policy for consumer loans.") so the header reads cleanly at phone width.
+
+**Why / alternatives.** The header-push root cause was a *fixed-width* field, not a flex bug — the fix is
+to let it flex, not to widen the frame. On the portfolio side we considered a CSS-only iOS iframe hack
+(`width:1px;min-width:100%`) but it flipped the app to its desktop layout; the portfolio instead falls
+back to a poster + "open the live prototype" link ≤700px and full-bleeds the embed on wide screens, so a
+1520px table only scrolls below ~1520px viewports (accepted — scaling would shrink everything). Baselines
+regenerate on CI; the header/connector/subtitle changes stayed within the 1440px visual tolerance.
+
+**Status.** Shipped to production (`decisioning-table.vercel.app`). Portfolio case study leads with the
+live embed (portfolio-vercel #31, merged).
+
 ## 2026-07-10 — Fix: drag had no live visual movement — DragOverlay (sticky-cell vs transform)
 
 **What.** Right after the dnd-kit migration, reorder was *functionally* correct but *visually* broken:

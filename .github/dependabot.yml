@@ -11,6 +11,19 @@ updates:
       npm-dependencies:
         patterns:
           - "*"
+        # Majors stay manual (repo policy) — keeping them out of the group
+        # stops one incompatible major from turning the whole weekly bump
+        # red (typescript 7.x vs typescript-eslint's <6.1 peer range,
+        # 2026-07-13 and 2026-07-15).
+        update-types:
+          - minor
+          - patch
+    ignore:
+      # typescript majors are unusable until typescript-eslint's peer
+      # range admits them — an individual major PR would just sit red.
+      # Revisit when typescript-eslint supports TS >= 6.
+      - dependency-name: "typescript"
+        update-types: ["version-update:semver-major"]
 
   # Keep the actions used in .github/workflows fresh too.
   - package-ecosystem: github-actions

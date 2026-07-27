@@ -25,6 +25,11 @@ Vitest unit tests + Playwright visual regression run in CI (`.github/workflows/c
 
 This repo consumes the decision-engine brand tokens from the published **`@digital2analogue2/parsimony`** npm package (built and published from the **brand-tokens** repo). It does not define its own color values.
 
+**Agent context packs:** the installed package ships compiled agent context — start at
+`node_modules/@digital2analogue2/parsimony/context/system.md` (rules + brand map), with
+per-component contracts in `context/components/<tag>.md` and the full token catalog in
+`tokens.json`. Prefer these over guessing token names or re-deriving rules from prose.
+
 ### Source of truth hierarchy
 
 ```

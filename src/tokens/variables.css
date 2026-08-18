@@ -1,11 +1,16 @@
 /**
  * App-local token overlay.
  *
- * Brand tokens (colour, radius, shadow scale, font compositions, letter-spacing)
- * now come from `@digital2analogue2/parsimony/decision-engine.css`, imported ahead
- * of this file in src/index.css. This file is no longer a hand-copy of the brand —
- * it holds only what the design system has no opinion on, plus the parallel
- * vocabularies still awaiting migration (see issue #61).
+ * Colour, radius, motion, spacing, type and the font compositions all come from
+ * `@digital2analogue2/parsimony/decision-engine.css`, imported ahead of this file
+ * in src/index.css. Issue #61 is complete: this file is no longer a hand-copy of
+ * the brand and holds no parallel vocabulary.
+ *
+ * What is left is only what the design system has no opinion on (layout,
+ * stacking, control heights, column widths, the tinted composite shadows) and a
+ * short list of values the brand genuinely does not have. Each of those carries
+ * a comment saying why it stays and what would retire it — they are decisions,
+ * not leftovers. Before adding anything here, check the brand build first.
  *
  * HARD RULE: never define a colour here. Colour lives in brand-tokens →
  * parsimony → the imported decision-engine.css. If you need a new colour token,
@@ -64,17 +69,14 @@
   --col-width-outcome: 190px;     /* Outcome segmented control */
 
   /* App-specific composite shadows — no brand equivalent */
-  --shadow-card: 0 2px 8px rgba(15, 26, 46, 0.07);
   --shadow-menu: 0 8px 28px rgba(15, 26, 46, 0.12), 0 2px 6px rgba(15, 26, 46, 0.06);
-  --shadow-inset-trough: inset 0 2px 4px rgba(15, 26, 46, 0.14), inset 0 0 0 1px rgba(15, 26, 46, 0.03); /* Recessed segmented-control trough */
-  --shadow-segment-raised: 0 2px 4px rgba(15, 26, 46, 0.16), 0 1px 2px rgba(15, 26, 46, 0.08), 0 0 0 0.5px rgba(15, 26, 46, 0.08); /* Raised active segment inside a recessed trough */
   --shadow-footer-up: 0 -2px 8px rgba(15, 26, 46, 0.06); /* Soft lift from below — sticky footers */
   --shadow-brand-tint: rgba(36, 86, 228, 0.10) 0px 20px 40px -20px, rgba(0, 0, 0, 0.08) 0px 8px 16px -8px; /* blue-tinted atmospheric lift for featured surfaces */
 
-  /* ── Awaiting migration to the brand vocabulary (issue #61) ──────────────
-     These duplicate names the design system already owns. Each family gets its
-     own migration PR so the value mapping can be verified one step at a time.
-     Do not extend these — use the brand token if one exists. */
+  /* ── No brand equivalent — deliberate keeps (issue #61 closed) ───────────
+     Every other family migrated cleanly. These three did not, for reasons
+     recorded below. Do not extend this section: if the brand names a token,
+     use the brand's. */
 
   /* Motion migrated to the brand vocabulary in #61 step 2 — every duration and
      easing now comes from --motion-* in the imported brand build, which means
@@ -100,11 +102,19 @@
      one of the two it has. Deliberate, not overlooked. */
   --letter-spacing-tight: -0.015em;
 
-  /* → --radius-full (issue #61 step 5) */
-  --radius-pill: 9999px;
+  /* Shadow — NOT migrated, deliberately. The brand's --shadow-raised /
+     --shadow-overlay / --shadow-dialog are neutral-black at different blur and
+     spread; these are navy-tinted rgba(15, 26, 46, …) to sit correctly on the
+     Arctic surfaces, and they belong to the same tinted family as --shadow-menu,
+     --shadow-footer-up and --shadow-brand-tint below, which the brand does not
+     name at all. Adopting three of them would fracture that language and repaint
+     every shadowed surface. Resolving this properly is an upstream question —
+     a navy-tinted DE shadow scale in brand-tokens — not a rename. See #61.
 
-  /* → --shadow-raised / --shadow-overlay / --shadow-dialog (issue #61 step 5).
-     Values do NOT match the brand scale — see the issue. */
+         local --shadow-sm  0 1px 2px 0  navy .06   vs  --shadow-raised   0 1px 3px 0  black .08
+         local --shadow-md  0 4px 16px   navy .10   vs  --shadow-overlay  0 6px 20px 0 black .16
+         local --shadow-xl  0 20px 48px  navy .14   vs  --shadow-dialog   0 12px 40px 0 black .24
+  */
   --shadow-sm: 0 1px 2px 0 rgba(15, 26, 46, 0.06);
   --shadow-md: 0 4px 16px rgba(15, 26, 46, 0.10); /* mid-elevation (above card, below menu) for popovers and hover-lifted CTAs */
   --shadow-xl: 0 20px 48px rgba(15, 26, 46, 0.14);

@@ -88,32 +88,17 @@
      on its own (an easing curve carries no duration). */
   --easing-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
 
-  /* → --primitive-font-* / --font-family-* (issue #61 step 4) */
-  --font-family-display: var(--font-family-sans);
-  --font-family-body: var(--font-family-sans);
-  --font-weight-light: 300;
-  --font-weight-regular: 400;
-  --font-weight-medium: 500;
-  --font-weight-semibold: 600;
-  --font-weight-bold: 700;
-  --font-size-xs: 0.75rem;
-  --font-size-sm: 0.875rem;
-  --font-size-base: 1rem;
-  --font-size-md: 1.25rem;
-  --font-size-lg: 1.5rem;
-  --font-size-xl: 1.75rem;   /* no --primitive-font-size-xl in the brand — resolve before step 4 */
-  --font-size-2xl: 2rem;
-  --font-size-3xl: 2.5rem;
-  --font-line-height-tight: 1.1;
-  --font-line-height-snug: 1.25;
-  --font-line-height-normal: 1.6;
-  --font-line-height-relaxed: 1.7;
+  /* Type migrated to the brand vocabulary in #61 step 4 — weights, sizes and
+     line-heights now come from --primitive-font-* in the imported brand build.
+     Fifteen of the twenty-two local type tokens turned out to have no usages at
+     all and were deleted rather than migrated. This one is all that is left:
 
-  /* → --letter-spacing-body/title/display (issue #61 step 4).
-     Values do NOT match the brand one-for-one — see the issue. */
+     -0.015em sits between the brand's --letter-spacing-display (-0.01em) and
+     --letter-spacing-title (-0.025em) and matches neither. Snapping to either
+     would retrack 5 call sites — the page title, tab labels and table headers —
+     so it stays local until the brand either gains this step or this app adopts
+     one of the two it has. Deliberate, not overlooked. */
   --letter-spacing-tight: -0.015em;
-  --letter-spacing-normal: 0em;
-  --letter-spacing-wide: 0.03em;
 
   /* → --radius-full (issue #61 step 5) */
   --radius-pill: 9999px;

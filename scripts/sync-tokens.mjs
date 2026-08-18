@@ -11,9 +11,11 @@
  *                     Always a bug: the local copy silently wins at runtime.
  *   2. shadowed     — a token declared in both at the same value. Dead weight;
  *                     delete it and let the imported brand build supply it.
- *   3. local-only   — a token the brand does not name. Layout, stacking and
- *                     app-specific shadows live here by design; the parallel
- *                     vocabularies are migration debt tracked in #61.
+ *   3. local-only   — a token the brand does not name. Layout, stacking and the
+ *                     navy-tinted shadows live here by design, alongside three
+ *                     documented keeps the brand has no equivalent for. Since
+ *                     #61 closed there is no parallel vocabulary left, so growth
+ *                     in this list is the thing to watch.
  *
  * Pass --verbose to also list brand semantic tokens this app does not shadow.
  *
@@ -205,7 +207,7 @@ if (localOnly.length) {
   for (const key of localOnly) {
     console.log(`    ${key}: ${localFull[key]}`)
   }
-  console.log('  Layout, stacking and app-specific shadows stay here by design. Parallel\n  vocabularies (--space-*, --duration-*, --easing-*, --font-*, --shadow-sm/md/xl,\n  --radius-pill) are migration debt — see issue #61.\n')
+  console.log('  Expected. Issue #61 is closed: there is no parallel vocabulary left. These are\n  layout, stacking, control heights, column widths and the navy-tinted shadows the\n  design system has no opinion on, plus three documented keeps the brand has no\n  equivalent for (--space-6, --easing-spring, --letter-spacing-tight).\n  Growth here is the signal to watch — check the brand build before adding one.\n')
 }
 
 if (missingLocal.length) {

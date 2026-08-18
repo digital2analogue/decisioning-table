@@ -81,17 +81,17 @@
      own migration PR so the value mapping can be verified one step at a time.
      Do not extend these — use the brand token if one exists. */
 
-  /* → --motion-duration-* / --motion-easing-* (issue #61 step 2).
-     NOTE: the brand zeroes --motion-duration-* under prefers-reduced-motion;
-     these local durations are NOT covered by that guard. */
-  --duration-fast: 120ms;
-  --duration-normal: 200ms;
-  --duration-slow: 350ms;
-  --easing-default: cubic-bezier(0.25, 0.1, 0.25, 1);
-  --easing-in: cubic-bezier(0.42, 0, 1, 1);
-  --easing-out: cubic-bezier(0, 0, 0.58, 1);
-  --easing-in-out: cubic-bezier(0.42, 0, 0.58, 1);
-  --easing-spring: cubic-bezier(0.34, 1.56, 0.64, 1); /* TODO: promote to parsimony brand-tokens (motion) — overshoot curve for confident snaps (drag settle, outcome thumb); no brand equivalent yet */
+  /* Motion migrated to the brand vocabulary in #61 step 2 — every duration and
+     easing now comes from --motion-* in the imported brand build, which means
+     the durations are finally covered by the brand's prefers-reduced-motion
+     guard. This one curve is all that is left:
+
+     TODO: promote to parsimony brand-tokens (motion). Overshoot curve for
+     confident snaps (drag settle, outcome thumb). The brand has no equivalent —
+     its easing set is default/enter/exit/move, none of which overshoot. Until
+     it lands upstream this stays local, and it is NOT reduced-motion sensitive
+     on its own (an easing curve carries no duration). */
+  --easing-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
 
   /* → --primitive-font-* / --font-family-* (issue #61 step 4) */
   --font-family-display: var(--font-family-sans);

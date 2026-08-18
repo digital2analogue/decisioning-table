@@ -6,6 +6,43 @@ feed the Capital One case study (and so future sessions don't re-litigate settle
 
 ---
 
+## 2026-08-18 — Motion moves to the brand vocabulary, restoring reduced-motion (#61 step 2)
+
+**What.** All 221 `--duration-*` / `--easing-*` call sites in `src/index.css` move to the brand's
+`--motion-*` names, and the seven local definitions are deleted. `--easing-spring` stays — the brand's
+easing set is default/enter/exit/move and none of them overshoot.
+
+**Why this one was worth doing first.** It is not a rename. The built brand CSS zeroes
+`--motion-duration-*` inside `@media (prefers-reduced-motion: reduce)`; a local `--duration-*` is never
+reached by that override, so every animated surface in this app ignored the user's reduced-motion
+setting. Measured on `main` before the change, and after:
+
+```
+before   prefers-reduced-motion: no-preference   .dt-tab-item transition-duration = 0.12s
+before   prefers-reduced-motion: reduce          .dt-tab-item transition-duration = 0.12s   ← ignored
+after    prefers-reduced-motion: no-preference   .dt-tab-item transition-duration = 0.12s
+after    prefers-reduced-motion: reduce          .dt-tab-item transition-duration = 0s      ← honoured
+```
+
+That is parsimony hard rule 10 and WCAG 2.3.3, and it was silently broken. Nothing in CI would ever
+have caught it: the Playwright config already sets `reducedMotion: 'reduce'`, so the visual suite was
+running in the very mode the app was ignoring, and passing.
+
+**Why / alternatives.** The name map in #61 is a proposal, so all seven pairs were resolved through
+their `var()` chains and compared before the rename — 7/7 value-preserving. The trap is that the brand
+names easings by **purpose, not curve**: `--easing-in` → `--motion-easing-exit` and `--easing-out` →
+`--motion-easing-enter`. They cross. Mapping by name similarity (`in`→`enter`, `out`→`exit`) would have
+swapped two curves while passing every check — only 13 call sites, but wrong in the hand and invisible
+to CI.
+
+Two tokens turned out to have **zero** real usages, definitions only: `--duration-slow` and
+`--easing-in-out`. They were deleted rather than migrated.
+
+**Status.** Shipped. `sync-tokens` local-only count 63 → 56. Remaining #61 steps: spacing, type, then
+shadow/radius — where `--font-size-xl` and `--letter-spacing-tight` are both known not to map cleanly.
+
+---
+
 ## 2026-08-18 — Consume the parsimony brand build instead of hand-copying it (colour)
 
 **What.** `src/index.css` now imports `@digital2analogue2/parsimony/decision-engine.css` ahead of

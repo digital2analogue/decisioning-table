@@ -85,10 +85,18 @@ Compares the imported brand build against the `variables.css` overlay and report
 Pass `--verbose` to also list brand semantic tokens this app doesn't shadow.
 
 **Status as of `@digital2analogue2/parsimony@0.7.0`:** zero drift, zero shadowed,
-**63 local-only**, **1 intentional override**. Of the 63, 22 are genuinely app-local; the
-remaining 41 are the `--space-*` / `--duration-*` / `--easing-*` / `--font-*` /
-`--letter-spacing-*` / `--shadow-sm|md|xl` / `--radius-pill` families awaiting the #61
-migration steps. The override is `--color-foreground-alt` (#60 / parsimony#217).
+**56 local-only**, **1 intentional override**. Of the 56, 22 are genuinely app-local and
+`--easing-spring` has no brand equivalent; the remaining 33 are the `--space-*` /
+`--font-*` / `--letter-spacing-*` / `--shadow-sm|md|xl` / `--radius-pill` families
+awaiting the #61 migration steps. The override is `--color-foreground-alt`
+(#60 / parsimony#217).
+
+**Motion is migrated (#61 step 2).** Use `--motion-duration-instant|standard|emphasized`
+and `--motion-easing-default|enter|exit|move` — never a local duration. The brand zeroes
+`--motion-duration-*` under `prefers-reduced-motion`, so a local duration token silently
+opts that surface out of the WCAG 2.3.3 guarantee. Note the brand names easings by
+**purpose, not curve**: `enter` is ease-out and `exit` is ease-in, so do not map by name
+similarity.
 
 One known dangling reference pre-dating the parsimony adoption: `--font-size-2xs`,
 referenced in a comment next to a hardcoded `10px`; the brand now has
@@ -183,8 +191,8 @@ Three semantically distinct states with three visual weights, all on `td:first-c
 
 - **Data Element schema is incomplete.** Per the product spec ("Select data element(s)" modal), each `DataElement` has `Status`, `Description`, `Datatype`, `Attribute Path`, `Valid Values`, `Exception Values`. Current `DataElement` type in [src/types.ts](src/types.ts) has only `id`, `label`, `description`, `dataType`, `attributePath`, `category` — missing `status`, `validValues`, `exceptionValues`. Add when wiring the data-element selector modal.
 - **Stale field naming.** `existingAccountVariable` / `annualIncomeVariable` on `Rule` should conceptually be `existingAccountDataElement` / `annualIncomeDataElement` per the data model. Worth a rename pass when next touching this surface.
-- **Parsimony adoption is partway done (issue #61).** Colour, radius, the font compositions and letter-spacing now come from the package. Still to migrate, one family per PR: motion (`--duration-*`/`--easing-*` → `--motion-*` — this one also restores the `prefers-reduced-motion` guarantee), spacing, type, then shadow/radius.
-- **`--easing-spring` has no brand equivalent.** Flagged in [src/tokens/variables.css](src/tokens/variables.css) — promote it to brand-tokens (motion) before the motion migration lands, or it stays local forever.
+- **Parsimony adoption is partway done (issue #61).** Colour, radius, the font compositions, letter-spacing and motion now come from the package. Still to migrate, one family per PR: spacing (`--space-*` → `--spacing-*`), type (`--font-size-*` / `--font-weight-*` / `--font-line-height-*` / `--font-family-body|display` / `--letter-spacing-tight|normal|wide`), then shadow/radius (`--shadow-sm|md|xl`, `--radius-pill`). Two known non-clean mappings to resolve rather than paper over: `--font-size-xl` (1.75rem) has no brand primitive — the ramp jumps 1.5rem → 2rem — and `--letter-spacing-tight` is -0.015em against the brand's -0.01em.
+- **`--easing-spring` has no brand equivalent.** The one motion token left in [src/tokens/variables.css](src/tokens/variables.css) after #61 step 2 — the brand's easing set (default/enter/exit/move) has no overshoot curve. Promote it to brand-tokens (motion) or it stays local indefinitely.
 - **Save-gating decision deferred.** Validation banner currently counts invalid rules but doesn't block the (nonexistent) save action. When a save flow lands, decide: block save with banner-only warning, or block save with a modal confirmation.
 - **No keyboard nav inside `ActionsMenu` dropdown.** Items have hover/focus-visible/active states but no arrow-key navigation, focus trap, or auto-focus first item on open. The audit recommended adopting Radix `DropdownMenu` (already in deps) for a clean fix — ~30 min vs ~4 hr to roll your own correctly. Same applies to the other portal-based pickers (`OperatorSelect`, `LogicOperatorSelect`, `ConditionalCell`).
 - **Drag-and-drop edge auto-scroll.** dnd-kit's `AutoScroll` is on by default within the scroll

@@ -33,14 +33,9 @@
   /* ── App-local: layout, stacking, sizing ─────────────────────────────────
      Concerns the design system deliberately has no opinion on. These stay. */
 
-  /* Spacing */
-  --space-2xs: 2px;
-  --space-xs: 4px;
-  --space-6: 6px;  /* component-specific gap-fill (avatar overlap, menu item padding); no t-shirt step at 6px */
-  --space-sm: 8px;
-  --space-md: 16px;
-  --space-lg: 24px;
-  --space-xl: 48px;
+  /* Spacing — migrated to the brand --spacing-* scale in #61 step 3. This step
+     has no brand equivalent: the scale runs 4px → 8px with nothing between. */
+  --space-6: 6px;  /* component-specific gap-fill (avatar overlap, menu item padding) */
 
   /* Sizing — control heights. Single source of truth so text inputs, select
      triggers, chips, and any custom input chrome all align in a row. */

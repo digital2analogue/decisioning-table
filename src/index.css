@@ -86,14 +86,14 @@ select option { background-color: var(--color-background-elevated); color: var(-
   .dt-breadcrumb { display: flex; align-items: center; gap: var(--spacing-micro); margin-bottom: var(--spacing-tight); }
   .dt-breadcrumb-item { font: var(--font-body-small); color: var(--color-foreground-default); }
   .dt-breadcrumb-inactive { color: var(--color-foreground-muted); }
-  .dt-breadcrumb-sep { color: var(--color-foreground-muted); font-size: var(--font-size-xs); margin: 0 1px; }
+  .dt-breadcrumb-sep { color: var(--color-foreground-muted); font-size: var(--primitive-font-size-xs); margin: 0 1px; }
 
   /* Title row — h1 + status pill on one line */
   .dt-page-title-row { display: flex; align-items: center; gap: var(--spacing-tight); }
 
   /* Status chip — pulsing live-dot pattern (Vercel/Linear style) */
-  .dt-status-pill { display: inline-flex; align-items: center; gap: 5px; padding: 1px var(--spacing-tight); border-radius: var(--radius-sm); font: var(--font-label-small); font-weight: var(--font-weight-semibold); letter-spacing: var(--letter-spacing-label); flex-shrink: 0; }
-  .dt-status-active { display: inline-flex; align-items: center; gap: var(--spacing-micro); font: var(--font-label-small); font-weight: var(--font-weight-semibold); color: var(--color-foreground-success); letter-spacing: var(--letter-spacing-label); flex-shrink: 0; }
+  .dt-status-pill { display: inline-flex; align-items: center; gap: 5px; padding: 1px var(--spacing-tight); border-radius: var(--radius-sm); font: var(--font-label-small); font-weight: var(--primitive-font-weight-semibold); letter-spacing: var(--letter-spacing-label); flex-shrink: 0; }
+  .dt-status-active { display: inline-flex; align-items: center; gap: var(--spacing-micro); font: var(--font-label-small); font-weight: var(--primitive-font-weight-semibold); color: var(--color-foreground-success); letter-spacing: var(--letter-spacing-label); flex-shrink: 0; }
   /* Ping dot — outer glow ring + inner solid dot stacked in a 10×10 wrapper */
   .dt-status-ping-wrap { position: relative; display: inline-flex; align-items: center; justify-content: center; width: 10px; height: 10px; flex-shrink: 0; }
   .dt-status-ping { position: absolute; inset: 0; border-radius: 50%; background-color: var(--color-foreground-success); animation: dt-ping 3.5s cubic-bezier(0, 0, 0.2, 1) infinite; }
@@ -125,7 +125,7 @@ select option { background-color: var(--color-background-elevated); color: var(-
   .dt-avatar {
     display: inline-flex; align-items: center; justify-content: center;
     width: 28px; height: 28px; border-radius: 50%;
-    font-size: 10px; /* DS-debt: no --font-size-2xs token in DE yet */ font-weight: var(--font-weight-semibold); letter-spacing: 0.02em;
+    font-size: var(--primitive-font-size-2xs); font-weight: var(--primitive-font-weight-semibold); letter-spacing: 0.02em;
     border: 2px solid var(--color-background-elevated); box-sizing: border-box;
     position: relative; flex-shrink: 0;
     /* Collapsed: -20px = slight peek, edges visible behind the one in front */
@@ -207,7 +207,7 @@ select option { background-color: var(--color-background-elevated); color: var(-
   .dt-rule-search-clear { display: inline-flex; align-items: center; justify-content: center; width: 16px; height: 16px; padding: 0; border: none; background: transparent; color: var(--color-foreground-muted); cursor: pointer; border-radius: var(--radius-sm); transition: color var(--motion-duration-instant) var(--motion-easing-default), background-color var(--motion-duration-instant) var(--motion-easing-default); }
   .dt-rule-search-clear:hover { color: var(--color-foreground-default); background-color: var(--color-background-hover); }
   .dt-rule-search-clear:focus-visible { outline: none; color: var(--color-foreground-default); background-color: var(--color-background-hover); box-shadow: 0 0 0 2px var(--color-border-focus); }
-  .dt-th { font-family: var(--font-family-sans); font-size: var(--font-size-xs); font-weight: var(--font-weight-semibold); line-height: var(--font-line-height-snug); color: var(--color-foreground-muted); text-transform: uppercase; letter-spacing: var(--letter-spacing-all-caps); }
+  .dt-th { font-family: var(--font-family-sans); font-size: var(--primitive-font-size-xs); font-weight: var(--primitive-font-weight-semibold); line-height: var(--primitive-font-line-height-snug); color: var(--color-foreground-muted); text-transform: uppercase; letter-spacing: var(--letter-spacing-all-caps); }
   /* Compact header row — tighter padding than tbody rows */
   .dt-thead-row th { padding-top: var(--spacing-micro) !important; padding-bottom: var(--spacing-micro) !important; }
   .dt-tbody-row { border-bottom: 1px solid var(--color-border-muted); background-color: var(--color-background-elevated); transition: background-color var(--motion-duration-instant) var(--motion-easing-default); }
@@ -251,11 +251,11 @@ select option { background-color: var(--color-background-elevated); color: var(-
   .dt-tbody-row-selected { background-color: color-mix(in srgb, var(--color-background-elevated) 82%, var(--color-background-action)); }
   .dt-tbody-row-selected:hover { background-color: color-mix(in srgb, var(--color-background-elevated) 74%, var(--color-background-action)); }
   /* Row numbers and warning indicators in the # column */
-  .dt-row-number { font-size: var(--font-size-xs); font-weight: var(--font-weight-regular); color: var(--color-foreground-alt); letter-spacing: 0; font-variant-numeric: tabular-nums; font-family: var(--font-family-mono); }
+  .dt-row-number { font-size: var(--primitive-font-size-xs); font-weight: var(--primitive-font-weight-regular); color: var(--color-foreground-alt); letter-spacing: 0; font-variant-numeric: tabular-nums; font-family: var(--font-family-mono); }
   .dt-empty-cell { font: var(--font-body-medium); color: var(--color-foreground-muted); }
   .dt-empty-state { display: flex; flex-direction: column; align-items: center; gap: var(--spacing-micro); padding: var(--spacing-component) 0; }
   .dt-empty-icon { color: var(--color-foreground-muted); margin-bottom: var(--spacing-tight); opacity: 0.5; }
-  .dt-empty-title { font: var(--font-label-medium); font-weight: var(--font-weight-semibold); color: var(--color-foreground-alt); margin: 0; }
+  .dt-empty-title { font: var(--font-label-medium); font-weight: var(--primitive-font-weight-semibold); color: var(--color-foreground-alt); margin: 0; }
   .dt-empty-subtitle { font: var(--font-body-small); color: var(--color-foreground-muted); margin: 0; }
 
   /* Toolbar */
@@ -265,7 +265,7 @@ select option { background-color: var(--color-background-elevated); color: var(-
   .dt-desc-input { font: var(--font-body-medium); color: var(--color-foreground-muted); background-color: var(--color-background-default); border: 0; outline: none; border-radius: var(--radius-sm); padding: 1px 4px; margin: -2px calc(-4px - 1px); box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-background-action) 18%, transparent); }
   .dt-editable-meta { cursor: text; border-radius: var(--radius-sm); border: 1px solid transparent; padding: 1px 4px; margin: -2px calc(-4px - 1px); transition: border-color var(--motion-duration-instant) var(--motion-easing-default); }
   .dt-editable-meta:hover { border-color: var(--color-border-alt); }
-  .dt-rule-count { font-size: var(--font-size-xs); line-height: var(--font-line-height-snug); color: var(--color-foreground-muted); background-color: var(--color-background-alt); border: 1px solid var(--color-border-alt); border-radius: var(--radius-pill); padding: 1px var(--spacing-tight); font-variant-numeric: tabular-nums; }
+  .dt-rule-count { font-size: var(--primitive-font-size-xs); line-height: var(--primitive-font-line-height-snug); color: var(--color-foreground-muted); background-color: var(--color-background-alt); border: 1px solid var(--color-border-alt); border-radius: var(--radius-pill); padding: 1px var(--spacing-tight); font-variant-numeric: tabular-nums; }
   /* Metric utility — inline numeric callouts using tabular figures (sans-serif per decision-table no-mono rule). */
   .dt-metric { font-variant-numeric: tabular-nums; }
   .dt-delete-selected { display: inline-flex; align-items: center; gap: var(--spacing-micro); font: var(--font-label-small); letter-spacing: var(--letter-spacing-label); color: var(--color-foreground-danger); background: none; border: none; cursor: pointer; transition: opacity var(--motion-duration-instant) var(--motion-easing-default), box-shadow var(--motion-duration-instant) var(--motion-easing-default); padding: var(--spacing-align) var(--spacing-micro); margin: calc(-1 * var(--spacing-align)) calc(-1 * var(--spacing-micro)); border-radius: var(--radius-sm); opacity: 0.65; }
@@ -279,7 +279,7 @@ select option { background-color: var(--color-background-elevated); color: var(-
   .dt-tab-item { display: inline-flex; align-items: center; gap: var(--spacing-micro); font: var(--font-label-medium); letter-spacing: var(--letter-spacing-label); color: var(--color-foreground-muted); background: none; border: none; border-top: 2px solid transparent; cursor: pointer; white-space: nowrap; padding: var(--spacing-tight) var(--spacing-element); transition: color var(--motion-duration-instant) var(--motion-easing-default), border-top-color var(--motion-duration-instant) var(--motion-easing-default), background-color var(--motion-duration-instant) var(--motion-easing-default), box-shadow var(--motion-duration-instant) var(--motion-easing-default); }
   .dt-tab-item:hover { color: var(--color-foreground-on-action-alt); background-color: var(--color-background-action-alt); }
   .dt-tab-item:focus-visible { outline: none; color: var(--color-foreground-on-action-alt); background-color: var(--color-background-action-alt); box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-background-action) 18%, transparent); }
-  .dt-tab-item-active { color: var(--color-foreground-action); border-top-color: var(--color-foreground-action); font-weight: var(--font-weight-semibold); background-color: var(--color-background-elevated); }
+  .dt-tab-item-active { color: var(--color-foreground-action); border-top-color: var(--color-foreground-action); font-weight: var(--primitive-font-weight-semibold); background-color: var(--color-background-elevated); }
   .dt-tab-item-editing { gap: var(--spacing-micro); padding: var(--spacing-micro) var(--spacing-tight); }
   /* Tab overflow button — hidden at rest, revealed on tab hover or when menu is open */
   .dt-tab-edit-btn { display: inline-flex; align-items: center; color: var(--color-foreground-muted); background: none; border: none; cursor: pointer; padding: 0; line-height: 0; border-radius: var(--radius-sm); opacity: 0; transition: color var(--motion-duration-instant) var(--motion-easing-default), opacity var(--motion-duration-instant) var(--motion-easing-default), box-shadow var(--motion-duration-instant) var(--motion-easing-default); }
@@ -287,7 +287,7 @@ select option { background-color: var(--color-background-elevated); color: var(-
   .dt-tab-edit-btn.dt-tab-edit-btn-open { opacity: 1; }
   .dt-tab-edit-btn:hover { color: var(--color-foreground-alt); }
   .dt-tab-edit-btn:focus-visible { outline: none; opacity: 1; color: var(--color-foreground-action); box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-background-action) 18%, transparent); }
-  .dt-tab-input { font: var(--font-label-medium); font-weight: var(--font-weight-semibold); letter-spacing: var(--letter-spacing-label); color: var(--color-foreground-action); background: transparent; border: none; outline: none; width: 10ch; min-width: 4ch; padding: 0; }
+  .dt-tab-input { font: var(--font-label-medium); font-weight: var(--primitive-font-weight-semibold); letter-spacing: var(--letter-spacing-label); color: var(--color-foreground-action); background: transparent; border: none; outline: none; width: 10ch; min-width: 4ch; padding: 0; }
   .dt-confirm-btn-sm { width: 22px; height: 22px; }
 
   /* Ruleset tabs bar */
@@ -302,7 +302,7 @@ select option { background-color: var(--color-background-elevated); color: var(-
      scrolls the text naturally — ellipsis only applies to unfocused state. */
   /* Rule name reads as the row identifier — semibold + bordered to match the
      other input controls (selects, conditional inputs, amount cell). */
-  .dt-rule-name-input { font: var(--font-body-medium); font-weight: var(--font-weight-semibold); color: var(--color-foreground-default); background-color: var(--color-background-default); border: 1px solid var(--color-border-alt); outline: none; flex: 1; min-width: 0; min-height: var(--control-height-md); box-sizing: border-box; text-overflow: ellipsis; border-radius: var(--radius-sm); padding: 0 var(--spacing-tight); transition: background-color var(--motion-duration-instant) var(--motion-easing-default), border-color var(--motion-duration-instant) var(--motion-easing-default), box-shadow var(--motion-duration-instant) var(--motion-easing-default); }
+  .dt-rule-name-input { font: var(--font-body-medium); font-weight: var(--primitive-font-weight-semibold); color: var(--color-foreground-default); background-color: var(--color-background-default); border: 1px solid var(--color-border-alt); outline: none; flex: 1; min-width: 0; min-height: var(--control-height-md); box-sizing: border-box; text-overflow: ellipsis; border-radius: var(--radius-sm); padding: 0 var(--spacing-tight); transition: background-color var(--motion-duration-instant) var(--motion-easing-default), border-color var(--motion-duration-instant) var(--motion-easing-default), box-shadow var(--motion-duration-instant) var(--motion-easing-default); }
   .dt-rule-name-input::placeholder { color: var(--color-foreground-muted); }
   .dt-rule-name-input:hover { background-color: var(--color-background-alt); box-shadow: 0 0 0 1px var(--color-border-alt); }
   .dt-rule-name-input:focus-visible { background-color: var(--color-background-elevated); border-color: var(--color-border-focus); box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-background-action) 18%, transparent); }
@@ -491,7 +491,7 @@ select option { background-color: var(--color-background-elevated); color: var(-
   .dt-validation-banner { display: flex; align-items: center; gap: var(--spacing-tight); padding: var(--spacing-tight) var(--spacing-component); background-color: var(--color-background-warning-vivid); border-bottom: 1px solid color-mix(in srgb, var(--color-foreground-default) 15%, transparent); color: var(--color-foreground-default); animation: dt-banner-in var(--motion-duration-standard) var(--motion-easing-enter) both; }
   .dt-validation-banner-icon { display: inline-flex; flex-shrink: 0; }
   .dt-validation-banner-text { font: var(--font-body-medium); color: var(--color-foreground-default); margin: 0; }
-  .dt-validation-banner-text strong { font-weight: var(--font-weight-semibold); }
+  .dt-validation-banner-text strong { font-weight: var(--primitive-font-weight-semibold); }
   .dt-validation-banner-cta { display: inline; font: inherit; color: var(--color-foreground-default); background: none; border: none; padding: 0; margin: 0; cursor: pointer; text-decoration: underline; text-underline-offset: 2px; border-radius: var(--radius-sm); transition: opacity var(--motion-duration-instant) var(--motion-easing-default), box-shadow var(--motion-duration-instant) var(--motion-easing-default); }
   .dt-validation-banner-cta:hover { opacity: 0.75; }
   .dt-validation-banner-cta:focus-visible { outline: none; box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-foreground-default) 25%, transparent); }
@@ -538,8 +538,8 @@ select option { background-color: var(--color-background-elevated); color: var(-
      every picker dropdown (operator, attribute, variable, logic, conditional). */
   .dt-conditional-dropdown-item-active,
   .dt-conditional-dropdown-item-active:hover { background-color: var(--color-background-accent-blue); color: var(--color-foreground-default); }
-  .dt-conditional-dropdown-var-name { font-weight: var(--font-weight-semibold); font-size: var(--font-size-sm); }
-  .dt-conditional-dropdown-desc { font-family: var(--font-family-sans); font-size: var(--font-size-xs); color: var(--color-foreground-tertiary); margin-top: 1px; }
+  .dt-conditional-dropdown-var-name { font-weight: var(--primitive-font-weight-semibold); font-size: var(--primitive-font-size-sm); }
+  .dt-conditional-dropdown-desc { font-family: var(--font-family-sans); font-size: var(--primitive-font-size-xs); color: var(--color-foreground-tertiary); margin-top: 1px; }
 
   /* Sticky rule name column */
   /* Sticky leader columns — # + Rule name pin to the left edge so the row's
@@ -672,7 +672,7 @@ select option { background-color: var(--color-background-elevated); color: var(-
     gap: 3px;
     flex-shrink: 0; min-width: 36px;
     height: 22px; box-sizing: border-box;
-    font: var(--font-label-small); font-weight: var(--font-weight-semibold);
+    font: var(--font-label-small); font-weight: var(--primitive-font-weight-semibold);
     letter-spacing: 0.04em; text-transform: uppercase;
     border-radius: var(--radius-sm); padding: 0 var(--spacing-micro);
     background-color: color-mix(in srgb, var(--color-background-action) 7%, transparent); /* glass-chip */
@@ -794,9 +794,9 @@ select option { background-color: var(--color-background-elevated); color: var(-
   .ob-step-label { font: var(--font-label-small); letter-spacing: var(--letter-spacing-all-caps); text-transform: uppercase; color: var(--color-foreground-alt); margin: 0; }
   .ob-step-check { display: inline-flex; align-items: center; justify-content: center; width: 18px; height: 18px; background-color: var(--color-feedback-success); color: var(--color-foreground-on-success); border-radius: 50%; flex-shrink: 0; }
   .ob-step-title { font: var(--font-title-small); letter-spacing: var(--letter-spacing-tight); color: var(--color-foreground-default); margin: 0 0 var(--spacing-tight); }
-  .ob-step-description { font: var(--font-body-medium); color: var(--color-foreground-alt); margin: 0 0 var(--spacing-component); line-height: var(--font-line-height-relaxed); }
+  .ob-step-description { font: var(--font-body-medium); color: var(--color-foreground-alt); margin: 0 0 var(--spacing-component); line-height: var(--primitive-font-line-height-relaxed); }
   .ob-step-context { font: var(--font-body-medium); color: var(--color-foreground-alt); margin: 0 0 var(--spacing-component); }
-  .ob-step-context strong { color: var(--color-foreground-default); font-weight: var(--font-weight-semibold); }
+  .ob-step-context strong { color: var(--color-foreground-default); font-weight: var(--primitive-font-weight-semibold); }
 
   /* Outcome radio cards */
   .ob-outcome-list { display: grid; grid-template-columns: 1fr 1fr; gap: var(--spacing-tight); }
@@ -843,7 +843,7 @@ select option { background-color: var(--color-background-elevated); color: var(-
   .ob-element-row--focused { background-color: var(--color-accent-subtle); border-left-color: var(--color-foreground-action); }
   .ob-element-row--selected .ob-element-label { color: var(--color-foreground-default); }
   .ob-checkbox { width: 14px; height: 14px; accent-color: var(--color-foreground-action); flex-shrink: 0; cursor: pointer; }
-  .ob-element-label { flex: 1; font-family: var(--font-family-mono); font-size: var(--font-size-xs); line-height: var(--font-line-height-snug); color: var(--color-foreground-default); }
+  .ob-element-label { flex: 1; font-family: var(--font-family-mono); font-size: var(--primitive-font-size-xs); line-height: var(--primitive-font-line-height-snug); color: var(--color-foreground-default); }
 
   /* Data type badges */
   .ob-type-badge { font: var(--font-label-small); letter-spacing: var(--letter-spacing-label); border-radius: var(--radius-pill); padding: 1px var(--spacing-tight); border: 1px solid transparent; white-space: nowrap; flex-shrink: 0; }
@@ -857,14 +857,14 @@ select option { background-color: var(--color-background-elevated); color: var(-
   .ob-preview-content { display: flex; flex-direction: column; gap: var(--spacing-element); padding: var(--spacing-element); height: 100%; }
   .ob-preview-header { display: flex; align-items: center; gap: var(--spacing-tight); flex-wrap: wrap; }
   .ob-preview-label { font: var(--font-label-medium); letter-spacing: var(--letter-spacing-label); color: var(--color-foreground-default); font-family: var(--font-family-mono); }
-  .ob-preview-description { font: var(--font-body-medium); color: var(--color-foreground-alt); line-height: var(--font-line-height-relaxed); margin: 0; }
+  .ob-preview-description { font: var(--font-body-medium); color: var(--color-foreground-alt); line-height: var(--primitive-font-line-height-relaxed); margin: 0; }
   .ob-preview-meta { display: flex; flex-direction: column; gap: var(--spacing-tight); background-color: var(--color-background-elevated); border: 1px solid var(--color-border-alt); border-radius: var(--radius-md); padding: var(--spacing-tight) var(--spacing-element); }
   .ob-preview-meta-row { display: flex; justify-content: space-between; align-items: baseline; gap: var(--spacing-tight); }
   .ob-preview-meta-key { font: var(--font-label-small); letter-spacing: var(--letter-spacing-label); color: var(--color-foreground-alt); white-space: nowrap; }
   .ob-preview-meta-val { font: var(--font-body-small); color: var(--color-foreground-default); text-align: right; }
-  .ob-preview-path { font-family: var(--font-family-mono); font-size: var(--font-size-xs); color: var(--color-foreground-alt); word-break: break-all; text-align: right; }
+  .ob-preview-path { font-family: var(--font-family-mono); font-size: var(--primitive-font-size-xs); color: var(--color-foreground-alt); word-break: break-all; text-align: right; }
   .ob-preview-empty { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: var(--spacing-tight); height: 100%; min-height: 200px; padding: var(--spacing-element); }
-  .ob-preview-empty p { font: var(--font-body-medium); color: var(--color-foreground-muted); text-align: center; margin: 0; line-height: var(--font-line-height-relaxed); }
+  .ob-preview-empty p { font: var(--font-body-medium); color: var(--color-foreground-muted); text-align: center; margin: 0; line-height: var(--primitive-font-line-height-relaxed); }
   .ob-preview-empty-icon { color: var(--color-foreground-muted); }
   .ob-select-btn { width: 100%; font: var(--font-label-medium); letter-spacing: var(--letter-spacing-label); color: var(--color-foreground-default); background-color: var(--color-background-default); border: 1px solid var(--color-border-default); border-radius: var(--radius-md); padding: var(--spacing-tight) var(--spacing-element); cursor: pointer; transition: background-color var(--motion-duration-instant) var(--motion-easing-default); margin-top: auto; }
   .ob-select-btn:hover { background-color: var(--color-background-alt); }

@@ -6,6 +6,53 @@ feed the Capital One case study (and so future sessions don't re-litigate settle
 
 ---
 
+## 2026-08-18 — Parsimony adoption complete: spacing, type, radius, and the shadow scale that stayed (#61 steps 3–5)
+
+**What.** The last three families. Spacing (157 sites) → `--spacing-*`. Type → `--primitive-font-*`.
+`--radius-pill` → `--radius-full`. Issue #61 closed. `variables.css` finished at **25 tokens**, from 160.
+
+**Why / alternatives — three things did not migrate, and that is the point.**
+
+*Shadow.* The brand's `--shadow-raised|overlay|dialog` are neutral-black at different blur and spread;
+this app's `--shadow-sm|md|xl` are navy-tinted `rgba(15, 26, 46, …)` so they sit correctly on the Arctic
+surfaces. They also belong to the same tinted family as `--shadow-menu`, `--shadow-footer-up` and
+`--shadow-brand-tint`, which the brand does not name at all. Adopting three of the nine would fracture
+the language *and* repaint every shadowed surface. The real fix is a navy-tinted DE shadow scale
+upstream — a design-system change, not a rename — so the three stay local with the comparison written
+next to them.
+
+*`--letter-spacing-tight`* (-0.015em, 5 sites) sits between `--letter-spacing-display` (-0.01em) and
+`--letter-spacing-title` (-0.025em). Snapping to either retracks the page title, tab labels and table
+headers.
+
+*`--space-6`* (6px) has no rung: the brand scale runs 4px → 8px.
+
+In each case the nearest name was available and would have looked tidier in the diff. #61's own warning
+was that a silent value change in a live product is the worst outcome, so the rule held: migrate on
+resolved value, never on name similarity.
+
+**The unexpected finding: most of the type ladder was already dead.** 15 of 22 local type tokens had
+zero usages — they died the moment step 1 landed, because the `--font-title/body/label/code`
+compositions came from the brand and resolve `--primitive-*` internally. Two of those were the mappings
+flagged as risky in the issue (`--font-size-xl`, which has no brand primitive at all, and
+`--letter-spacing-wide`). Checking usage turned both into deletions rather than decisions. Three
+app-local composite shadows (`--shadow-card`, `--shadow-inset-trough`, `--shadow-segment-raised`) were
+likewise orphaned by earlier component work — the segmented control now uses `--shadow-sm` — and were
+removed. Verified first that nothing had replaced them with hardcoded values; nothing had.
+
+**Method, in hindsight.** Two different checks did the work at different steps, and neither alone was
+enough: resolving *values* through their `var()` chains caught the motion easing crossover
+(`--easing-in` → `--motion-easing-exit`, because the brand names easings by purpose) and the shadow
+mismatch; checking *usage* dissolved the two type mappings that looked like hard decisions. Worth doing
+both before any future family migration.
+
+**Status.** Shipped across #62, #64, #65, #66, #67. `sync-tokens`: zero drift, zero shadowed,
+25 local-only, 1 intentional override. All 3 visual baselines unchanged throughout — no baseline was
+regenerated at any step, which was the standing constraint and the main evidence that the migration was
+value-preserving.
+
+---
+
 ## 2026-08-18 — Motion moves to the brand vocabulary, restoring reduced-motion (#61 step 2)
 
 **What.** All 221 `--duration-*` / `--easing-*` call sites in `src/index.css` move to the brand's

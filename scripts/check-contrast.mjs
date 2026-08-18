@@ -123,11 +123,10 @@ const LOGIC_CHIP_BG = resolveColorMix(`color-mix(in srgb, ${tok('--color-foregro
 const PAIRINGS = [
   // Page header
   { text: '--color-foreground-default',   bg: WHITE,        label: 'Page title' },
-  { text: '--color-foreground-secondary', bg: WHITE,        label: 'Buttons / menu items / empty state title' },
   { text: '--color-foreground-muted',     bg: WHITE,        label: 'Page subtitle / amount prefix / empty state subtitle' },
   { text: '--color-foreground-muted',     bg: BG_ALT,       label: 'Table col headers / tab inactive / rule count badge' },
   // Row states
-  { text: '--color-foreground-alt',       bg: WHITE,        label: 'Row numbers (default)' },
+  { text: '--color-foreground-alt',       bg: WHITE,        label: 'Row numbers / buttons / menu items / empty state title' },
   { text: '--color-foreground-alt',       bg: ROW_HOVER,    label: 'Row numbers (hover row)' },
   { text: '--color-foreground-alt',       bg: ROW_SELECTED, label: 'Row numbers (selected row)' },
   // Interactive / action
@@ -150,7 +149,7 @@ const PAIRINGS = [
   // Onboarding flow
   { text: '--color-foreground-action',    bg: WHITE,        label: 'Onboarding: nav + CTA links' },
   { text: '--color-foreground-default',   bg: WHITE,        label: 'Onboarding: element labels' },
-  { text: '--color-foreground-secondary', bg: '--color-background-alt', label: 'Onboarding: category headers' },
+  { text: '--color-foreground-alt',       bg: '--color-background-alt', label: 'Onboarding: category headers' },
   // Nested rules — parent affordances (both now use fg-muted, no chrome)
   { text: '--color-foreground-muted',     bg: WHITE,                    label: 'Nested: IF prefix + sub-count' },
   // Nested rules — child rows (bg-alt is the child row background)

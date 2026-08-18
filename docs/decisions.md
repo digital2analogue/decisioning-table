@@ -38,6 +38,21 @@ in both, same value — dead weight to delete), and local-only tokens. This clos
 issue names: the old script compared only tokens present in both files, so it reported "1 drifted" for a
 file that was structurally 40% divergent.
 
+**The one colour that stayed.** #60 merged into `main` while this was in review, and it is the reason
+the no-colour rule needed an escape hatch rather than an exception. That change folded
+`foreground.secondary` into `foreground.alt` and kept the navy `#3A4663` — matching parsimony#217,
+which is merged upstream but **not yet published**. The installed `@0.7.0` still resolves
+`--color-foreground-alt` to gray-700 `#4A4A5A`. Deleting the local declaration, as this PR does for
+every other colour, would therefore have silently repainted all 15 usages #60 had just migrated —
+turning a value-preserving migration into a repaint, which is precisely the failure this PR exists to
+make impossible.
+
+So `variables.css` keeps exactly one colour, in a labelled *intentional overrides* block, and
+`sync-tokens` grew a matching `INTENTIONAL_OVERRIDES` allowlist. The alternative — suppressing drift
+detection for that token — is how a temporary override becomes permanent. Instead the allowlist
+requires a reason string naming what retires it, and the script reports the override as **stale** the
+moment upstream catches up, so the next person is told to delete it rather than left to notice.
+
 **Status.** Shipped. Remaining #61 steps, in order: motion (also restores the `prefers-reduced-motion`
 guarantee — the brand zeroes `--motion-duration-*` under that media query and local `--duration-*` is
 not reached by it), spacing, type, shadow/radius.

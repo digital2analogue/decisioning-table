@@ -9,9 +9,27 @@
  *
  * HARD RULE: never define a colour here. Colour lives in brand-tokens →
  * parsimony → the imported decision-engine.css. If you need a new colour token,
- * add it upstream and publish.
+ * add it upstream and publish. The one exception is the intentional-override
+ * block below, which is temporary by construction and listed in sync-tokens.
  */
 :root {
+  /* ── Intentional overrides — this app is AHEAD of the published package ──
+     Colour that deliberately differs from the imported brand build because the
+     upstream fix is merged but not yet published. Each entry names the upstream
+     change that retires it, and is allowlisted in scripts/sync-tokens.mjs so the
+     drift check stays meaningful rather than being switched off.
+
+     DELETE the moment the package catches up — a stale override here is exactly
+     the failure mode issue #61 exists to end. */
+
+  /* parsimony#217 folded foreground.secondary into foreground.alt and kept the
+     navy #3A4663 (chosen for its perceptual darkness; the value this app already
+     rendered in all 15 usages). The published @0.7.0 still resolves
+     --color-foreground-alt to gray-700 #4A4A5A. Adopted here by #60; without
+     this line, merging the brand import would silently repaint all 15 of them.
+     Retire when the parsimony release carrying #217 lands. */
+  --color-foreground-alt: #3A4663;
+
   /* ── App-local: layout, stacking, sizing ─────────────────────────────────
      Concerns the design system deliberately has no opinion on. These stay. */
 

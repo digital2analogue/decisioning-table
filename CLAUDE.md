@@ -56,6 +56,21 @@ it up from the import.
 dead weight that goes stale silently; a local copy at a different value is drift that
 wins at runtime. `sync-tokens` reports both.
 
+### The one exception: intentional overrides
+
+When an upstream fix is *merged but not yet published*, this app can legitimately run
+ahead of the package. That is the only sanctioned reason for a colour in `variables.css`,
+and it comes with obligations:
+
+- Put it in the **intentional-overrides block** at the top of `variables.css`, with a
+  comment naming the upstream change that retires it.
+- Add a matching entry to `INTENTIONAL_OVERRIDES` in `scripts/sync-tokens.mjs`.
+- **Delete both the moment the package catches up.** `sync-tokens` watches for this: once
+  upstream matches, the override is reported as *stale* rather than quietly accepted.
+
+This exists so the drift check stays meaningful. The alternative — switching drift
+detection off for a token — is what lets a temporary override become permanent.
+
 ### `npm run sync-tokens`
 
 Compares the imported brand build against the `variables.css` overlay and reports:
@@ -64,18 +79,21 @@ Compares the imported brand build against the `variables.css` overlay and report
 2. **shadowed** — declared in both at the same value. Delete the local copy.
 3. **local-only** — not named by the brand. Layout/stacking/app shadows stay by design;
    the parallel vocabularies are migration debt tracked in #61.
+4. **intentional / stale** — the allowlisted overrides above. Intentional ones don't fail
+   the check; stale ones tell you to delete the override.
 
 Pass `--verbose` to also list brand semantic tokens this app doesn't shadow.
 
 **Status as of `@digital2analogue2/parsimony@0.7.0`:** zero drift, zero shadowed,
-**63 local-only**. Of those, 22 are genuinely app-local; the remaining 41 are the
-`--space-*` / `--duration-*` / `--easing-*` / `--font-*` / `--letter-spacing-*` /
-`--shadow-sm|md|xl` / `--radius-pill` families awaiting the #61 migration steps.
+**63 local-only**, **1 intentional override**. Of the 63, 22 are genuinely app-local; the
+remaining 41 are the `--space-*` / `--duration-*` / `--easing-*` / `--font-*` /
+`--letter-spacing-*` / `--shadow-sm|md|xl` / `--radius-pill` families awaiting the #61
+migration steps. The override is `--color-foreground-alt` (#60 / parsimony#217).
 
-Two known dangling references, both pre-dating the parsimony adoption:
-`--color-border-subtle` (used in `.dt-conditional-dropdown-item`, defined nowhere) and
-`--font-size-2xs` (referenced in a comment; the brand now has
-`--primitive-font-size-2xs: 0.625rem`, which is the fix).
+One known dangling reference pre-dating the parsimony adoption: `--font-size-2xs`,
+referenced in a comment next to a hardcoded `10px`; the brand now has
+`--primitive-font-size-2xs: 0.625rem`, which is the fix. (The other one,
+`--color-border-subtle`, is fixed in #63.)
 
 ## Contrast Gate
 

@@ -106,7 +106,7 @@ select option { background-color: var(--color-background-elevated); color: var(-
   .dt-meta-link:focus-visible { outline: none; box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-background-action) 18%, transparent); }
 
   /* Buttons */
-  .dt-test-model-btn { display: inline-flex; align-items: center; gap: var(--space-xs); font: var(--font-label-medium); letter-spacing: var(--letter-spacing-label); color: var(--color-foreground-secondary); background: none; border: 1px solid var(--color-border-default); border-radius: var(--radius-md); padding: var(--space-xs) var(--space-sm); cursor: pointer; transition: color var(--duration-fast) var(--easing-default), border-color var(--duration-fast) var(--easing-default), background-color var(--duration-fast) var(--easing-default), box-shadow var(--duration-fast) var(--easing-default); }
+  .dt-test-model-btn { display: inline-flex; align-items: center; gap: var(--space-xs); font: var(--font-label-medium); letter-spacing: var(--letter-spacing-label); color: var(--color-foreground-alt); background: none; border: 1px solid var(--color-border-default); border-radius: var(--radius-md); padding: var(--space-xs) var(--space-sm); cursor: pointer; transition: color var(--duration-fast) var(--easing-default), border-color var(--duration-fast) var(--easing-default), background-color var(--duration-fast) var(--easing-default), box-shadow var(--duration-fast) var(--easing-default); }
   .dt-test-model-btn:hover { color: var(--color-foreground-default); border-color: var(--color-foreground-muted); background-color: var(--color-background-alt); }
   .dt-test-model-btn:focus-visible { outline: none; color: var(--color-foreground-default); border-color: var(--color-border-focus); box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-background-action) 18%, transparent); }
 
@@ -150,7 +150,7 @@ select option { background-color: var(--color-background-elevated); color: var(-
   .dt-split-btn-chevron:hover { background-color: var(--color-background-action-hover); border-color: var(--color-background-action-hover); }
   .dt-split-btn-chevron:focus-visible { outline: none; box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-background-action) 25%, transparent); }
   .dt-split-btn-menu { position: absolute; right: 0; top: calc(100% + 4px); z-index: var(--z-menu-local); background-color: var(--color-background-elevated); border: 1px solid var(--color-border-alt); border-radius: var(--radius-md); box-shadow: var(--shadow-menu); padding: var(--space-xs) 0; min-width: 168px; }
-  .dt-split-btn-menu-item { display: flex; align-items: center; gap: var(--space-sm); width: 100%; font: var(--font-label-medium); letter-spacing: var(--letter-spacing-label); color: var(--color-foreground-secondary); background: none; border: none; cursor: pointer; padding: var(--space-6) var(--space-sm); transition: background-color var(--duration-fast) var(--easing-default), color var(--duration-fast) var(--easing-default); text-align: left; white-space: nowrap; }
+  .dt-split-btn-menu-item { display: flex; align-items: center; gap: var(--space-sm); width: 100%; font: var(--font-label-medium); letter-spacing: var(--letter-spacing-label); color: var(--color-foreground-alt); background: none; border: none; cursor: pointer; padding: var(--space-6) var(--space-sm); transition: background-color var(--duration-fast) var(--easing-default), color var(--duration-fast) var(--easing-default); text-align: left; white-space: nowrap; }
   .dt-split-btn-menu-item:hover { background-color: var(--color-background-alt); color: var(--color-foreground-default); }
   .dt-split-btn-menu-item:focus-visible { outline: none; background-color: var(--color-background-alt); color: var(--color-foreground-default); box-shadow: inset 0 0 0 2px var(--color-border-focus); }
   .dt-split-btn-menu-divider { border: none; border-top: 1px solid var(--color-border-muted); margin: var(--space-xs) 0; }
@@ -255,7 +255,7 @@ select option { background-color: var(--color-background-elevated); color: var(-
   .dt-empty-cell { font: var(--font-body-medium); color: var(--color-foreground-muted); }
   .dt-empty-state { display: flex; flex-direction: column; align-items: center; gap: var(--space-xs); padding: var(--space-lg) 0; }
   .dt-empty-icon { color: var(--color-foreground-muted); margin-bottom: var(--space-sm); opacity: 0.5; }
-  .dt-empty-title { font: var(--font-label-medium); font-weight: var(--font-weight-semibold); color: var(--color-foreground-secondary); margin: 0; }
+  .dt-empty-title { font: var(--font-label-medium); font-weight: var(--font-weight-semibold); color: var(--color-foreground-alt); margin: 0; }
   .dt-empty-subtitle { font: var(--font-body-small); color: var(--color-foreground-muted); margin: 0; }
 
   /* Toolbar */
@@ -285,7 +285,7 @@ select option { background-color: var(--color-background-elevated); color: var(-
   .dt-tab-edit-btn { display: inline-flex; align-items: center; color: var(--color-foreground-muted); background: none; border: none; cursor: pointer; padding: 0; line-height: 0; border-radius: var(--radius-sm); opacity: 0; transition: color var(--duration-fast) var(--easing-default), opacity var(--duration-fast) var(--easing-default), box-shadow var(--duration-fast) var(--easing-default); }
   .dt-tab-item:hover .dt-tab-edit-btn,
   .dt-tab-edit-btn.dt-tab-edit-btn-open { opacity: 1; }
-  .dt-tab-edit-btn:hover { color: var(--color-foreground-secondary); }
+  .dt-tab-edit-btn:hover { color: var(--color-foreground-alt); }
   .dt-tab-edit-btn:focus-visible { outline: none; opacity: 1; color: var(--color-foreground-action); box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-background-action) 18%, transparent); }
   .dt-tab-input { font: var(--font-label-medium); font-weight: var(--font-weight-semibold); letter-spacing: var(--letter-spacing-label); color: var(--color-foreground-action); background: transparent; border: none; outline: none; width: 10ch; min-width: 4ch; padding: 0; }
   .dt-confirm-btn-sm { width: 22px; height: 22px; }
@@ -373,7 +373,7 @@ select option { background-color: var(--color-background-elevated); color: var(-
   }
   /* Inactive segment uses --color-foreground-inactive (WCAG-exempt; reads as recessed against the active states; not in contrast manifest by design). */
   .dt-outcome-seg-btn { position: relative; z-index: 1; display: inline-flex; align-items: center; justify-content: center; min-width: 84px; gap: var(--space-2xs); font: var(--font-label-small); letter-spacing: var(--letter-spacing-label); padding: 3px var(--space-sm); border: 1px solid transparent; background: transparent; border-radius: var(--radius-sm); cursor: pointer; color: var(--color-foreground-inactive); transition: color var(--duration-normal) var(--easing-default); }
-  .dt-outcome-seg-btn:hover:not(.dt-outcome-seg-approve):not(.dt-outcome-seg-deny) { color: var(--color-foreground-secondary); }
+  .dt-outcome-seg-btn:hover:not(.dt-outcome-seg-approve):not(.dt-outcome-seg-deny) { color: var(--color-foreground-alt); }
   .dt-outcome-seg-btn:focus-visible { outline: none; box-shadow: 0 0 0 2px var(--color-border-focus); }
   .dt-outcome-seg-icon { flex-shrink: 0; transition: color var(--duration-normal) var(--easing-default); }
   /* Outcome cell — pending hint shown when prerequisites aren't filled, in place of the toggle */
@@ -791,11 +791,11 @@ select option { background-color: var(--color-background-elevated); color: var(-
   .ob-section:last-of-type { border-bottom: none; }
   .ob-section--dimmed { opacity: 0.42; pointer-events: none; }
   .ob-step-label-row { display: flex; align-items: center; gap: var(--space-sm); margin: 0 0 var(--space-sm); }
-  .ob-step-label { font: var(--font-label-small); letter-spacing: var(--letter-spacing-all-caps); text-transform: uppercase; color: var(--color-foreground-secondary); margin: 0; }
+  .ob-step-label { font: var(--font-label-small); letter-spacing: var(--letter-spacing-all-caps); text-transform: uppercase; color: var(--color-foreground-alt); margin: 0; }
   .ob-step-check { display: inline-flex; align-items: center; justify-content: center; width: 18px; height: 18px; background-color: var(--color-feedback-success); color: var(--color-foreground-on-success); border-radius: 50%; flex-shrink: 0; }
   .ob-step-title { font: var(--font-title-small); letter-spacing: var(--letter-spacing-tight); color: var(--color-foreground-default); margin: 0 0 var(--space-sm); }
-  .ob-step-description { font: var(--font-body-medium); color: var(--color-foreground-secondary); margin: 0 0 var(--space-lg); line-height: var(--font-line-height-relaxed); }
-  .ob-step-context { font: var(--font-body-medium); color: var(--color-foreground-secondary); margin: 0 0 var(--space-lg); }
+  .ob-step-description { font: var(--font-body-medium); color: var(--color-foreground-alt); margin: 0 0 var(--space-lg); line-height: var(--font-line-height-relaxed); }
+  .ob-step-context { font: var(--font-body-medium); color: var(--color-foreground-alt); margin: 0 0 var(--space-lg); }
   .ob-step-context strong { color: var(--color-foreground-default); font-weight: var(--font-weight-semibold); }
 
   /* Outcome radio cards */
@@ -807,7 +807,7 @@ select option { background-color: var(--color-background-elevated); color: var(-
   .ob-radio { width: 16px; height: 16px; accent-color: var(--color-foreground-action); flex-shrink: 0; margin-top: 2px; cursor: pointer; }
   .ob-outcome-text { display: flex; flex-direction: column; gap: var(--space-xs); }
   .ob-outcome-label { font: var(--font-label-medium); letter-spacing: var(--letter-spacing-label); color: var(--color-foreground-default); }
-  .ob-outcome-desc { font: var(--font-body-medium); color: var(--color-foreground-secondary); }
+  .ob-outcome-desc { font: var(--font-body-medium); color: var(--color-foreground-alt); }
 
   /* Form fields */
   .ob-field { display: flex; flex-direction: column; gap: var(--space-xs); margin-bottom: var(--space-md); }
@@ -832,12 +832,12 @@ select option { background-color: var(--color-background-elevated); color: var(-
   .ob-search-input { flex: 1; font: var(--font-body-medium); color: var(--color-foreground-default); background: transparent; border: none; outline: none; }
   .ob-search-input::placeholder { color: var(--color-foreground-muted); }
   .ob-search-clear { display: inline-flex; align-items: center; justify-content: center; width: 20px; height: 20px; color: var(--color-foreground-muted); background: none; border: none; cursor: pointer; padding: 0; border-radius: var(--radius-sm); transition: color var(--duration-fast) var(--easing-default); }
-  .ob-search-clear:hover { color: var(--color-foreground-secondary); }
+  .ob-search-clear:hover { color: var(--color-foreground-alt); }
 
   /* Category groups */
   .ob-category { display: flex; flex-direction: column; }
   .ob-category-checkbox { width: 13px; height: 13px; accent-color: var(--color-foreground-action); flex-shrink: 0; cursor: pointer; margin: 0; }
-  .ob-category-label { font: var(--font-label-small); letter-spacing: var(--letter-spacing-all-caps); text-transform: uppercase; color: var(--color-foreground-secondary); padding: var(--space-xs) var(--space-md); background-color: var(--color-background-alt); border-bottom: 1px solid var(--color-border-alt); display: flex; align-items: center; gap: var(--space-sm); }
+  .ob-category-label { font: var(--font-label-small); letter-spacing: var(--letter-spacing-all-caps); text-transform: uppercase; color: var(--color-foreground-alt); padding: var(--space-xs) var(--space-md); background-color: var(--color-background-alt); border-bottom: 1px solid var(--color-border-alt); display: flex; align-items: center; gap: var(--space-sm); }
   .ob-element-row { display: flex; align-items: center; gap: var(--space-sm); padding: var(--space-sm) var(--space-md) var(--space-sm) var(--space-xl); cursor: pointer; transition: background-color var(--duration-fast) var(--easing-default); border-left: 2px solid transparent; }
   .ob-element-row:hover { background-color: var(--color-background-alt); }
   .ob-element-row--focused { background-color: var(--color-accent-subtle); border-left-color: var(--color-foreground-action); }
@@ -848,7 +848,7 @@ select option { background-color: var(--color-background-elevated); color: var(-
   /* Data type badges */
   .ob-type-badge { font: var(--font-label-small); letter-spacing: var(--letter-spacing-label); border-radius: var(--radius-pill); padding: 1px var(--space-sm); border: 1px solid transparent; white-space: nowrap; flex-shrink: 0; }
   .ob-type-badge--number { background-color: var(--color-accent-subtle); color: var(--color-foreground-action); border-color: var(--color-accent-subtle-border); }
-  .ob-type-badge--string { background-color: var(--color-background-alt); color: var(--color-foreground-secondary); border-color: var(--color-border-alt); }
+  .ob-type-badge--string { background-color: var(--color-background-alt); color: var(--color-foreground-alt); border-color: var(--color-border-alt); }
   .ob-type-badge--boolean { background-color: color-mix(in srgb, var(--color-background-elevated) 88%, var(--color-feedback-success) 12%); color: var(--color-feedback-success); border-color: color-mix(in srgb, var(--color-background-elevated) 55%, var(--color-feedback-success) 45%); }
   .ob-type-badge--enum { background-color: var(--color-background-accent-violet); color: var(--color-foreground-accent-purple); border-color: color-mix(in srgb, var(--color-background-accent-violet) 40%, var(--color-foreground-accent-purple) 60%); }
 
@@ -857,10 +857,10 @@ select option { background-color: var(--color-background-elevated); color: var(-
   .ob-preview-content { display: flex; flex-direction: column; gap: var(--space-md); padding: var(--space-md); height: 100%; }
   .ob-preview-header { display: flex; align-items: center; gap: var(--space-sm); flex-wrap: wrap; }
   .ob-preview-label { font: var(--font-label-medium); letter-spacing: var(--letter-spacing-label); color: var(--color-foreground-default); font-family: var(--font-family-mono); }
-  .ob-preview-description { font: var(--font-body-medium); color: var(--color-foreground-secondary); line-height: var(--font-line-height-relaxed); margin: 0; }
+  .ob-preview-description { font: var(--font-body-medium); color: var(--color-foreground-alt); line-height: var(--font-line-height-relaxed); margin: 0; }
   .ob-preview-meta { display: flex; flex-direction: column; gap: var(--space-sm); background-color: var(--color-background-elevated); border: 1px solid var(--color-border-alt); border-radius: var(--radius-md); padding: var(--space-sm) var(--space-md); }
   .ob-preview-meta-row { display: flex; justify-content: space-between; align-items: baseline; gap: var(--space-sm); }
-  .ob-preview-meta-key { font: var(--font-label-small); letter-spacing: var(--letter-spacing-label); color: var(--color-foreground-secondary); white-space: nowrap; }
+  .ob-preview-meta-key { font: var(--font-label-small); letter-spacing: var(--letter-spacing-label); color: var(--color-foreground-alt); white-space: nowrap; }
   .ob-preview-meta-val { font: var(--font-body-small); color: var(--color-foreground-default); text-align: right; }
   .ob-preview-path { font-family: var(--font-family-mono); font-size: var(--font-size-xs); color: var(--color-foreground-alt); word-break: break-all; text-align: right; }
   .ob-preview-empty { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: var(--space-sm); height: 100%; min-height: 200px; padding: var(--space-md); }
@@ -881,7 +881,7 @@ select option { background-color: var(--color-background-elevated); color: var(-
   /* Sticky footer */
   .ob-footer { flex-shrink: 0; background-color: var(--color-background-elevated); border-top: 1px solid var(--color-border-alt); box-shadow: var(--shadow-footer-up); }
   .ob-footer-inner { display: flex; align-items: center; justify-content: flex-end; padding: var(--space-md) var(--space-lg); }
-  .ob-footer-progress { font: var(--font-body-medium); color: var(--color-foreground-secondary); }
+  .ob-footer-progress { font: var(--font-body-medium); color: var(--color-foreground-alt); }
   .ob-next-btn { font: var(--font-label-medium); letter-spacing: var(--letter-spacing-label); color: var(--color-foreground-on-action); background-color: var(--color-background-action); border: 1px solid var(--color-background-action); border-radius: var(--radius-md); padding: var(--space-sm) var(--space-xl); min-width: 140px; cursor: pointer; transition: background-color var(--duration-fast) var(--easing-default), box-shadow var(--duration-fast) var(--easing-default); box-shadow: var(--shadow-sm); }
   .ob-next-btn:hover { background-color: var(--color-background-action-hover); box-shadow: var(--shadow-md); }
   .ob-next-btn:focus-visible { outline: 2px solid var(--color-foreground-action); outline-offset: 2px; }

@@ -119,10 +119,31 @@ const missingLocal = VERBOSE
       .map(key => ({ key, value: brandFull[key] }))
   : []
 
+// Overrides where this app is deliberately AHEAD of the published package: the
+// upstream change is merged but not released, so variables.css carries the new
+// value on purpose. Each entry must name what retires it. These are reported
+// separately and do NOT fail the check — but they are not silenced either, and
+// an entry whose value has since matched upstream is reported as stale so it
+// gets deleted rather than lingering.
+//
+// This is the ONLY sanctioned reason for a colour to appear in variables.css.
+const INTENTIONAL_OVERRIDES = {
+  '--color-foreground-alt':
+    'parsimony#217 folded foreground.secondary into foreground.alt keeping navy #3A4663; @0.7.0 still ships gray-700. Adopted by #60. Retire when the release carrying #217 publishes.',
+}
+
 const drifted = []
 const shadowedInSync = []
+const intentional = []
+const staleOverrides = []
 
 for (const key of shared) {
+  if (key in INTENTIONAL_OVERRIDES) {
+    const entry = { key, brand: brandFull[key], local: localFull[key], why: INTENTIONAL_OVERRIDES[key] }
+    if (brandFull[key] === localFull[key]) staleOverrides.push(entry)
+    else intentional.push(entry)
+    continue
+  }
   if (brandFull[key] !== localFull[key]) {
     drifted.push({ key, brand: brandFull[key], local: localFull[key] })
   } else {
@@ -134,9 +155,30 @@ for (const key of shared) {
 
 console.log('\n  Token sync report\n')
 
-if (drifted.length === 0 && shadowedInSync.length === 0 && localOnly.length === 0) {
+if (drifted.length === 0 && shadowedInSync.length === 0 && localOnly.length === 0 &&
+    intentional.length === 0 && staleOverrides.length === 0) {
   console.log('  ✅ variables.css is empty of brand material — everything comes from the package.\n')
   process.exit(0)
+}
+
+if (staleOverrides.length) {
+  console.log(`  ⚠️  ${staleOverrides.length} intentional override(s) the package has now caught up with:\n`)
+  for (const { key, value, why } of staleOverrides) {
+    console.log(`    ${key}: ${value ?? brandFull[key]}`)
+    console.log(`      ${why}`)
+  }
+  console.log('  Action: the upstream value now matches. Delete the override from\n  variables.css and its entry from INTENTIONAL_OVERRIDES in this script.\n')
+}
+
+if (intentional.length) {
+  console.log(`  ⏳ ${intentional.length} intentional override(s) — this app is ahead of the package:\n`)
+  for (const { key, brand, local, why } of intentional) {
+    console.log(`    ${key}`)
+    console.log(`      ${PKG} → ${brand}`)
+    console.log(`      variables.css → ${local}  (kept on purpose)`)
+    console.log(`      ${why}`)
+    console.log()
+  }
 }
 
 if (drifted.length) {

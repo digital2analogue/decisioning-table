@@ -12,15 +12,24 @@ import path from 'path'
 import { fileURLToPath } from 'url'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
-const CSS_FILE = path.join(__dirname, '../src/tokens/variables.css')
+const PKG       = '@digital2analogue2/parsimony'
+// Mirrors the runtime cascade in src/index.css: brand tokens first, app-local
+// overlay second. Colour lives entirely in the brand build now (issue #61).
+const BRAND_CSS = path.join(__dirname, '..', 'node_modules', PKG, 'css', 'decision-engine.css')
+const LOCAL_CSS = path.join(__dirname, '../src/tokens/variables.css')
 
 // ─── Token resolution ──────────────────────────────────────────────────────────
 
 function parseTokens(css) {
   const tokens = {}
+  // Strip comment blocks — the brand build annotates every token inline — and
+  // drop the trailing @media (prefers-reduced-motion) override, which would
+  // otherwise shadow the base --motion-duration-* values.
+  const rm = css.indexOf('@media (prefers-reduced-motion')
+  const stripped = (rm === -1 ? css : css.slice(0, rm)).replace(/\/\*[\s\S]*?\*\//g, '')
   const re = /--([a-zA-Z0-9-]+)\s*:\s*([^;]+);/g
   let m
-  while ((m = re.exec(css)) !== null) {
+  while ((m = re.exec(stripped)) !== null) {
     tokens[`--${m[1]}`] = m[2].trim()
   }
   return tokens
@@ -91,8 +100,15 @@ function contrastRatio(a, b) {
 
 // ─── Load tokens ───────────────────────────────────────────────────────────────
 
-const css = fs.readFileSync(CSS_FILE, 'utf8')
-const tokens = parseTokens(css)
+if (!fs.existsSync(BRAND_CSS)) {
+  console.error(`\n  ❌ ${PKG} is not installed (no decision-engine.css found).\n     Run: npm install\n`)
+  process.exit(1)
+}
+
+const tokens = {
+  ...parseTokens(fs.readFileSync(BRAND_CSS, 'utf8')),
+  ...parseTokens(fs.readFileSync(LOCAL_CSS, 'utf8')),
+}
 const tok = name => resolve(name, tokens)
 
 // Frequently used resolved values

@@ -1,22 +1,26 @@
 /**
  * scripts/sync-tokens.mjs
  *
- * Compares the published decision-engine brand CSS against src/tokens/variables.css
- * and reports any drift in the --color-* namespace.
+ * Compares the published decision-engine brand CSS (imported at runtime by
+ * src/index.css) against the src/tokens/variables.css overlay.
  *
- * The brand CSS now comes from the installed npm package
- * (@digital2analogue2/parsimony → decision-engine.css) instead of a sibling
- * ../brand-tokens checkout, so this runs without the design-system repo on disk.
+ * Since #61, variables.css is an override layer rather than a hand-copy of the
+ * brand, so this reports three things:
+ *
+ *   1. drift        — a token declared in both, with different resolved values.
+ *                     Always a bug: the local copy silently wins at runtime.
+ *   2. shadowed     — a token declared in both at the same value. Dead weight;
+ *                     delete it and let the imported brand build supply it.
+ *   3. local-only   — a token the brand does not name. Layout, stacking and
+ *                     app-specific shadows live here by design; the parallel
+ *                     vocabularies are migration debt tracked in #61.
+ *
+ * Pass --verbose to also list brand semantic tokens this app does not shadow.
  *
  * Usage:
  *   npm run sync-tokens
  *
- * This script does NOT auto-overwrite. It shows you what's drifted so you can
- * decide whether to update the brand tokens upstream (publish a new parsimony
- * version) or variables.css. The only expected drift is the documented
- * light-mode override set — see CLAUDE.md "Known intentional drifts".
- *
- * Exits 1 if drift is found, 0 if everything matches.
+ * This script does NOT auto-overwrite. Exits 1 if drift is found, 0 otherwise.
  */
 
 import fs from 'fs'
@@ -86,35 +90,43 @@ function fullyResolve(tokens) {
   return out
 }
 
-const brandRaw  = parseTokens(fs.readFileSync(BRAND_CSS, 'utf8'))
+const brandCssRaw = fs.readFileSync(BRAND_CSS, 'utf8')
+// Drop the trailing @media (prefers-reduced-motion) override — it deliberately
+// re-declares --motion-duration-* as 0ms and would shadow the base values.
+const rmIdx     = brandCssRaw.indexOf('@media (prefers-reduced-motion')
+const brandRaw  = parseTokens(rmIdx === -1 ? brandCssRaw : brandCssRaw.slice(0, rmIdx))
 const localRaw  = parseTokens(fs.readFileSync(LOCAL_CSS, 'utf8'))
 
-// Merge brand primitives + semantics so var() chains can fully resolve
+// variables.css is an overlay on top of the imported brand build (see
+// src/index.css), so resolve local var() chains against the merged cascade.
 const brandFull = fullyResolve({ ...brandRaw })
-const localFull = fullyResolve({ ...localRaw })
+const localFull = fullyResolve({ ...brandRaw, ...localRaw })
 
-// Only compare --color-* tokens (ignore primitives, spacing, typography, etc.)
-const brandColors = Object.fromEntries(Object.entries(brandFull).filter(([k]) => k.match(/^--color-/)))
-const localColors = Object.fromEntries(Object.entries(localFull).filter(([k]) => k.match(/^--color-/)))
+// Compare every token variables.css still declares, not just --color-*. Since
+// #61 the local file is an override layer: anything it re-declares that the
+// brand also names is a shadow, and a shadow with a different value is drift.
+const shared    = Object.keys(localRaw).filter(k => k in brandRaw).sort()
+const localOnly = Object.keys(localRaw).filter(k => !(k in brandRaw)).sort()
 
-const allKeys = new Set([...Object.keys(brandColors), ...Object.keys(localColors)])
+// Informational: brand tokens this app does not (yet) shadow. Now that colour
+// comes from the package this is most of the brand, so only report the
+// non-primitive semantic layer, and only when asked.
+const VERBOSE = process.argv.includes('--verbose')
+const missingLocal = VERBOSE
+  ? Object.keys(brandRaw)
+      .filter(k => !k.startsWith('--primitive-') && !(k in localRaw))
+      .sort()
+      .map(key => ({ key, value: brandFull[key] }))
+  : []
 
-const drifted    = []
-const missingLocal = []
-const localOnly  = []
+const drifted = []
+const shadowedInSync = []
 
-for (const key of [...allKeys].sort()) {
-  const inBrand = key in brandColors
-  const inLocal = key in localColors
-
-  if (inBrand && inLocal) {
-    if (brandColors[key] !== localColors[key]) {
-      drifted.push({ key, brand: brandColors[key], local: localColors[key] })
-    }
-  } else if (inBrand) {
-    missingLocal.push({ key, value: brandColors[key] })
+for (const key of shared) {
+  if (brandFull[key] !== localFull[key]) {
+    drifted.push({ key, brand: brandFull[key], local: localFull[key] })
   } else {
-    localOnly.push({ key, value: localColors[key] })
+    shadowedInSync.push({ key, value: brandFull[key] })
   }
 }
 
@@ -122,8 +134,8 @@ for (const key of [...allKeys].sort()) {
 
 console.log('\n  Token sync report\n')
 
-if (drifted.length === 0 && missingLocal.length === 0 && localOnly.length === 0) {
-  console.log('  ✅ Perfect sync — variables.css matches the published brand exactly.\n')
+if (drifted.length === 0 && shadowedInSync.length === 0 && localOnly.length === 0) {
+  console.log('  ✅ variables.css is empty of brand material — everything comes from the package.\n')
   process.exit(0)
 }
 
@@ -138,20 +150,28 @@ if (drifted.length) {
   console.log('  Action: update the brand tokens upstream and publish a new parsimony version\n  (if variables.css is correct), or vice versa.\n')
 }
 
+if (shadowedInSync.length) {
+  console.log(`  ℹ️  ${shadowedInSync.length} token(s) re-declared locally at the brand's own value:\n`)
+  for (const { key, value } of shadowedInSync) {
+    console.log(`    ${key}: ${value}`)
+  }
+  console.log('  Action: delete these from variables.css — the imported brand build already\n  supplies them, and a copy here can silently go stale.\n')
+}
+
+if (localOnly.length) {
+  console.log(`  ℹ️  ${localOnly.length} local-only token(s) in variables.css, not named by the brand:\n`)
+  for (const key of localOnly) {
+    console.log(`    ${key}: ${localFull[key]}`)
+  }
+  console.log('  Layout, stacking and app-specific shadows stay here by design. Parallel\n  vocabularies (--space-*, --duration-*, --easing-*, --font-*, --shadow-sm/md/xl,\n  --radius-pill) are migration debt — see issue #61.\n')
+}
+
 if (missingLocal.length) {
-  console.log(`  ℹ️  ${missingLocal.length} token(s) exist in the brand package but not in variables.css:\n`)
+  console.log(`  ℹ️  ${missingLocal.length} brand semantic token(s) not shadowed locally (informational):\n`)
   for (const { key, value } of missingLocal) {
     console.log(`    ${key}: ${value}`)
   }
   console.log()
-}
-
-if (localOnly.length) {
-  console.log(`  ℹ️  ${localOnly.length} local-only token(s) in variables.css not yet in the brand package:\n`)
-  for (const { key, value } of localOnly) {
-    console.log(`    ${key}: ${value}`)
-  }
-  console.log('  Action: move these into the brand tokens upstream (decision-engine.tokens.json).\n')
 }
 
 if (drifted.length > 0) {

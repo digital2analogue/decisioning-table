@@ -1,95 +1,38 @@
+/**
+ * App-local token overlay.
+ *
+ * Brand tokens (colour, radius, shadow scale, font compositions, letter-spacing)
+ * now come from `@digital2analogue2/parsimony/decision-engine.css`, imported ahead
+ * of this file in src/index.css. This file is no longer a hand-copy of the brand —
+ * it holds only what the design system has no opinion on, plus the parallel
+ * vocabularies still awaiting migration (see issue #61).
+ *
+ * HARD RULE: never define a colour here. Colour lives in brand-tokens →
+ * parsimony → the imported decision-engine.css. If you need a new colour token,
+ * add it upstream and publish. The one exception is the intentional-override
+ * block below, which is temporary by construction and listed in sync-tokens.
+ */
 :root {
-  /* Backgrounds — Arctic theme (cool blue tint on all neutrals) */
-  --color-background-default: #F5F8FC;
-  --color-background-alt: #EBF0F8;
-  --color-background-elevated: #F0F4FA;
-  /* Ghost-button hover bg */
-  --color-background-hover: #E2EAF5;
-  --color-background-action: #2456E4;
-  --color-background-accent-subtle: #E5EBFC;
-  --color-background-accent-hover: #9CB3F3;
-  --color-background-accent-blue: #e5ebfc;
-  --color-background-accent-green: #ecfdf5;
-  --color-background-accent-violet: #f5f3ff;
-  --color-background-accent-amber: #fffbeb;
-  --color-background-danger: #c8002e; /* red.600 — adopted from the brand per parsimony#70 §B (was stale #d03027) */
-  --color-background-danger-alt: #fef2f2;
-  --color-background-danger-subtle: #FBEBEE;
-  --color-background-selected: #E5EBFC;
-  /* Foreground */
-  --color-foreground-default: #1A1A2E;
+  /* ── Intentional overrides — this app is AHEAD of the published package ──
+     Colour that deliberately differs from the imported brand build because the
+     upstream fix is merged but not yet published. Each entry names the upstream
+     change that retires it, and is allowlisted in scripts/sync-tokens.mjs so the
+     drift check stays meaningful rather than being switched off.
+
+     DELETE the moment the package catches up — a stale override here is exactly
+     the failure mode issue #61 exists to end. */
+
+  /* parsimony#217 folded foreground.secondary into foreground.alt and kept the
+     navy #3A4663 (chosen for its perceptual darkness; the value this app already
+     rendered in all 15 usages). The published @0.7.0 still resolves
+     --color-foreground-alt to gray-700 #4A4A5A. Adopted here by #60; without
+     this line, merging the brand import would silently repaint all 15 of them.
+     Retire when the parsimony release carrying #217 lands. */
   --color-foreground-alt: #3A4663;
-  --color-foreground-muted: #5E6E88;
-  --color-foreground-tertiary: #4E5F79;
-  --color-foreground-accent-blue: #2456E4;
-  --color-foreground-accent-green: #15803d;
-  --color-foreground-accent-purple: #7C3AED;
-  --color-foreground-accent-violet: #7c3aed;
-  --color-foreground-accent-amber: #92400e;
-  --color-foreground-accent-on-blue: #ffffff;
-  --color-foreground-accent-on-green: #ffffff;
-  --color-foreground-accent-on-purple: #ffffff;
-  --color-foreground-accent-on-violet: #0a0d0a;
-  --color-foreground-accent-on-amber: #0a0d0a;
-  --color-foreground-action: #2456E4;
-  --color-foreground-on-action: #FFFFFF;
-  /* Subtle/alternate action variants — paired tokens for hover, selected,
-     and other low-emphasis states that signal action without competing with
-     primary CTAs. Colors mirror existing accent-blue values; aliased here
-     so component CSS can be semantic ("action-alt") rather than incidental
-     ("accent-blue"). TODO: move to brand-tokens. */
-  --color-background-action-alt: #E5EBFC;
-  --color-foreground-on-action-alt: #2456E4;
-  --color-foreground-danger: #C8002E;
-  --color-foreground-on-danger: #ffffff;
-  --color-foreground-inverse: #FFFFFF;
-  /* Borders */
-  --color-border-default: #7A8FA9; /* arctic.600 — legible functional edge, 3.11:1 on canvas (parsimony#28) */
-  --color-border-alt: #C8D6EA;     /* quiet decorative edge — the previous border-default value */
-  --color-border-elevated: #B0C4D8;
-  --color-border-muted: #D8E4F0;
-  --color-border-accent: #2456E4;
-  --color-border-hover: #2456E4;
-  --color-border-active: #1e48d0;
-  --color-border-disabled: #e8eaed;
-  /* Feedback */
-  --color-background-success: #15803d;
-  --color-background-success-alt: #dcfce7;
-  --color-background-warning: #d97706;
-  --color-background-warning-vivid: #FCD34D;   /* TODO: move to brand-tokens — amber-300, vivid banner bg (matches screenshot reference) */
-  --color-background-warning-alt: #fef3c7;     /* amber-100 — soft cream banner bg (Arctic theme; was #fde047 yellow-300, too vivid) */
-  --color-background-warning-subtle: #fef3c7;  /* amber-100 — invalid-row tint; strong enough to scan without hovering */
-  --color-background-info: #2456e4;
-  --color-background-info-alt: #e5ebfc;
-  --color-foreground-success: #15803d;
-  --color-foreground-on-success: #ffffff;
-  --color-foreground-warning: #92400e;
-  --color-foreground-warning-icon: #b45309; /* TODO: move to brand-tokens — amber-700, 4.75:1 on light rows */
-  --color-foreground-warning-dark: #78350f; /* TODO: move to brand-tokens — OR logic chip foreground (deeper amber for chip-on-tint contrast) */
-  --color-foreground-on-warning: #1A1A2E; /* matches the brand as of parsimony#66 — the DE brand now ships gray.900 here too */
-  --color-foreground-info: #2456e4;
-  --color-foreground-on-info: #ffffff;
-  --color-feedback-success: #00875A;
-  /* State */
-  --color-background-action-hover: #1e48d0;
-  --color-background-action-active: #183dae;
-  --color-border-focus: #2456E4;
-  --color-background-disabled: #E8EAED;
-  --color-foreground-disabled: #D8DCE0;
-  --color-foreground-inactive: #A8B0BE; /* TODO: move to brand-tokens — washed-out slate for WCAG-exempt inactive UI elements (segmented controls, etc.) */
-  /* Chip surface — light cool-gray badge for AND/OR chips; distinct from white form inputs without being heavy */
-  --color-background-inverted: #E2E7F0;     /* TODO: move to brand-tokens — light slate; contrast ~7:1 with chip text */
-  --color-foreground-on-inverted: #2C3A55;  /* TODO: move to brand-tokens — dark navy text on light chip */
-  /* Accent tints */
-  --color-accent-subtle: #E0E7FB;
-  --color-accent-subtle-border: #92AAF2;
-  /* Accent-bold fills — saturated accent surfaces (avatars, identity badges). From brand-tokens. */
-  --color-background-accent-indigo-bold: #4338ca;  /* indigo-700 — 7.98:1 vs #fff ✅ AAA */
-  --color-background-accent-sky-bold: #0369a1;     /* sky-700    — 5.90:1 vs #fff ✅ AA */
-  --color-background-accent-green-bold: #047857;   /* emerald-700 — 5.47:1 vs #fff ✅ AA */
-  --color-background-accent-amber-bold: #b45309;   /* amber-600  — 5.02:1 vs #fff ✅ AA */
-  --color-foreground-accent-on-indigo: #ffffff;
-  --color-foreground-accent-on-sky: #ffffff;
+
+  /* ── App-local: layout, stacking, sizing ─────────────────────────────────
+     Concerns the design system deliberately has no opinion on. These stay. */
+
   /* Spacing */
   --space-2xs: 2px;
   --space-xs: 4px;
@@ -98,13 +41,14 @@
   --space-md: 16px;
   --space-lg: 24px;
   --space-xl: 48px;
-  /* Sizing — control heights (TODO: move to brand-tokens once stabilized).
-     Single source of truth so text inputs, select triggers, chips, and any
-     custom input chrome all align in a row. */
+
+  /* Sizing — control heights. Single source of truth so text inputs, select
+     triggers, chips, and any custom input chrome all align in a row. */
   --control-height-sm: 24px;   /* compact chips, tags, inline badges */
   --control-height-md: 32px;
   --control-height-lg: 40px;   /* large standalone inputs */
-  /* z-index — stacking context values (TODO: move to brand-tokens) */
+
+  /* z-index — stacking context values */
   --z-backdrop: 9998;    /* fixed backdrop overlay behind portal menus */
   --z-dropdown: 9999;    /* portal-positioned menus, pickers, dropdowns */
   /* Table stacking layers — sticky columns, thead, child rows */
@@ -112,11 +56,44 @@
   --z-sticky-head: 3;    /* sticky # and name columns in thead */
   --z-child: 4;          /* sticky name column in child rows (above parent sticky) + thead */
   --z-menu-local: 30;    /* non-portal local menus (split-btn, add-rule row) */
+
   /* Dropdown constraints */
   --dropdown-max-height: 192px;  /* portal listboxes and pickers */
-  /* Fonts */
-  --font-family-sans: 'Geist', sans-serif;
-  --font-family-mono: 'DM Mono', 'JetBrains Mono', monospace;
+
+  /* Column widths — decisioning table */
+  --col-width-name: 260px;        /* Rule name — sticky column */
+  --col-width-attr: 140px;        /* Data attribute */
+  --col-width-existing-acct: 200px; /* Existing Account picker */
+  --col-width-annual-income: 220px; /* Annual Income operator + amount */
+  --col-width-credit-score: 200px;  /* Credit Score operator + number */
+  --col-width-outcome: 190px;     /* Outcome segmented control */
+
+  /* App-specific composite shadows — no brand equivalent */
+  --shadow-card: 0 2px 8px rgba(15, 26, 46, 0.07);
+  --shadow-menu: 0 8px 28px rgba(15, 26, 46, 0.12), 0 2px 6px rgba(15, 26, 46, 0.06);
+  --shadow-inset-trough: inset 0 2px 4px rgba(15, 26, 46, 0.14), inset 0 0 0 1px rgba(15, 26, 46, 0.03); /* Recessed segmented-control trough */
+  --shadow-segment-raised: 0 2px 4px rgba(15, 26, 46, 0.16), 0 1px 2px rgba(15, 26, 46, 0.08), 0 0 0 0.5px rgba(15, 26, 46, 0.08); /* Raised active segment inside a recessed trough */
+  --shadow-footer-up: 0 -2px 8px rgba(15, 26, 46, 0.06); /* Soft lift from below — sticky footers */
+  --shadow-brand-tint: rgba(36, 86, 228, 0.10) 0px 20px 40px -20px, rgba(0, 0, 0, 0.08) 0px 8px 16px -8px; /* blue-tinted atmospheric lift for featured surfaces */
+
+  /* ── Awaiting migration to the brand vocabulary (issue #61) ──────────────
+     These duplicate names the design system already owns. Each family gets its
+     own migration PR so the value mapping can be verified one step at a time.
+     Do not extend these — use the brand token if one exists. */
+
+  /* → --motion-duration-* / --motion-easing-* (issue #61 step 2).
+     NOTE: the brand zeroes --motion-duration-* under prefers-reduced-motion;
+     these local durations are NOT covered by that guard. */
+  --duration-fast: 120ms;
+  --duration-normal: 200ms;
+  --duration-slow: 350ms;
+  --easing-default: cubic-bezier(0.25, 0.1, 0.25, 1);
+  --easing-in: cubic-bezier(0.42, 0, 1, 1);
+  --easing-out: cubic-bezier(0, 0, 0.58, 1);
+  --easing-in-out: cubic-bezier(0.42, 0, 0.58, 1);
+  --easing-spring: cubic-bezier(0.34, 1.56, 0.64, 1); /* TODO: promote to parsimony brand-tokens (motion) — overshoot curve for confident snaps (drag settle, outcome thumb); no brand equivalent yet */
+
+  /* → --primitive-font-* / --font-family-* (issue #61 step 4) */
   --font-family-display: var(--font-family-sans);
   --font-family-body: var(--font-family-sans);
   --font-weight-light: 300;
@@ -129,62 +106,26 @@
   --font-size-base: 1rem;
   --font-size-md: 1.25rem;
   --font-size-lg: 1.5rem;
-  --font-size-xl: 1.75rem;
+  --font-size-xl: 1.75rem;   /* no --primitive-font-size-xl in the brand — resolve before step 4 */
   --font-size-2xl: 2rem;
   --font-size-3xl: 2.5rem;
   --font-line-height-tight: 1.1;
   --font-line-height-snug: 1.25;
   --font-line-height-normal: 1.6;
   --font-line-height-relaxed: 1.7;
-  --font-title-large: var(--font-weight-light) var(--font-size-3xl)/var(--font-line-height-tight) var(--font-family-sans);
-  --font-title-medium: var(--font-weight-light) var(--font-size-2xl)/var(--font-line-height-snug) var(--font-family-sans);
-  --font-title-small: var(--font-weight-medium) var(--font-size-lg)/var(--font-line-height-snug) var(--font-family-sans);
-  --font-body-large: var(--font-weight-regular) var(--font-size-base)/var(--font-line-height-normal) var(--font-family-sans);
-  --font-body-medium: var(--font-weight-regular) var(--font-size-sm)/var(--font-line-height-normal) var(--font-family-sans);
-  --font-body-small: var(--font-weight-regular) var(--font-size-xs)/var(--font-line-height-normal) var(--font-family-sans);
-  --font-label-large: var(--font-weight-medium) var(--font-size-base)/var(--font-line-height-snug) var(--font-family-sans);
-  --font-label-medium: var(--font-weight-medium) var(--font-size-sm)/var(--font-line-height-snug) var(--font-family-sans);
-  --font-label-small: var(--font-weight-medium) var(--font-size-xs)/var(--font-line-height-snug) var(--font-family-sans);
-  --font-code: var(--font-weight-regular) var(--font-size-sm)/var(--font-line-height-normal) var(--font-family-mono);
-  /* Radii */
-  --radius-none: 0;
-  --radius-sm: 3px;
-  --radius-md: 6px;
-  --radius-lg: 10px;
-  --radius-xl: 14px;
-  --radius-pill: 9999px;
-  /* Shadows */
-  --shadow-none: 0 0 0 0 transparent;
-  --shadow-sm: 0 1px 2px 0 rgba(15, 26, 46, 0.06);
-  --shadow-card: 0 2px 8px rgba(15, 26, 46, 0.07);
-  --shadow-md: 0 4px 16px rgba(15, 26, 46, 0.10); /* TODO: move to brand-tokens — mid-elevation (above card, below menu) for popovers and hover-lifted CTAs */
-  --shadow-menu: 0 8px 28px rgba(15, 26, 46, 0.12), 0 2px 6px rgba(15, 26, 46, 0.06);
-  --shadow-xl: 0 20px 48px rgba(15, 26, 46, 0.14);
-  /* Component-specific composite shadows (TODO: move to brand-tokens once stabilized) */
-  --shadow-inset-trough: inset 0 2px 4px rgba(15, 26, 46, 0.14), inset 0 0 0 1px rgba(15, 26, 46, 0.03); /* Recessed segmented-control trough */
-  --shadow-segment-raised: 0 2px 4px rgba(15, 26, 46, 0.16), 0 1px 2px rgba(15, 26, 46, 0.08), 0 0 0 0.5px rgba(15, 26, 46, 0.08); /* Raised active segment inside a recessed trough */
-  --shadow-footer-up: 0 -2px 8px rgba(15, 26, 46, 0.06); /* Soft lift from below — sticky footers */
-  --shadow-brand-tint: rgba(36, 86, 228, 0.10) 0px 20px 40px -20px, rgba(0, 0, 0, 0.08) 0px 8px 16px -8px; /* TODO: move to brand-tokens — blue-tinted atmospheric lift for featured surfaces */
-  /* Motion */
-  --duration-fast: 120ms;
-  --duration-normal: 200ms;
-  --duration-slow: 350ms;
-  --easing-default: cubic-bezier(0.25, 0.1, 0.25, 1);
-  --easing-in: cubic-bezier(0.42, 0, 1, 1);
-  --easing-out: cubic-bezier(0, 0, 0.58, 1);
-  --easing-in-out: cubic-bezier(0.42, 0, 0.58, 1);
-  --easing-spring: cubic-bezier(0.34, 1.56, 0.64, 1); /* TODO: promote to parsimony brand-tokens (motion) — overshoot curve for confident snaps (drag settle, outcome thumb); mirrors the avatar-stack curve in index.css */
-  /* Letter-spacing */
+
+  /* → --letter-spacing-body/title/display (issue #61 step 4).
+     Values do NOT match the brand one-for-one — see the issue. */
   --letter-spacing-tight: -0.015em;
   --letter-spacing-normal: 0em;
-  --letter-spacing-label: 0.01em;
   --letter-spacing-wide: 0.03em;
-  --letter-spacing-all-caps: 0.1em;
-  /* Column widths — decisioning table (TODO: move to brand-tokens once stabilized) */
-  --col-width-name: 260px;        /* Rule name — sticky column */
-  --col-width-attr: 140px;        /* Data attribute */
-  --col-width-existing-acct: 200px; /* Existing Account picker */
-  --col-width-annual-income: 220px; /* Annual Income operator + amount */
-  --col-width-credit-score: 200px;  /* Credit Score operator + number */
-  --col-width-outcome: 190px;     /* Outcome segmented control */
+
+  /* → --radius-full (issue #61 step 5) */
+  --radius-pill: 9999px;
+
+  /* → --shadow-raised / --shadow-overlay / --shadow-dialog (issue #61 step 5).
+     Values do NOT match the brand scale — see the issue. */
+  --shadow-sm: 0 1px 2px 0 rgba(15, 26, 46, 0.06);
+  --shadow-md: 0 4px 16px rgba(15, 26, 46, 0.10); /* mid-elevation (above card, below menu) for popovers and hover-lifted CTAs */
+  --shadow-xl: 0 20px 48px rgba(15, 26, 46, 0.14);
 }

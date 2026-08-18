@@ -33,46 +33,67 @@ per-component contracts in `context/components/<tag>.md` and the full token cata
 ### Source of truth hierarchy
 
 ```
-brand-tokens/tokens/brands/decision-engine.tokens.json         ← edit here first
+brand-tokens/tokens/brands/decision-engine.tokens.json             ← edit here first
   ↓ build + publish (brand-tokens → @digital2analogue2/parsimony on npm)
-node_modules/@digital2analogue2/parsimony/decision-engine.css  ← installed brand build
-  ↓ sync-tokens compares against
-src/tokens/variables.css                                       ← local flat CSS, consumed by Tailwind + components
+node_modules/@digital2analogue2/parsimony/css/decision-engine.css  ← imported directly by src/index.css
+  ↓ layered under
+src/tokens/variables.css                                           ← app-local overlay only
 ```
 
-**Hard rule: `variables.css` is a sync target, not a place to define tokens.**
+`src/index.css` imports the brand build first, then `variables.css`. The brand build is
+the *only* place colour is defined; `variables.css` is an overlay for things the design
+system has no opinion on (layout, stacking, control heights, column widths, app-specific
+composite shadows) plus a shrinking set of parallel vocabularies still being migrated
+(issue #61).
 
-The flow is always: **brand-tokens → publish parsimony → npm install → variables.css**. Never the reverse.
+**Hard rule: never define a colour in `variables.css`.** Colour that is not in
+brand-tokens does not exist. If you need one, add it to
+`brand-tokens/tokens/brands/decision-engine.tokens.json`, publish a new
+`@digital2analogue2/parsimony`, then `npm install` — no copying required, the app picks
+it up from the import.
 
-- **Never define a new color token in `variables.css` directly.** If you need a new token, add it to `brand-tokens/tokens/brands/decision-engine.tokens.json`, publish a new `@digital2analogue2/parsimony` version, `npm install` it, then copy the resolved value into `variables.css`.
-- **Never write a hex value, `color-mix()`, or `var()` expression into `variables.css` for a new token.** If it's not in brand-tokens first, it doesn't exist.
-- If a token is needed urgently mid-session, you may add it locally with `/* TODO: move to brand-tokens */` — but treat this as a debt marker, not a pattern. The next thing you do is add it properly to brand-tokens and remove the comment.
-- After any token work, run `npm run sync-tokens` (it diffs `variables.css` against the installed `@digital2analogue2/parsimony` package). The expected output is the drift set documented below; anything outside it is a bug.
+**Never re-declare a token the brand already names.** A local copy at the same value is
+dead weight that goes stale silently; a local copy at a different value is drift that
+wins at runtime. `sync-tokens` reports both.
 
-### Known drifts vs the published brand
+### The one exception: intentional overrides
 
-`sync-tokens` diffs `variables.css` against the published `@digital2analogue2/parsimony`
-decision-engine build.
+When an upstream fix is *merged but not yet published*, this app can legitimately run
+ahead of the package. That is the only sanctioned reason for a colour in `variables.css`,
+and it comes with obligations:
 
-**Status: CLEAN as of `@digital2analogue2/parsimony@0.3.0` (2026-07-02).** The parsimony#70
-reconciliation landed and published: the arctic surfaces/borders, the `#1a1a2e` on-warning
-override (parsimony#66), and the 10 formerly-local color tokens are now in the brand source,
-and this repo adopted the brand's `#c8002e` danger (§B) and deleted the unused
-`--color-background-accent`. 0.3.0 adds the border split (parsimony#28): `border-default`
-is the legible functional edge (`#7A8FA9`, interactive-control outlines), `border-alt`
-(`#C8D6EA`) is the quiet decorative edge — this repo's structural/decorative usages were
-migrated to `border-alt` in the same change. `sync-tokens` reports **zero value drifts**.
+- Put it in the **intentional-overrides block** at the top of `variables.css`, with a
+  comment naming the upstream change that retires it.
+- Add a matching entry to `INTENTIONAL_OVERRIDES` in `scripts/sync-tokens.mjs`.
+- **Delete both the moment the package catches up.** `sync-tokens` watches for this: once
+  upstream matches, the override is reported as *stale* rather than quietly accepted.
 
-Expected residual output, all informational:
-- **3 brand-only tokens** not in `variables.css` (fine — unused here for now):
-  `--color-border-action` (`#4ade6e`, base-theme ghost-button outline that DE never renders),
-  `--color-foreground-accent-on-amber-bold` / `--color-foreground-accent-on-green-bold`
-  (`#ffffff` — adopt these if the avatar stack's hardcoded white is ever tokenized).
-- **App-local tokens** (layout, z-index, control heights, column widths, composite shadows)
-  stay local by design — they are not brand material.
+This exists so the drift check stays meaningful. The alternative — switching drift
+detection off for a token — is what lets a temporary override become permanent.
 
-If `sync-tokens` reports any *value drift*, investigate — that state is a bug now, not a
-documented exception.
+### `npm run sync-tokens`
+
+Compares the imported brand build against the `variables.css` overlay and reports:
+
+1. **drift** — declared in both with different resolved values. Always a bug; exits 1.
+2. **shadowed** — declared in both at the same value. Delete the local copy.
+3. **local-only** — not named by the brand. Layout/stacking/app shadows stay by design;
+   the parallel vocabularies are migration debt tracked in #61.
+4. **intentional / stale** — the allowlisted overrides above. Intentional ones don't fail
+   the check; stale ones tell you to delete the override.
+
+Pass `--verbose` to also list brand semantic tokens this app doesn't shadow.
+
+**Status as of `@digital2analogue2/parsimony@0.7.0`:** zero drift, zero shadowed,
+**63 local-only**, **1 intentional override**. Of the 63, 22 are genuinely app-local; the
+remaining 41 are the `--space-*` / `--duration-*` / `--easing-*` / `--font-*` /
+`--letter-spacing-*` / `--shadow-sm|md|xl` / `--radius-pill` families awaiting the #61
+migration steps. The override is `--color-foreground-alt` (#60 / parsimony#217).
+
+One known dangling reference pre-dating the parsimony adoption: `--font-size-2xs`,
+referenced in a comment next to a hardcoded `10px`; the brand now has
+`--primitive-font-size-2xs: 0.625rem`, which is the fix. (The other one,
+`--color-border-subtle`, is fixed in #63.)
 
 ## Contrast Gate
 
@@ -100,13 +121,13 @@ Format:
 
 ## Design Tokens in CSS
 
-All color is via CSS custom properties from `src/tokens/variables.css`. Components use class names defined in `src/index.css` — inline style overrides are rare and must use token variables, never hex values.
+All color is via CSS custom properties from the imported `@digital2analogue2/parsimony/decision-engine.css`. Components use class names defined in `src/index.css` — inline style overrides are rare and must use token variables, never hex values.
 
 **Cascade-layer trap (real, recurring):** `src/index.css` wraps component rules in `@layer components`. Per CSS layer cascade, **unlayered rules beat layered rules regardless of selector specificity.** If you add a global rule (`input::placeholder`, `select option`, etc.) outside the layer, it will silently override any in-layer override even with stronger selectors. **Keep all rules inside `@layer components`** unless you explicitly want a higher cascade priority.
 
 ## Sub-Brand Reference
 
-For decision-engine token values, read the installed `node_modules/@digital2analogue2/parsimony/decision-engine.css` directly (or the source in `brand-tokens/build/css/decision-engine.css`). The brand-tokens `ai/DESIGN.md` covers the base dark theme only.
+For decision-engine token values, read the installed `node_modules/@digital2analogue2/parsimony/css/decision-engine.css` directly (or the source in `brand-tokens/build/css/decision-engine.css`). The brand-tokens `ai/DESIGN.md` covers the base dark theme only.
 
 ## Patterns & Conventions
 
@@ -162,7 +183,8 @@ Three semantically distinct states with three visual weights, all on `td:first-c
 
 - **Data Element schema is incomplete.** Per the product spec ("Select data element(s)" modal), each `DataElement` has `Status`, `Description`, `Datatype`, `Attribute Path`, `Valid Values`, `Exception Values`. Current `DataElement` type in [src/types.ts](src/types.ts) has only `id`, `label`, `description`, `dataType`, `attributePath`, `category` — missing `status`, `validValues`, `exceptionValues`. Add when wiring the data-element selector modal.
 - **Stale field naming.** `existingAccountVariable` / `annualIncomeVariable` on `Rule` should conceptually be `existingAccountDataElement` / `annualIncomeDataElement` per the data model. Worth a rename pass when next touching this surface.
-- **TODO-marked local tokens.** Three tokens in [src/tokens/variables.css](src/tokens/variables.css) are flagged `/* TODO: move to brand-tokens */`: `--color-background-warning-subtle`, `--color-foreground-warning-dark`, `--shadow-md`, `--color-foreground-inactive`. Plus three composite shadow tokens (`--shadow-inset-trough`, `--shadow-segment-raised`, `--shadow-footer-up`). Backport when stable.
+- **Parsimony adoption is partway done (issue #61).** Colour, radius, the font compositions and letter-spacing now come from the package. Still to migrate, one family per PR: motion (`--duration-*`/`--easing-*` → `--motion-*` — this one also restores the `prefers-reduced-motion` guarantee), spacing, type, then shadow/radius.
+- **`--easing-spring` has no brand equivalent.** Flagged in [src/tokens/variables.css](src/tokens/variables.css) — promote it to brand-tokens (motion) before the motion migration lands, or it stays local forever.
 - **Save-gating decision deferred.** Validation banner currently counts invalid rules but doesn't block the (nonexistent) save action. When a save flow lands, decide: block save with banner-only warning, or block save with a modal confirmation.
 - **No keyboard nav inside `ActionsMenu` dropdown.** Items have hover/focus-visible/active states but no arrow-key navigation, focus trap, or auto-focus first item on open. The audit recommended adopting Radix `DropdownMenu` (already in deps) for a clean fix — ~30 min vs ~4 hr to roll your own correctly. Same applies to the other portal-based pickers (`OperatorSelect`, `LogicOperatorSelect`, `ConditionalCell`).
 - **Drag-and-drop edge auto-scroll.** dnd-kit's `AutoScroll` is on by default within the scroll

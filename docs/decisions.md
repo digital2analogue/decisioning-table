@@ -6,6 +6,59 @@ feed the Capital One case study (and so future sessions don't re-litigate settle
 
 ---
 
+## 2026-08-18 — Consume the parsimony brand build instead of hand-copying it (colour)
+
+**What.** `src/index.css` now imports `@digital2analogue2/parsimony/decision-engine.css` ahead of
+`src/tokens/variables.css`, and `variables.css` drops the 98 tokens the brand already defines — every
+`--color-*`, the `--radius-*` scale, the `--font-title|body|label|code-*` compositions,
+`--font-family-sans|mono`, `--shadow-none`, `--letter-spacing-label|all-caps`. It keeps the 63 tokens
+the brand does not name. Step 1 of issue #61.
+
+The package was already a declared dependency and nothing imported it, so upstream token fixes reached
+this app only when someone re-typed them by hand — #60 is the worked example, a rename that had to be
+made twice. `variables.css` stops being a copy of the brand and becomes an overlay on top of it.
+
+**Why / alternatives.** The obvious move — delete `variables.css` outright — breaks the app: 63 of its
+160 tokens exist nowhere in the package. Two thirds of those are layout and stacking concerns the design
+system deliberately has no opinion on (`--col-width-*`, `--z-*`, `--control-height-*`, the composite
+app shadows); the rest are a parallel vocabulary for things the system *does* name
+(`--space-*` vs `--spacing-*`, `--duration-*` vs `--motion-duration-*`, and so on). Those need call-site
+renames, not deletion, so they stay put and migrate one family per PR.
+
+Every one of the 98 deleted tokens was checked by resolving both sides through their `var()` chains
+before removal. 97 matched exactly. The one difference was `--shadow-none`: local
+`0 0 0 0 transparent` against the brand's `0 0 0 0 rgba(0,0,0,0)` — the same colour written two ways,
+so it computes identically. All three visual baselines pass unchanged.
+
+`scripts/check-contrast.mjs` and `scripts/sync-tokens.mjs` both read tokens from the two files merged in
+cascade order now, rather than from `variables.css` alone. `sync-tokens` was also re-pointed at the new
+model: it used to ask "does the local copy match the brand", which stops meaning anything once there is
+no copy. It now reports drift (declared in both, different values — a bug, exits 1), shadowing (declared
+in both, same value — dead weight to delete), and local-only tokens. This closes the blind spot the
+issue names: the old script compared only tokens present in both files, so it reported "1 drifted" for a
+file that was structurally 40% divergent.
+
+**The one colour that stayed.** #60 merged into `main` while this was in review, and it is the reason
+the no-colour rule needed an escape hatch rather than an exception. That change folded
+`foreground.secondary` into `foreground.alt` and kept the navy `#3A4663` — matching parsimony#217,
+which is merged upstream but **not yet published**. The installed `@0.7.0` still resolves
+`--color-foreground-alt` to gray-700 `#4A4A5A`. Deleting the local declaration, as this PR does for
+every other colour, would therefore have silently repainted all 15 usages #60 had just migrated —
+turning a value-preserving migration into a repaint, which is precisely the failure this PR exists to
+make impossible.
+
+So `variables.css` keeps exactly one colour, in a labelled *intentional overrides* block, and
+`sync-tokens` grew a matching `INTENTIONAL_OVERRIDES` allowlist. The alternative — suppressing drift
+detection for that token — is how a temporary override becomes permanent. Instead the allowlist
+requires a reason string naming what retires it, and the script reports the override as **stale** the
+moment upstream catches up, so the next person is told to delete it rather than left to notice.
+
+**Status.** Shipped. Remaining #61 steps, in order: motion (also restores the `prefers-reduced-motion`
+guarantee — the brand zeroes `--motion-duration-*` under that media query and local `--duration-*` is
+not reached by it), spacing, type, shadow/radius.
+
+---
+
 ## 2026-07-13 — Embed-driven fixes: page overflow, connector centering, header width, subtitle
 
 **What.** Four fixes surfaced by embedding the demo (`/?demo=1`) as a live iframe in the Capital One

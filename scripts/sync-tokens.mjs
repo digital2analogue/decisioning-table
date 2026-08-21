@@ -19,7 +19,11 @@ import { execSync } from 'child_process'
 import { fileURLToPath } from 'url'
 
 const __dirname   = path.dirname(fileURLToPath(import.meta.url))
-const BRAND_DIR   = path.join(__dirname, '../../brand-tokens')
+// The token repo is a sibling named either `brand-tokens` (legacy) or
+// `parsimony` (current). Resolve whichever exists so this runs on any machine.
+const BRAND_DIR   = ['../../brand-tokens', '../../parsimony']
+  .map(p => path.join(__dirname, p))
+  .find(p => fs.existsSync(p)) ?? path.join(__dirname, '../../brand-tokens')
 const BRAND_CSS   = path.join(BRAND_DIR, 'build/css/decision-engine.css')
 const LOCAL_CSS   = path.join(__dirname, '../src/tokens/variables.css')
 

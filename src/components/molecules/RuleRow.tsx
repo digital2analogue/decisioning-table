@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef } from 'react'
 import { useDrag, useDrop } from 'react-dnd'
-import { AlertTriangleIcon, MoreHorizontalIcon, ChevronRightIcon } from 'lucide-react'
+import { AlertTriangleIcon, ChevronRightIcon } from 'lucide-react'
 
 /**
  * Custom 6-dot drag handle (3 rows × 2 cols). Hand-rolled SVG instead of
@@ -31,7 +31,6 @@ import { isRuleValid, isRuleTouched, isEmptyDraft, missingFields } from '../../t
 import { cn } from '../../lib/utils'
 import { Checkbox } from '../atoms/Checkbox'
 import { AttributeSelectBadge, OutcomeBadge } from '../atoms/Badge'
-import { IconButton } from '../atoms/IconButton'
 import { ActionsMenu } from './ActionsMenu'
 import { ConditionalCell } from './ConditionalCell'
 import { AccountTypeCell } from './AccountTypeCell'
@@ -42,9 +41,6 @@ export interface RuleRowProps {
   rule: Rule
   index: number
   totalRules: number
-  openMenuId: string | null
-  onMenuToggle: (id: string) => void
-  onMenuClose: () => void
   onUpdate: (id: string, patch: Partial<Rule>) => void
   onDelete: (id: string) => void
   onDuplicate: (id: string) => void
@@ -65,9 +61,6 @@ export function RuleRow({
   rule,
   index,
   totalRules,
-  openMenuId,
-  onMenuToggle,
-  onMenuClose,
   onUpdate,
   onDelete,
   onDuplicate,
@@ -80,7 +73,6 @@ export function RuleRow({
   onAutoFocusConsumed,
 }: RuleRowProps) {
   const rowRef = useRef<HTMLTableRowElement>(null)
-  const actionsAnchorRef = useRef<HTMLDivElement>(null)
   const nameInputRef = useRef<HTMLInputElement>(null)
 
   useEffect(() => {
@@ -105,12 +97,7 @@ export function RuleRow({
 
   const [{ isDragging }, drag, dragPreview] = useDrag<DragItem, unknown, { isDragging: boolean }>({
     type: DND_TYPE,
-    // item is a function so it runs at drag-start — close any open overflow
-    // menu so the portaled popover doesn't dangle in the old viewport position.
-    item: () => {
-      onMenuClose()
-      return { index, id: rule.id }
-    },
+    item: () => ({ index, id: rule.id }),
     canDrag: () => dndEnabled,
     collect: (monitor) => ({ isDragging: monitor.isDragging() }),
   })
@@ -215,7 +202,7 @@ export function RuleRow({
       </td>
 
       {/* Existing Account — account type picker, no operator */}
-      <td className="dt-td min-w-[200px]">
+      <td className="dt-td" style={{ minWidth: 'var(--col-width-existing-acct)' }}>
         <AccountTypeCell
           value={rule.existingAccountVariable}
           onChange={(v) => onUpdate(rule.id, { existingAccountVariable: v })}
@@ -223,7 +210,7 @@ export function RuleRow({
       </td>
 
       {/* Annual Income — operator + dollar amount */}
-      <td className="dt-td min-w-[220px]">
+      <td className="dt-td" style={{ minWidth: 'var(--col-width-annual-income)' }}>
         <ConditionalCell
           operator={rule.annualIncomeOperator}
           variable={rule.annualIncomeVariable}
@@ -235,7 +222,7 @@ export function RuleRow({
       </td>
 
       {/* Credit Score — operator + plain number */}
-      <td className="dt-td min-w-[200px]">
+      <td className="dt-td" style={{ minWidth: 'var(--col-width-credit-score)' }}>
         <ConditionalCell
           operator={rule.creditScoreOperator ?? null}
           variable={rule.creditScoreVariable ?? ''}
@@ -257,29 +244,15 @@ export function RuleRow({
       </td>
 
       {/* Actions */}
-      <td className="dt-td dt-col-actions" data-menu-open={openMenuId === rule.id || undefined}>
-        <div ref={actionsAnchorRef} className="relative inline-block">
-          <IconButton
-            onClick={() => onMenuToggle(rule.id)}
-            className="dt-toolbar-btn"
-            ariaLabel={`Row actions for ${rule.ruleName || `rule ${index + 1}`}`}
-            ariaHasPopup="menu"
-            ariaExpanded={openMenuId === rule.id}
-          >
-            <MoreHorizontalIcon size={18} />
-          </IconButton>
-          {openMenuId === rule.id && (
-            <ActionsMenu
-              anchorRef={actionsAnchorRef}
-              onAddChild={() => onAddChild(rule.id)}
-              onDuplicate={() => onDuplicate(rule.id)}
-              onDelete={() => onDelete(rule.id)}
-              onClose={onMenuClose}
-              onMoveUp={index > 0 ? () => onMove(index, index - 1) : undefined}
-              onMoveDown={index < totalRules - 1 ? () => onMove(index, index + 1) : undefined}
-            />
-          )}
-        </div>
+      <td className="dt-td dt-col-actions">
+        <ActionsMenu
+          triggerAriaLabel={`Row actions for ${rule.ruleName || `rule ${index + 1}`}`}
+          onAddChild={() => onAddChild(rule.id)}
+          onDuplicate={() => onDuplicate(rule.id)}
+          onDelete={() => onDelete(rule.id)}
+          onMoveUp={index > 0 ? () => onMove(index, index - 1) : undefined}
+          onMoveDown={index < totalRules - 1 ? () => onMove(index, index + 1) : undefined}
+        />
       </td>
     </tr>
   )

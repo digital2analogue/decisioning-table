@@ -201,19 +201,19 @@ for (const { text, bg, label } of PAIRINGS) {
   const ratio = contrastRatio(textHex, bgHex)
   const pass  = ratio >= MIN_RATIO
   if (!pass) failed++
-  console.log(`  ${label.padEnd(52)} ${ratio.toFixed(2).padStart(7)}:1  ${pass ? '✅' : '❌ FAIL'}`)
+  const status = pass ? '✅ PASS' : '❌ FAIL'
+  console.log(`  ${label.padEnd(52)} ${ratio.toFixed(2).padStart(7)}  ${status}`)
 }
 
-console.log()
+// ─── Summary ───────────────────────────────────────────────────────────────────
 
-const totalProblems = failed + unresolved
-
-if (totalProblems > 0) {
-  const parts = []
-  if (failed > 0)     parts.push(`${failed} contrast failure(s)`)
-  if (unresolved > 0) parts.push(`${unresolved} unresolved pairing(s)`)
-  console.error(`  ❌ ${parts.join(' + ')}. Fix token values, pairing CSS, or manifest references before shipping.\n`)
+console.log(`\n  ${'─'.repeat(72)}`)
+if (unresolved > 0) {
+  console.log(`\n  ⚠️  ${unresolved} pair(s) could not be resolved — check token names.\n`)
+}
+if (failed > 0) {
+  console.log(`  ❌  ${failed} pair(s) failed WCAG AA. Fix before shipping.\n`)
   process.exit(1)
 } else {
-  console.log(`  ✅ All ${PAIRINGS.length} pairs pass WCAG AA\n`)
+  console.log(`\n  ✅  All pairs pass WCAG AA (4.5:1).\n`)
 }

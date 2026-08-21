@@ -1,10 +1,8 @@
-import { useRef } from 'react'
-import { AlertTriangleIcon, MoreHorizontalIcon } from 'lucide-react'
+import { AlertTriangleIcon } from 'lucide-react'
 import type { Rule, LogicOperator } from '../../types'
 import { isChildRuleValid, isRuleTouched, isEmptyDraft, missingFields } from '../../types'
 import { cn } from '../../lib/utils'
 import { AttributeSelectBadge } from '../atoms/Badge'
-import { IconButton } from '../atoms/IconButton'
 import { ConditionalCell } from './ConditionalCell'
 import { AccountTypeCell } from './AccountTypeCell'
 import { ActionsMenu } from './ActionsMenu'
@@ -18,9 +16,6 @@ export interface ChildRuleRowProps {
   totalChildren: number
   isLast: boolean
   isCollapsing?: boolean
-  menuOpen: boolean
-  onMenuToggle: () => void
-  onMenuClose: () => void
   onUpdate: (parentId: string, childId: string, patch: Partial<Rule>) => void
   onDelete: (parentId: string, childId: string) => void
   onDuplicate: (parentId: string, childId: string) => void
@@ -34,16 +29,11 @@ export function ChildRuleRow({
   totalChildren,
   isLast,
   isCollapsing,
-  menuOpen,
-  onMenuToggle,
-  onMenuClose,
   onUpdate,
   onDelete,
   onDuplicate,
   onMove,
 }: ChildRuleRowProps) {
-  const actionsAnchorRef = useRef<HTMLDivElement>(null)
-
   const op: LogicOperator = rule.logicOperator ?? 'AND'
   // Untouched drafts stay quiet — no warning icon, no tinted row bg —
   // until the user has set at least one field.
@@ -101,7 +91,7 @@ export function ChildRuleRow({
       </td>
 
       {/* Existing Account — account type picker, no operator */}
-      <td className="dt-td min-w-[200px]">
+      <td className="dt-td" style={{ minWidth: 'var(--col-width-existing-acct)' }}>
         <AccountTypeCell
           value={rule.existingAccountVariable}
           onChange={(v) => onUpdate(parentId, rule.id, { existingAccountVariable: v })}
@@ -109,7 +99,7 @@ export function ChildRuleRow({
       </td>
 
       {/* Annual Income — operator + dollar amount */}
-      <td className="dt-td min-w-[220px]">
+      <td className="dt-td" style={{ minWidth: 'var(--col-width-annual-income)' }}>
         <ConditionalCell
           operator={rule.annualIncomeOperator}
           variable={rule.annualIncomeVariable}
@@ -121,7 +111,7 @@ export function ChildRuleRow({
       </td>
 
       {/* Credit Score — operator + plain number */}
-      <td className="dt-td min-w-[200px]">
+      <td className="dt-td" style={{ minWidth: 'var(--col-width-credit-score)' }}>
         <ConditionalCell
           operator={rule.creditScoreOperator ?? null}
           variable={rule.creditScoreVariable ?? ''}
@@ -136,29 +126,15 @@ export function ChildRuleRow({
       <td className="dt-td"></td>
 
       {/* Actions */}
-      <td className="dt-td dt-col-actions" data-menu-open={menuOpen || undefined}>
-        <div ref={actionsAnchorRef} className="relative inline-block">
-          <IconButton
-            onClick={onMenuToggle}
-            className="dt-toolbar-btn"
-            ariaLabel={`Child rule actions for ${rule.ruleName || 'unnamed child rule'}`}
-            ariaHasPopup="menu"
-            ariaExpanded={menuOpen}
-          >
-            <MoreHorizontalIcon size={18} />
-          </IconButton>
-          {menuOpen && (
-            <ActionsMenu
-              anchorRef={actionsAnchorRef}
-              onDuplicate={() => onDuplicate(parentId, rule.id)}
-              onDelete={() => onDelete(parentId, rule.id)}
-              onClose={onMenuClose}
-              onMoveUp={childIndex > 0 ? () => onMove(parentId, childIndex, childIndex - 1) : undefined}
-              onMoveDown={childIndex < totalChildren - 1 ? () => onMove(parentId, childIndex, childIndex + 1) : undefined}
-              isChild
-            />
-          )}
-        </div>
+      <td className="dt-td dt-col-actions">
+        <ActionsMenu
+          triggerAriaLabel={`Child rule actions for ${rule.ruleName || 'unnamed child rule'}`}
+          onDuplicate={() => onDuplicate(parentId, rule.id)}
+          onDelete={() => onDelete(parentId, rule.id)}
+          onMoveUp={childIndex > 0 ? () => onMove(parentId, childIndex, childIndex - 1) : undefined}
+          onMoveDown={childIndex < totalChildren - 1 ? () => onMove(parentId, childIndex, childIndex + 1) : undefined}
+          isChild
+        />
       </td>
     </tr>
   )

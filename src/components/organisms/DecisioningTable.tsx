@@ -36,7 +36,6 @@ export function DecisioningTable({
   autoFocusRuleId,
   onAutoFocusConsumed,
 }: DecisioningTableProps) {
-  const [openMenuId, setOpenMenuId] = useState<string | null>(null)
   const [collapsingIds, setCollapsingIds] = useState<Set<string>>(new Set())
   const [openColumnMenuId, setOpenColumnMenuId] = useState<string | null>(null)
   const existingAccountBtnRef = useRef<HTMLButtonElement>(null)
@@ -112,7 +111,6 @@ export function DecisioningTable({
     const removed = ruleset.rules[idx]
     const nextRules = ruleset.rules.filter((r) => r.id !== id)
     onUpdate({ ...ruleset, rules: nextRules })
-    setOpenMenuId(null)
     // Focus follows the deletion — keyboard / screen-reader users land on the
     // next visible row's name input (or the previous one if the deleted row
     // was the last). Defers a frame so the new DOM is mounted.
@@ -151,7 +149,6 @@ export function DecisioningTable({
     const next = [...ruleset.rules]
     next.splice(idx + 1, 0, dup)
     onUpdate({ ...ruleset, rules: next })
-    setOpenMenuId(null)
   }
 
   function deleteChild(parentId: string, childId: string) {
@@ -169,7 +166,6 @@ export function DecisioningTable({
           : r,
       ),
     })
-    setOpenMenuId(null)
     // Focus the next visible sibling child (or the parent if no siblings remain).
     const nextFocusId = nextChildren[childIdx]?.id ?? nextChildren[childIdx - 1]?.id ?? parentId
     if (nextFocusId) {
@@ -213,7 +209,6 @@ export function DecisioningTable({
         return { ...r, children: nextChildren }
       }),
     })
-    setOpenMenuId(null)
   }
 
   function moveRow(dragIndex: number, hoverIndex: number) {
@@ -277,8 +272,8 @@ export function DecisioningTable({
               />
             </th>
             <th className="dt-th dt-col-sticky-num-head w-14 px-2 py-2.5 text-right tracking-wider">#</th>
-            <th className="dt-th dt-col-sticky-head dt-td text-left tracking-wider w-[260px] max-w-[260px]">Rule name</th>
-            <th className="dt-th dt-col-data-attribute dt-td text-left tracking-wider min-w-[140px]">Data attribute</th>
+            <th className="dt-th dt-col-sticky-head dt-td text-left tracking-wider" style={{ width: 'var(--col-width-name)', maxWidth: 'var(--col-width-name)' }}>Rule name</th>
+            <th className="dt-th dt-col-data-attribute dt-td text-left tracking-wider" style={{ minWidth: 'var(--col-width-attr)' }}>Data attribute</th>
             <th className="dt-th dt-td text-left tracking-wider">
               <div className="dt-th-label-wrap">
                 <span>Existing Account</span>
@@ -327,7 +322,7 @@ export function DecisioningTable({
                 </button>
               </div>
             </th>
-            <th className="dt-th dt-td text-left tracking-wider w-[190px]">Outcome</th>
+            <th className="dt-th dt-td text-left tracking-wider" style={{ width: 'var(--col-width-outcome)' }}>Outcome</th>
             <th className="dt-col-actions-head w-10 dt-td"></th>
           </tr>
         </thead>
@@ -368,9 +363,6 @@ export function DecisioningTable({
                     index={index}
                     totalRules={ruleset.rules.length}
                     dndEnabled={!filterActive}
-                    openMenuId={openMenuId}
-                    onMenuToggle={(id) => setOpenMenuId(openMenuId === id ? null : id)}
-                    onMenuClose={() => setOpenMenuId(null)}
                     onUpdate={updateRule}
                     onDelete={deleteRule}
                     onDuplicate={duplicateRule}
@@ -390,9 +382,6 @@ export function DecisioningTable({
                       totalChildren={children.length}
                       isLast={ci === children.length - 1}
                       isCollapsing={collapsingIds.has(rule.id)}
-                      menuOpen={openMenuId === child.id}
-                      onMenuToggle={() => setOpenMenuId(openMenuId === child.id ? null : child.id)}
-                      onMenuClose={() => setOpenMenuId(null)}
                       onUpdate={updateChild}
                       onDelete={deleteChild}
                       onDuplicate={duplicateChild}

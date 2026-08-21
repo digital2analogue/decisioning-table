@@ -33,7 +33,7 @@ The flow is always: **brand-tokens → build → variables.css**. Never the reve
 - **Never define a new color token in `variables.css` directly.** If you need a new token, add it to `brand-tokens/tokens/brands/decision-engine.tokens.json`, rebuild brand-tokens, then copy the resolved value into `variables.css`.
 - **Never write a hex value, `color-mix()`, or `var()` expression into `variables.css` for a new token.** If it's not in brand-tokens first, it doesn't exist.
 - If a token is needed urgently mid-session, you may add it locally with `/* TODO: move to brand-tokens */` — but treat this as a debt marker, not a pattern. The next thing you do is add it properly to brand-tokens and remove the comment.
-- After any token work, run `npm run sync-tokens`. The only acceptable output is the 6 known drifts listed below. Any additional local-only token is a bug.
+- After any token work, run `npm run sync-tokens`. The only acceptable output is the 7 known drifts listed below. Any additional local-only token is a bug.
 
 ### Known intentional drifts (do not fix these)
 
@@ -43,6 +43,7 @@ Bluer-tint surface/border palette (hand-tuned for DE light mode, not yet backpor
 - `--color-background-alt`
 - `--color-background-default`
 - `--color-border-default`
+- `--color-background-elevated` — local `#f0f4fa` vs brand `#ffffff`. Third rung of the DE light-mode surface ramp (default #F5F8FC / alt #EBF0F8 / elevated #F0F4FA); brand ships pure white because decision-engine inherits the neutral elevated surface.
 - `--color-border-elevated` — local `#c6cad1` vs brand `#c0c4ce`. Slightly cooler-gray border for elevated surfaces in light mode.
 - `--color-border-muted` — local `#eaecef` vs brand `#e8eaed`. Same intent — bluer cast for the light theme's row separators.
 

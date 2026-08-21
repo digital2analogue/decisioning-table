@@ -1,0 +1,24 @@
+{
+  "enabledPlugins": {
+    "security-scanning@claude-code-workflows": true,
+    "superpowers@claude-plugins-official": true,
+    "comprehensive-review@claude-code-workflows": true,
+    "full-stack-orchestration@claude-code-workflows": true,
+    "seo-content-creation@claude-code-workflows": true,
+    "seo-technical-optimization@claude-code-workflows": true,
+    "seo-analysis-monitoring@claude-code-workflows": true,
+    "business-analytics@claude-code-workflows": true,
+    "content-marketing@claude-code-workflows": true,
+    "quantitative-trading@claude-code-workflows": true,
+    "accessibility-compliance@claude-code-workflows": true,
+    "ux-strategy@designer-skills": true,
+    "ui-design@designer-skills": true,
+    "interaction-design@designer-skills": true,
+    "prototyping-testing@designer-skills": true,
+    "design-ops@designer-skills": true,
+    "designer-toolkit@designer-skills": true,
+    "javascript-typescript@claude-code-workflows": true,
+    "design-systems@designer-skills": true,
+    "design-research@designer-skills": true
+  }
+}

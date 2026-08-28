@@ -25,15 +25,14 @@
      drift check stays meaningful rather than being switched off.
 
      DELETE the moment the package catches up — a stale override here is exactly
-     the failure mode issue #61 exists to end. */
+     the failure mode issue #61 exists to end.
 
-  /* parsimony#217 folded foreground.secondary into foreground.alt and kept the
-     navy #3A4663 (chosen for its perceptual darkness; the value this app already
-     rendered in all 15 usages). The published @0.7.0 still resolves
-     --color-foreground-alt to gray-700 #4A4A5A. Adopted here by #60; without
-     this line, merging the brand import would silently repaint all 15 of them.
-     Retire when the parsimony release carrying #217 lands. */
-  --color-foreground-alt: #3A4663;
+     CURRENTLY EMPTY. The last one was --color-foreground-alt (#3A4663), carried
+     from #60 while parsimony#217 sat merged-but-unpublished. @0.7.1 ships that
+     fold, so the brand now resolves foreground.alt to gray-navy #3a4663 itself
+     and the override was deleted — the same value from upstream instead of from
+     here. The block stays as the signpost: a colour belongs here, temporarily
+     and allowlisted, or it does not belong in this file at all. */
 
   /* ── App-local: layout, stacking, sizing ─────────────────────────────────
      Concerns the design system deliberately has no opinion on. These stay. */

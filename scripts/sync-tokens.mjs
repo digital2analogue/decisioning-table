@@ -129,10 +129,11 @@ const missingLocal = VERBOSE
 // gets deleted rather than lingering.
 //
 // This is the ONLY sanctioned reason for a colour to appear in variables.css.
-const INTENTIONAL_OVERRIDES = {
-  '--color-foreground-alt':
-    'parsimony#217 folded foreground.secondary into foreground.alt keeping navy #3A4663; @0.7.0 still ships gray-700. Adopted by #60. Retire when the release carrying #217 publishes.',
-}
+//
+// Currently empty: the last entry was --color-foreground-alt, retired when
+// @digital2analogue2/parsimony@0.7.1 shipped parsimony#217 and the brand began
+// resolving foreground.alt to gray-navy #3a4663 on its own.
+const INTENTIONAL_OVERRIDES = {}
 
 const drifted = []
 const shadowedInSync = []

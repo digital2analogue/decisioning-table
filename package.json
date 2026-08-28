@@ -35,7 +35,7 @@
     "tailwind-merge": "^3.6.0"
   },
   "devDependencies": {
-    "@digital2analogue2/parsimony": "^0.7.0",
+    "@digital2analogue2/parsimony": "^0.7.1",
     "@eslint/js": "^10.0.1",
     "@playwright/test": "^1.62.1",
     "@tailwindcss/vite": "^4.3.3",

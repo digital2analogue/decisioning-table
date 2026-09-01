@@ -24,7 +24,7 @@
 import { createServer } from 'vite'
 import puppeteer from 'puppeteer'
 import sharp from 'sharp'
-import { mkdirSync, writeFileSync, existsSync, cpSync } from 'node:fs'
+import { mkdirSync, writeFileSync, existsSync, cpSync, readFileSync } from 'node:fs'
 import { dirname, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
@@ -35,24 +35,78 @@ const DEFAULT_OUTPUT = resolve(PROJECT_ROOT, 'screenshots')
 const OUTPUT_DIR = process.env.PORTFOLIO_IMAGES ?? DEFAULT_OUTPUT
 const PORTFOLIO_DIR = resolve(PROJECT_ROOT, '..', 'portfolio-vercel', 'public', 'projects', 'images')
 
-// Design tokens (from variables.css)
+// ── Design tokens ──────────────────────────────────────────────────────────
+// RESOLVED from the installed package, never hand-copied. These mockup pages
+// are rendered outside the app (standalone HTML strings, not the React tree),
+// so they cannot pick up tokens from src/index.css the way components do —
+// they need the values as literals. Reading them here means the literals are
+// generated at run time from the same decision-engine.css the app imports,
+// instead of being a snapshot that rots.
+//
+// It rotted: before this, `const T` was a hand-copy commented "from
+// variables.css" — a file that has held no colour since #61 — and 9 of its 15
+// entries had drifted from the brand. borderDefault was still #DDE1EC against
+// the brand's #7a8fa9, so every screenshot showed a 1.38:1 hairline the product
+// stopped drawing when parsimony#28/#91 made borders legible. sync-tokens could
+// not see it, because sync-tokens only reads variables.css. (#76)
+const BRAND_CSS = resolve(
+  PROJECT_ROOT,
+  'node_modules/@digital2analogue2/parsimony/css/decision-engine.css',
+)
+
+function loadBrandTokens() {
+  if (!existsSync(BRAND_CSS)) {
+    throw new Error(
+      `screenshots: @digital2analogue2/parsimony is not installed (${BRAND_CSS}).\n` +
+        `  Run: npm install`,
+    )
+  }
+  const css = readFileSync(BRAND_CSS, 'utf8')
+  const raw = {}
+  for (const m of css.matchAll(/(--[a-zA-Z0-9-]+)\s*:\s*([^;]+);/g)) raw[m[1]] = m[2].trim()
+
+  return (name) => {
+    if (!(name in raw)) {
+      // Loud rather than silent: a renamed or removed token must fail the run,
+      // not quietly render a blank fill.
+      throw new Error(
+        `screenshots: ${name} is not in @digital2analogue2/parsimony's decision-engine.css. ` +
+          `It may have been renamed or removed upstream — update this map or bump the package.`,
+      )
+    }
+    let v = raw[name]
+    for (let i = 0; v.includes('var(') && i < 20; i++) {
+      v = v.replace(/var\((--[a-zA-Z0-9-]+)(?:,[^)]*)?\)/g, (_, ref) => raw[ref] ?? '')
+    }
+    return v.trim()
+  }
+}
+
+const token = loadBrandTokens()
+
 const T = {
-  bgDefault: '#F7F9FC',
-  bgAlt: '#EFF1F8',
-  bgElevated: '#FFFFFF',
-  bgAction: '#2456E4',
-  fgPrimary: '#0F1A2E',
-  fgSecondary: '#3A4663',
-  fgMuted: '#8492A6',
-  fgAccent: '#2456E4',
-  fgDanger: '#C8002E',
-  fgSuccess: '#00875A',
-  fgOnAction: '#FFFFFF',
-  borderDefault: '#DDE1EC',
-  borderMuted: '#ECEEF5',
+  bgDefault: token('--color-background-default'),
+  bgAlt: token('--color-background-alt'),
+  bgElevated: token('--color-background-elevated'),
+  bgAction: token('--color-background-action'),
+  fgPrimary: token('--color-foreground-default'),
+  fgSecondary: token('--color-foreground-alt'),
+  fgMuted: token('--color-foreground-muted'),
+  fgAccent: token('--color-foreground-action'),
+  fgDanger: token('--color-foreground-danger'),
+  fgSuccess: token('--color-foreground-success'),
+  fgOnAction: token('--color-foreground-on-action'),
+  borderDefault: token('--color-border-default'),
+  borderMuted: token('--color-border-muted'),
+  fontSans: token('--font-family-sans'),
+  fontMono: token('--font-family-mono'),
+
+  // Presentation-only, and deliberately NOT a decision-engine token: the dark
+  // mat these light-mode screenshots are composited onto for the case study.
+  // It is the base theme's canvas (green.950), chosen to match the portfolio
+  // site the images are embedded in — a framing decision about the photograph,
+  // not a value the product renders. Nothing upstream would retire it.
   frameBg: '#0A0D0A',
-  fontSans: "'Plus Jakarta Sans', sans-serif",
-  fontMono: "'DM Mono', 'JetBrains Mono', monospace",
 }
 
 const VIEWPORT = { width: 1440, height: 860, deviceScaleFactor: 2 }
@@ -92,7 +146,26 @@ function savePng(name, buffer) {
 }
 
 // ── Google Fonts link for all mockup pages ───────────────
-const FONTS_LINK = `<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">`
+// DERIVED from the same resolved tokens the CSS below uses. Hardcoding the
+// families here is how a font stack and its @font-face request drift apart:
+// the request said Plus Jakarta Sans while the brand had long since moved the
+// DE sans to Geist, so the two only agreed by accident. Naming the family in
+// one place means the page can no longer ask for one font and style with
+// another — if a family fails to load now, it is because it is unavailable,
+// not because two literals disagreed.
+const primaryFamily = (stack) => stack.split(',')[0].trim().replace(/^['"]|['"]$/g, '')
+
+const FONT_REQUESTS = [
+  { family: primaryFamily(T.fontSans), weights: '300;400;500;600;700' },
+  { family: primaryFamily(T.fontMono), weights: '400;500' },
+]
+
+const FONTS_LINK =
+  `<link href="https://fonts.googleapis.com/css2?` +
+  FONT_REQUESTS.map(
+    ({ family, weights }) => `family=${family.replace(/ /g, '+')}:wght@${weights}`,
+  ).join('&') +
+  `&display=swap" rel="stylesheet">`
 
 const BASE_STYLE = `
   * { box-sizing: border-box; margin: 0; padding: 0; }

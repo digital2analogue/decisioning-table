@@ -35,28 +35,38 @@ jobs:
           script: |
             const STALE_DAYS = 7;
             const cutoff = Date.now() - STALE_DAYS * 864e5;
-            const title = 'Stale PRs — no activity in 7+ days';
+            const title = 'Stale PRs — open 7+ days';
             const label = 'stale-prs';
             const runUrl = `${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`;
             const stamp = new Date().toISOString().slice(0, 16).replace('T', ' ');
 
-            // Open, non-draft PRs whose last activity (updated_at advances on any
-            // push/comment/label) predates the cutoff. Drafts are work-in-progress.
+            // Open, non-draft PRs RAISED more than STALE_DAYS ago. Drafts are
+            // work-in-progress.
+            //
+            // Measured from created_at, not updated_at. updated_at advances on any
+            // push, comment or label — and Dependabot rebases a recurring grouped
+            // PR weekly, which resets it every time. parsimony#222 had been open
+            // seven days and still read as ZERO days idle, so it was never listed
+            // once. Age since opening is also the honest reading of the rule: it
+            // asks how long a PR has been waiting, not when a bot last touched it.
+            //
+            // Idle time is still reported per row, as context for triage.
             const prs = await github.rest.pulls.list({
               ...context.repo, state: 'open', per_page: 100,
             });
             const staleList = prs.data
-              .filter((pr) => !pr.draft && new Date(pr.updated_at).getTime() < cutoff)
+              .filter((pr) => !pr.draft && new Date(pr.created_at).getTime() < cutoff)
               .map((pr) => ({
                 num: pr.number, title: pr.title, user: pr.user?.login ?? 'unknown',
-                days: Math.floor((Date.now() - new Date(pr.updated_at).getTime()) / 864e5),
+                openDays: Math.floor((Date.now() - new Date(pr.created_at).getTime()) / 864e5),
+                idleDays: Math.floor((Date.now() - new Date(pr.updated_at).getTime()) / 864e5),
                 url: pr.html_url,
               }))
-              .sort((a, b) => b.days - a.days);
+              .sort((a, b) => b.openDays - a.openDays);
 
             const stale = staleList.length > 0;
             const report = stale
-              ? staleList.map((p) => `- [#${p.num}](${p.url}) ${p.title} — ${p.days} days, @${p.user}`).join('\n')
+              ? staleList.map((p) => `- [#${p.num}](${p.url}) ${p.title} — open ${p.openDays}d, idle ${p.idleDays}d, @${p.user}`).join('\n')
               : 'No open PRs are stale.';
             console.log(`${staleList.length} stale PR(s)`);
             await core.summary
@@ -71,12 +81,14 @@ jobs:
             const existing = open.data.find((i) => i.title === title);
 
             const body = [
-              `Open PRs with no activity in ${STALE_DAYS}+ days. Land them or close them — a PR that sits does not get easier to merge.`,
+              `Open PRs raised ${STALE_DAYS}+ days ago. Land them or close them — a PR that sits does not get easier to merge.`,
+              '',
+              '`open` counts days since the PR was raised. `idle` counts days since anything touched it, and is context only: a bot rebase resets it, so it cannot be the trigger.',
               '',
               report,
               '',
               '---',
-              `Checked at ${stamp} UTC by the [stale-prs workflow](${runUrl}). This issue closes automatically once every open PR is fresh again.`,
+              `Checked at ${stamp} UTC by the [stale-prs workflow](${runUrl}). This issue closes automatically once no open PR is older than ${STALE_DAYS} days — which now means landing or closing them, since a bot rebase no longer resets the clock.`,
             ].join('\n');
 
             if (stale) {
@@ -87,11 +99,11 @@ jobs:
               } else {
                 try { await github.rest.issues.getLabel({ ...context.repo, name: label }); }
                 catch { await github.rest.issues.createLabel({ ...context.repo, name: label,
-                  color: 'FCD34D', description: 'Open PRs with no activity in 7+ days' }); }
+                  color: 'FCD34D', description: 'Open PRs raised 7+ days ago' }); }
                 await github.rest.issues.create({ ...context.repo, title, body, labels: [label] });
               }
             } else if (existing) {
               await github.rest.issues.createComment({ ...context.repo, issue_number: existing.number,
-                body: `All open PRs are fresh again (${stamp} UTC). Closing.` });
+                body: `No open PR is older than ${STALE_DAYS} days (${stamp} UTC). Closing.` });
               await github.rest.issues.update({ ...context.repo, issue_number: existing.number, state: 'closed' });
             }

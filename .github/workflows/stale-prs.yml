@@ -1,0 +1,97 @@
+name: Stale PRs
+
+# Surfaces open PRs that have gone quiet. Lists open non-draft PRs with no
+# activity in 7+ days and reflects them as a single tracked issue — opened or
+# updated while any are stale, closed automatically once they are all fresh.
+# Purely a visibility nudge: it never comments on, labels, or closes the PRs
+# themselves.
+#
+# Added 2026-09-01 after two Dependabot PRs (setup-node v4->v6 and
+# upload-artifact v4->v7 in river-intro) sat open for two months. Neither was
+# blocked and neither was grouped — they were simply never looked at again,
+# because nothing in the repo said a PR had gone quiet. The npm-group fix that
+# landed the same day stops one unapproved major stranding the safe bumps
+# behind it; this covers the other half, where a PR sits alone with nobody
+# reminded it exists.
+#
+# Ported from parsimony's workflow of the same name.
+
+on:
+  schedule:
+    - cron: '0 9 * * 1' # Mondays 09:00 UTC
+  workflow_dispatch:
+
+permissions:
+  pull-requests: read
+  issues: write
+
+jobs:
+  stale-prs:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Reflect stale PRs as a tracked issue
+        uses: actions/github-script@v9
+        with:
+          script: |
+            const STALE_DAYS = 7;
+            const cutoff = Date.now() - STALE_DAYS * 864e5;
+            const title = 'Stale PRs — no activity in 7+ days';
+            const label = 'stale-prs';
+            const runUrl = `${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`;
+            const stamp = new Date().toISOString().slice(0, 16).replace('T', ' ');
+
+            // Open, non-draft PRs whose last activity (updated_at advances on any
+            // push/comment/label) predates the cutoff. Drafts are work-in-progress.
+            const prs = await github.rest.pulls.list({
+              ...context.repo, state: 'open', per_page: 100,
+            });
+            const staleList = prs.data
+              .filter((pr) => !pr.draft && new Date(pr.updated_at).getTime() < cutoff)
+              .map((pr) => ({
+                num: pr.number, title: pr.title, user: pr.user?.login ?? 'unknown',
+                days: Math.floor((Date.now() - new Date(pr.updated_at).getTime()) / 864e5),
+                url: pr.html_url,
+              }))
+              .sort((a, b) => b.days - a.days);
+
+            const stale = staleList.length > 0;
+            const report = stale
+              ? staleList.map((p) => `- [#${p.num}](${p.url}) ${p.title} — ${p.days} days, @${p.user}`).join('\n')
+              : 'No open PRs are stale.';
+            console.log(`${staleList.length} stale PR(s)`);
+            await core.summary
+              .addHeading('Stale PRs', 2)
+              .addRaw(report)
+              .write();
+
+            const open = await github.rest.issues.listForRepo({
+              owner: context.repo.owner, repo: context.repo.repo,
+              state: 'open', labels: label, per_page: 100,
+            });
+            const existing = open.data.find((i) => i.title === title);
+
+            const body = [
+              `Open PRs with no activity in ${STALE_DAYS}+ days. Land them or close them — a PR that sits does not get easier to merge.`,
+              '',
+              report,
+              '',
+              '---',
+              `Checked at ${stamp} UTC by the [stale-prs workflow](${runUrl}). This issue closes automatically once every open PR is fresh again.`,
+            ].join('\n');
+
+            if (stale) {
+              if (existing) {
+                await github.rest.issues.update({ ...context.repo, issue_number: existing.number, body });
+                await github.rest.issues.createComment({ ...context.repo, issue_number: existing.number,
+                  body: `Still ${staleList.length} stale PR(s) on the ${stamp} UTC check.` });
+              } else {
+                try { await github.rest.issues.getLabel({ ...context.repo, name: label }); }
+                catch { await github.rest.issues.createLabel({ ...context.repo, name: label,
+                  color: 'FCD34D', description: 'Open PRs with no activity in 7+ days' }); }
+                await github.rest.issues.create({ ...context.repo, title, body, labels: [label] });
+              }
+            } else if (existing) {
+              await github.rest.issues.createComment({ ...context.repo, issue_number: existing.number,
+                body: `All open PRs are fresh again (${stamp} UTC). Closing.` });
+              await github.rest.issues.update({ ...context.repo, issue_number: existing.number, state: 'closed' });
+            }

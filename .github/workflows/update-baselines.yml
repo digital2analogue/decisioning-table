@@ -24,6 +24,28 @@ jobs:
       - name: Install
         run: npm ci
 
+      # Runs EARLY, while the checkout is still fresh. Without it, a run whose
+      # baselines happen to be unchanged exits green having exercised nothing —
+      # so a checkout version that stopped persisting credentials would stay
+      # invisible until the next real regen, i.e. mid visual change, which is
+      # the worst moment to find out. Every "successful" run of this workflow on
+      # checkout@v7 across these repos took that early exit (the commit step
+      # measures 0s in all of them), which is why v7 stayed unproven despite a
+      # green history.
+      #
+      # --dry-run does the full auth and ref negotiation against origin and
+      # writes nothing. It needs *push* permission, so unlike `git ls-remote` it
+      # cannot pass on a public repo without credentials.
+      #
+      # Deliberately before the ~1min regenerate step rather than beside the
+      # commit: run late, a branch that moved underneath us would fail this as
+      # non-fast-forward and read as broken credentials. The real push keeps its
+      # own rebase-and-retry loop for that case.
+      - name: Verify push credentials
+        run: |
+          echo "Dry-run push (writes nothing) to prove credentials survived checkout…"
+          git push --dry-run origin "HEAD:$GITHUB_REF_NAME"
+
       - name: Install Playwright browser
         run: npx playwright install --with-deps chromium
 
@@ -33,7 +55,7 @@ jobs:
       - name: Commit refreshed baselines
         run: |
           if [ -z "$(git status --porcelain -- tests/visual/__screenshots__)" ]; then
-            echo "Baselines unchanged — nothing to commit."
+            echo "Baselines unchanged — nothing to commit (push path already verified)."
             exit 0
           fi
           git config user.name "github-actions[bot]"

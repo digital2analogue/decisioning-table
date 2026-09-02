@@ -3,7 +3,7 @@ import { AlertTriangleIcon, MoreHorizontalIcon } from 'lucide-react'
 import type { Rule, LogicOperator } from '../../types'
 import { isChildRuleValid, isRuleTouched, isEmptyDraft, missingFields } from '../../types'
 import { cn } from '../../lib/utils'
-import { AttributeSelectBadge } from '../atoms/Badge'
+import { AttributeChip } from '../atoms/AttributeChip'
 import { IconButton } from '../atoms/IconButton'
 import { ConditionalCell } from './ConditionalCell'
 import { AccountTypeCell } from './AccountTypeCell'
@@ -93,7 +93,7 @@ export function ChildRuleRow({
 
       {/* Data Attribute — hidden via .dt-col-data-attribute (kept in JSX for easy re-enable) */}
       <td className="dt-col-data-attribute dt-td">
-        <AttributeSelectBadge
+        <AttributeChip
           value={rule.dataAttribute}
           onChange={(v) => onUpdate(parentId, rule.id, { dataAttribute: v })}
           error={false}

@@ -341,10 +341,10 @@ select option { background-color: var(--color-background-elevated); color: var(-
   .dt-menu-item-danger:disabled:hover { background-color: transparent; }
 
   /* Badges — monochrome Pebble chip (rounded square, single neutral treatment for all categories) */
-  .dt-badge { display: inline-flex; align-items: center; justify-content: center; font: var(--font-label-medium); letter-spacing: var(--letter-spacing-label); line-height: 1; background-color: var(--color-background-default); color: var(--color-foreground-default); border: 1px solid var(--color-border-default); border-radius: var(--radius-sm); padding: 0 var(--spacing-tight); min-height: var(--control-height-md); white-space: nowrap; box-sizing: border-box; }
-  .dt-badge-select { cursor: pointer; gap: var(--spacing-micro); transition: background-color var(--motion-duration-instant) var(--motion-easing-default), border-color var(--motion-duration-instant) var(--motion-easing-default), box-shadow var(--motion-duration-instant) var(--motion-easing-default); }
-  .dt-badge-select:hover { background-color: var(--color-background-alt); border-color: var(--color-foreground-muted); }
-  .dt-badge-select:focus-visible { outline: none; box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-background-action) 18%, transparent); }
+  .dt-chip { display: inline-flex; align-items: center; justify-content: center; font: var(--font-label-medium); letter-spacing: var(--letter-spacing-label); line-height: 1; background-color: var(--color-background-default); color: var(--color-foreground-default); border: 1px solid var(--color-border-default); border-radius: var(--radius-sm); padding: 0 var(--spacing-tight); min-height: var(--control-height-md); white-space: nowrap; box-sizing: border-box; }
+  .dt-chip-select { cursor: pointer; gap: var(--spacing-micro); transition: background-color var(--motion-duration-instant) var(--motion-easing-default), border-color var(--motion-duration-instant) var(--motion-easing-default), box-shadow var(--motion-duration-instant) var(--motion-easing-default); }
+  .dt-chip-select:hover { background-color: var(--color-background-alt); border-color: var(--color-foreground-muted); }
+  .dt-chip-select:focus-visible { outline: none; box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-background-action) 18%, transparent); }
   .dt-attr-option { display: flex; align-items: center; gap: 8px; }
   .dt-attr-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
   .dt-attr-dot-income   { background-color: var(--color-feedback-success); }
@@ -471,9 +471,9 @@ select option { background-color: var(--color-background-elevated); color: var(-
   /* Empty / placeholder states for inline pickers (badge, select trigger, conditional operator).
      Borders stay solid so empty selects match the rest of the input system (filled
      selects, text inputs, etc.) — only the text color is muted to signal "no value yet". */
-  .dt-badge-empty { color: var(--color-foreground-muted); background-color: var(--color-background-default); }
-  .dt-badge-empty:hover { color: var(--color-foreground-action); border-color: var(--color-foreground-action); background-color: var(--color-background-accent-blue); filter: none; }
-  .dt-badge-empty:focus-visible { outline: none; box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-background-action) 18%, transparent); border-color: var(--color-border-focus); }
+  .dt-chip-empty { color: var(--color-foreground-muted); background-color: var(--color-background-default); }
+  .dt-chip-empty:hover { color: var(--color-foreground-action); border-color: var(--color-foreground-action); background-color: var(--color-background-accent-blue); filter: none; }
+  .dt-chip-empty:focus-visible { outline: none; box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-background-action) 18%, transparent); border-color: var(--color-border-focus); }
   .dt-select-trigger-empty { color: var(--color-foreground-muted); }
   .dt-select-trigger-empty:hover { color: var(--color-foreground-action); border-color: var(--color-foreground-action); background-color: var(--color-background-accent-blue); }
   .dt-select-trigger-empty:focus-visible { outline: none; box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-background-action) 18%, transparent); border-color: var(--color-border-focus); }

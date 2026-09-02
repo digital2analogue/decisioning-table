@@ -14,15 +14,15 @@ import { computePortalPos } from '../../lib/portalPosition'
 export interface PickerOption<T> {
   value: T
   label: string
-  /** Optional class for a leading colored dot (used by AttributeSelectBadge). */
+  /** Optional class for a leading colored dot (used by AttributeChip). */
   leadingDotClass?: string
 }
 
 export type PickerTriggerVariant =
   | 'select-trigger'
   | 'conditional-op'
-  | 'badge'
-  | 'logic-chip'
+  | 'chip'
+  | 'logic'
 
 export interface PickerProps<T extends string> {
   value: T | null
@@ -50,14 +50,14 @@ export interface PickerProps<T extends string> {
 const TRIGGER_CLASS: Record<PickerTriggerVariant, string> = {
   'select-trigger': 'dt-select-trigger',
   'conditional-op': 'dt-conditional-operator',
-  badge: 'dt-badge dt-badge-select',
-  'logic-chip': 'dt-logic-chip',
+  chip: 'dt-chip dt-chip-select',
+  logic: 'dt-logic-chip',
 }
 
 const EMPTY_CLASS: Partial<Record<PickerTriggerVariant, string>> = {
   'select-trigger': 'dt-select-trigger-empty',
   'conditional-op': 'dt-conditional-operator-empty',
-  badge: 'dt-badge-empty',
+  chip: 'dt-chip-empty',
 }
 
 export function Picker<T extends string>({
@@ -243,7 +243,7 @@ export function Picker<T extends string>({
             <ChevronDownIcon
               size={12}
               className={
-                triggerVariant === 'logic-chip'
+                triggerVariant === 'logic'
                   ? 'dt-logic-chip-chevron'
                   : 'dt-select-chevron'
               }

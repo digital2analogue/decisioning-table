@@ -17,7 +17,7 @@ export function LogicOperatorSelect({ value, onChange }: LogicOperatorSelectProp
       value={value}
       onChange={onChange}
       options={OPTIONS}
-      triggerVariant="logic-chip"
+      triggerVariant="logic"
       ariaLabel={`Logic operator: ${value.toLowerCase()}`}
       title={`Logic: ${value.toLowerCase()}`}
     />

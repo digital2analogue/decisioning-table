@@ -31,7 +31,8 @@ import type { Rule } from '../../types'
 import { isRuleValid, isRuleTouched, isEmptyDraft, missingFields } from '../../types'
 import { cn } from '../../lib/utils'
 import { Checkbox } from '../atoms/Checkbox'
-import { AttributeSelectBadge, OutcomeBadge } from '../atoms/Badge'
+import { AttributeChip } from '../atoms/AttributeChip'
+import { OutcomeSegmented } from '../atoms/OutcomeSegmented'
 import { IconButton } from '../atoms/IconButton'
 import { ActionsMenu } from './ActionsMenu'
 import { ConditionalCell } from './ConditionalCell'
@@ -232,7 +233,7 @@ export function RuleRow({
 
       {/* Data Attribute — hidden via .dt-col-data-attribute (kept in JSX for easy re-enable) */}
       <td className="dt-col-data-attribute dt-td">
-        <AttributeSelectBadge
+        <AttributeChip
           value={rule.dataAttribute}
           onChange={(v) => onUpdate(rule.id, { dataAttribute: v })}
           error={false}
@@ -275,7 +276,7 @@ export function RuleRow({
           validity so the user can toggle Approve/Deny independently of filling
           the rest of the row. */}
       <td className="dt-td">
-        <OutcomeBadge
+        <OutcomeSegmented
           value={rule.outcome}
           onChange={(v) => onUpdate(rule.id, { outcome: v })}
         />

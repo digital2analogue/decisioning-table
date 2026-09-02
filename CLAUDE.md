@@ -179,7 +179,7 @@ Every interactive element should have rest, hover, focus-visible, and (if the ac
 - Always use `:focus-visible` (not `:focus`) so mouse clicks don't trigger the ring.
 
 ### Empty / draft picker styling
-Dashed border + muted text on `.dt-*-empty` modifier (`.dt-badge-empty`, `.dt-select-trigger-empty`, `.dt-conditional-operator.dt-conditional-operator-empty`). Hover transitions to action color + accent-blue tint.
+Dashed border + muted text on `.dt-*-empty` modifier (`.dt-chip-empty`, `.dt-select-trigger-empty`, `.dt-conditional-operator.dt-conditional-operator-empty`). Hover transitions to action color + accent-blue tint.
 
 ### Active dropdown item
 `.dt-conditional-dropdown-item-active` uses `--color-background-accent-blue` bg + `--color-foreground-action` text — distinct from hover (`bg-alt`). Used uniformly across every picker.
@@ -192,7 +192,16 @@ Three semantically distinct states with three visual weights, all on `td:first-c
 
 ## Components inventory
 
-**Atoms** ([src/components/atoms/](src/components/atoms/)): `IconButton`, `Checkbox`, `Badge` (`AttributeSelectBadge`, `OutcomeBadge`), `AmountCell`
+**Atoms** ([src/components/atoms/](src/components/atoms/)): `IconButton`, `Checkbox`, `AttributeChip`, `OutcomeSegmented`, `Picker`, `AmountCell`, `AppIcon`, `AvatarStack`
+
+> **Naming (#84).** A **badge** reports state the system decided and cannot be clicked. A **chip** names a
+> discrete thing — a category, a filter, a value someone chose — and may or may not be interactive. A
+> **segmented control** is a field whose two or three choices are all visible at rest (`radiogroup`/`radio`);
+> a **listbox** is one whose choices are behind a click; a **menu** runs commands and latches nothing.
+> There is no `Badge` component here — nothing renders inert status as a pill (validity uses the warning
+> triangle in the `#` column plus a row tint), so the noun is free if one is ever needed. Taxonomy settled
+> 2026-09-02; filed upstream as parsimony#229/#230/#232, which this repo does **not** consume — it stays on
+> Parsimony tokens only and keeps its own components.
 
 **Molecules** ([src/components/molecules/](src/components/molecules/)): `RuleRow`, `ChildRuleRow`, `OperatorSelect`, `LogicOperatorSelect`, `ConditionalCell`, `ActionsMenu`, `Toast`, `ValidationBanner`, `OperatorSelect`, `TabItem`, `ToolbarActions`
 

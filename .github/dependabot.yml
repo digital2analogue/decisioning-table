@@ -18,6 +18,25 @@ updates:
         update-types:
           - minor
           - patch
+        # ...with one exception, because "one major per PR" is wrong for
+        # packages that only work in lockstep. `@vitest/ui` declares an EXACT
+        # peer on its matching `vitest`, so splitting the pair across two PRs
+        # makes each one uninstallable — `npm install` fails ERESOLVE before
+        # anything runs. That is what #87 and #88 are: the 4.1.11 -> 5.0.0 bump
+        # arriving as two halves, each conflicting with the half still on main.
+        exclude-patterns:
+          - "vitest"
+          - "@vitest/*"
+      # The vitest family, kept whole. No `update-types` filter, so majors ride
+      # in this group too and the pair moves together in one installable PR.
+      # Majors are still taken by hand — dependabot-automerge skips any npm PR
+      # whose update-type is semver-major, and a group reports its highest
+      # change. This only ensures the PR can resolve, so CI gets to report a
+      # verdict on vitest 5 instead of dying at install.
+      vitest:
+        patterns:
+          - "vitest"
+          - "@vitest/*"
     ignore:
       # typescript majors are unusable until typescript-eslint's peer
       # range admits them — an individual major PR would just sit red.
